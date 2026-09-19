@@ -24,6 +24,20 @@
         </header>
 
         <main class="page-content">
+            <?php if (isset($_SESSION['flash_success'])): ?>
+                <div class="soft-alert tone-green" style="background: #ecfdf5; color: #065f46; border-color: #a7f3d0; margin-bottom: 16px;">
+                    <?= e($_SESSION['flash_success']) ?>
+                </div>
+                <?php unset($_SESSION['flash_success']); ?>
+            <?php endif; ?>
+
+            <?php if (isset($_SESSION['flash_error'])): ?>
+                <div class="soft-alert tone-red" style="background: #fef2f2; color: #991b1b; border-color: #fecaca; margin-bottom: 16px;">
+                    <?= e($_SESSION['flash_error']) ?>
+                </div>
+                <?php unset($_SESSION['flash_error']); ?>
+            <?php endif; ?>
+
             <?php require $contentView; ?>
         </main>
 

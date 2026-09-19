@@ -427,3 +427,143 @@ button {
         border-left: 1px solid var(--line);
     }
 }
+
+/* ==========================================================================
+   Reusable UI Components (ui-guide.md design tokens)
+   ========================================================================== */
+
+/* Buttons */
+.btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    padding: 10px 16px;
+    border-radius: 12px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    border: 1px solid transparent;
+    transition: background-color 0.2s, color 0.2s;
+}
+
+.btn-sm {
+    padding: 6px 10px;
+    font-size: 12px;
+    border-radius: 8px;
+}
+
+.btn-primary {
+    background-color: #1b4332;
+    color: #ffffff;
+}
+
+.btn-primary:hover {
+    background-color: #143326;
+}
+
+.btn-secondary {
+    background-color: transparent;
+    color: #6b7280;
+    border-color: #e5e7eb;
+}
+
+.btn-secondary:hover {
+    background-color: #f3f1ec;
+    color: #1f2937;
+}
+
+.btn-danger {
+    background-color: #fef2f2;
+    color: #dc2626;
+    border-color: #fecaca;
+}
+
+.btn-danger:hover {
+    background-color: #fee2e2;
+}
+
+/* Cards & Containers */
+.ui-card {
+    background: #ffffff;
+    border-radius: 14px;
+    border: 1px solid #e5e7eb;
+    padding: 16px;
+    box-shadow: 0 2px 8px rgba(27, 67, 50, 0.05);
+}
+
+.ui-card-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 14px;
+    background: #ffffff;
+    border-radius: 12px;
+    border: 1px solid #e5e7eb;
+}
+
+/* Form Elements */
+.form-group {
+    margin-bottom: 14px;
+}
+
+.form-label {
+    display: block;
+    font-size: 13px;
+    font-weight: 600;
+    color: #1f2937;
+    margin-bottom: 6px;
+}
+
+.form-control {
+    width: 100%;
+    padding: 10px 12px;
+    border-radius: 12px;
+    border: 1px solid #e5e7eb;
+    background: #f3f1ec;
+    font-size: 14px;
+    color: #1f2937;
+    outline: none;
+    transition: border-color 0.2s;
+}
+
+.form-control:focus {
+    border-color: #1b4332;
+}
+
+.form-control.is-invalid {
+    border-color: #ef4444;
+}
+
+.form-error {
+    color: #ef4444;
+    font-size: 12px;
+    margin-top: 4px;
+    display: block;
+}
+
+/* Badges & Indicators */
+.badge {
+    display: inline-block;
+    padding: 2px 8px;
+    border-radius: 9999px;
+    font-size: 10px;
+    font-weight: 600;
+    text-transform: uppercase;
+}
+
+.badge-owner { background: #e0e7ff; color: #3730a3; }
+.badge-admin { background: #dbeafe; color: #1e40af; }
+.badge-tentor { background: #e8f0ec; color: #1b4332; }
+
+.status-dot {
+    display: inline-block;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+}
+
+.status-dot-active { background: #10b981; }
+.status-dot-inactive { background: #ef4444; }
+
