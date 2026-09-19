@@ -54,10 +54,14 @@ Dokumen ini mencatat histori perubahan backend, modul yang telah selesai dibangu
 - **🟢 Automated Test Suite (`/tests/run_all_tests.php`)**:
   - Dibuat suite pengujian otomatis untuk Unit Testing & Whitebox Testing.
   - Memverifikasi pattern matching HTTP Router, sanitasi slug artikel berita, enkripsi hash password akun, relasi 1:1 profil tentor, serta sinkronisasi otomatis presensi siswa saat sesi pertemuan dibuat.
-- **🟢 Dokumen Log V&V (`/instructions/vv-log.md`)**:
-  - Dokumentasi matriks test case, ruang lingkup pengujian, dan log hasil pengujian V&V.
+- **🟢 Laporan Formal V&V IEEE/ISO/IEC 15288:2023 (`/instructions/vv-log.md`)**:
+  - Dokumentasi formal pengujian V&V sesuai standar internasional IEEE/ISO/IEC 15288:2023 (Clause 6.4.9 Verification Process & Clause 6.4.11 Validation Process).
+- **🟢 Dokumen Ringkasan Unit & Whitebox Test (`/instructions/unit-and-whitebox-test-summary.md`)**:
+  - Dokumentasi khusus teknis pengujian Unit Test (Router parameter extraction, Berita Slug generator) dan Whitebox Test (Branch Coverage 404, Enkripsi Hash Password, Relasi Data 1:1, Rule No-Login Siswa/Wali, Auto-sync Presensi).
 - **🟢 Panduan Blackbox Testing (`/instructions/blackbox-testing-guide.md`)**:
   - Panduan langkah demi langkah pengujian UI/UX untuk Windows & Linux/macOS, perintah `php -S`, kredensial akun uji coba, serta daftar checklist test cases.
+
+
 
 
 ---
