@@ -56,6 +56,9 @@ Dokumen ini mencatat histori perubahan backend, modul yang telah selesai dibangu
   - Memverifikasi pattern matching HTTP Router, sanitasi slug artikel berita, enkripsi hash password akun, relasi 1:1 profil tentor, serta sinkronisasi otomatis presensi siswa saat sesi pertemuan dibuat.
 - **🟢 Dokumen Log V&V (`/instructions/vv-log.md`)**:
   - Dokumentasi matriks test case, ruang lingkup pengujian, dan log hasil pengujian V&V.
+- **🟢 Panduan Blackbox Testing (`/instructions/blackbox-testing-guide.md`)**:
+  - Panduan langkah demi langkah pengujian UI/UX untuk Windows & Linux/macOS, perintah `php -S`, kredensial akun uji coba, serta daftar checklist test cases.
+
 
 ---
 
