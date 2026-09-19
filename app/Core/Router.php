@@ -18,8 +18,9 @@ class Router
 
     private function addRoute(string $method, string $path, array|callable $handler): void
     {
-        $pattern = preg_replace('/\{([a-zA-Z0-9_]+)\}/', '(?P<$1>[^/]+)', $path);
-        $pattern = "#^" . rtrim($pattern, '/') . "$#i";
+        $normalizedPath = '/' . trim($path, '/');
+        $pattern = preg_replace('/\{([a-zA-Z0-9_]+)\}/', '(?P<$1>[^/]+)', $normalizedPath);
+        $pattern = "#^" . ($pattern === '/' ? '/' : rtrim($pattern, '/')) . "$#i";
 
         $this->routes[] = [
             'method' => strtoupper($method),

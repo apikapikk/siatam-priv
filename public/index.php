@@ -24,6 +24,7 @@ spl_autoload_register(function ($class) {
 require_once __DIR__ . '/../app/Support/helpers.php';
 require_once __DIR__ . '/../app/Data/AdminDashboardData.php';
 
+use App\Core\Router;
 use App\Controllers\PublicController;
 use App\Controllers\AuthController;
 use App\Controllers\Admin\DashboardController;
