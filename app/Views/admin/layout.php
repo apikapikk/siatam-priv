@@ -18,9 +18,11 @@
                     <small>Admin Panel</small>
                 </span>
             </a>
-            <button class="icon-button" type="button" aria-label="Notifikasi">
-                <span aria-hidden="true">!</span>
-            </button>
+            <div style="display: flex; align-items: center; gap: 8px;">
+                <a href="/logout" class="btn btn-sm btn-danger" style="padding: 4px 10px; font-size: 11px; text-decoration: none; border-radius: 4px;">
+                    Keluar
+                </a>
+            </div>
         </header>
 
         <main class="page-content">
