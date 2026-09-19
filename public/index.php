@@ -24,7 +24,8 @@ spl_autoload_register(function ($class) {
 require_once __DIR__ . '/../app/Support/helpers.php';
 require_once __DIR__ . '/../app/Data/AdminDashboardData.php';
 
-use App\Core\Router;
+use App\Controllers\PublicController;
+use App\Controllers\AuthController;
 use App\Controllers\Admin\DashboardController;
 use App\Controllers\Admin\PenggunaController;
 use App\Controllers\Admin\JenjangController;
@@ -36,14 +37,39 @@ use App\Controllers\Admin\JadwalController;
 use App\Controllers\Admin\PengumumanController;
 use App\Controllers\Admin\BeritaController;
 use App\Controllers\Admin\PertemuanController;
+use App\Controllers\Tentor\DashboardController as TentorDashboardController;
+use App\Controllers\Tentor\AkademikController as TentorAkademikController;
 
 $router = new Router();
 
-// Redirect root ke admin beranda
-$router->get('/', function () {
-    header('Location: /admin/beranda');
+// Public Routes (Landing Page, Berita, & Cek Presensi Tanpa Login)
+$router->get('/', [PublicController::class, 'index']);
+$router->get('/berita', [PublicController::class, 'beritaList']);
+$router->get('/berita/{slug}', [PublicController::class, 'beritaDetail']);
+$router->get('/cek-presensi', [PublicController::class, 'cekPresensi']);
+
+// Auth Routes
+$router->get('/login', [AuthController::class, 'loginForm']);
+$router->post('/login', [AuthController::class, 'loginProcess']);
+$router->get('/logout', [AuthController::class, 'logout']);
+
+
+// Portal Tentor Routes
+$router->get('/tentor', function () {
+    header('Location: /tentor/beranda');
     exit;
 });
+$router->get('/tentor/beranda', [TentorDashboardController::class, 'index']);
+
+// Tentor Akademik & Presensi
+$router->get('/tentor/jadwal', [TentorAkademikController::class, 'jadwal']);
+$router->get('/tentor/pertemuan', [TentorAkademikController::class, 'pertemuan']);
+$router->get('/tentor/pertemuan/tambah', [TentorAkademikController::class, 'createPertemuan']);
+$router->post('/tentor/pertemuan/simpan', [TentorAkademikController::class, 'storePertemuan']);
+$router->get('/tentor/pertemuan/{id}/presensi', [TentorAkademikController::class, 'presensi']);
+$router->post('/tentor/pertemuan/{id}/presensi/update', [TentorAkademikController::class, 'updatePresensi']);
+
+
 $router->get('/admin', function () {
     header('Location: /admin/beranda');
     exit;

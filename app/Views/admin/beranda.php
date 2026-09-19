@@ -26,19 +26,19 @@
 </section>
 
 <section class="quick-actions" aria-label="Aksi cepat">
-    <a href="#" class="quick-action">
+    <a href="/admin/jadwal" class="quick-action">
         <span class="action-icon calendar-icon" aria-hidden="true"></span>
         <span>Jadwal</span>
     </a>
-    <a href="#" class="quick-action">
+    <a href="/admin/siswa" class="quick-action">
         <span class="action-icon users-icon" aria-hidden="true"></span>
         <span>Siswa</span>
     </a>
-    <a href="#" class="quick-action">
+    <a href="/admin/tentor" class="quick-action">
         <span class="action-icon tutor-icon" aria-hidden="true"></span>
         <span>Tentor</span>
     </a>
-    <a href="#" class="quick-action">
+    <a href="/admin/berita" class="quick-action">
         <span class="action-icon news-icon" aria-hidden="true"></span>
         <span>Berita</span>
     </a>
@@ -50,7 +50,7 @@
             <p class="eyebrow">Hari Ini</p>
             <h2>Jadwal Mengajar</h2>
         </div>
-        <a href="#">Lihat</a>
+        <a href="/admin/jadwal">Lihat</a>
     </div>
 
     <div class="stack-list">
@@ -77,7 +77,7 @@
             <p class="eyebrow">Internal</p>
             <h2>Pengumuman</h2>
         </div>
-        <a href="#">Kelola</a>
+        <a href="/admin/pengumuman">Kelola</a>
     </div>
 
     <div class="stack-list">
@@ -96,7 +96,7 @@
             <p class="eyebrow">Publik</p>
             <h2>Berita Terbaru</h2>
         </div>
-        <a href="#">Kelola</a>
+        <a href="/admin/berita">Kelola</a>
     </div>
 
     <div class="news-list">
