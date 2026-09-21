@@ -1,10 +1,10 @@
-<div class="max-w-md mx-auto py-6 px-4">
-    <div class="bg-white rounded-2xl p-6 shadow-sm border border-gray-200/80">
+<div class="max-w-md mx-auto">
+    <div class="bg-white rounded-2xl p-6 md:p-7 shadow-sm border border-gray-200/80">
         <div class="text-center mb-6">
-            <div class="w-12 h-12 rounded-2xl bg-[#324f47] text-white flex items-center justify-center mx-auto mb-3 shadow-xs">
-                <span class="material-symbols-outlined text-2xl">school</span>
+            <div class="w-14 h-14 rounded-2xl bg-[#324f47] text-white flex items-center justify-center mx-auto mb-3 shadow-sm">
+                <span class="material-symbols-outlined text-[30px]">school</span>
             </div>
-            <h1 class="text-xl font-bold text-[#2D3E39] tracking-tight">Siatama Privat</h1>
+            <h1 class="text-2xl font-bold text-[#2D3E39] tracking-tight">Siatama Privat</h1>
             <p class="text-xs text-gray-500 mt-1">Silakan masuk ke akun Admin / Tentor Anda</p>
         </div>
 
@@ -43,5 +43,9 @@
                 Masuk ke Portal
             </button>
         </form>
+
+        <div class="mt-5 pt-4 border-t border-gray-100 text-center">
+            <p class="text-[11px] text-gray-400">Portal internal administrasi dan tentor Siatama Privat</p>
+        </div>
     </div>
 </div>
