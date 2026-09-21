@@ -21,45 +21,55 @@ Seluruh elemen form `input`, `select`, `textarea`, dan `button` pada seluruh hal
 ---
 
 ### 🔵 2. Penyesuaian UI Draft - Modul Admin (100% Selesai)
-- ** Layout & Design System (`app/Views/admin/layout.php`)**: Tailwind CSS CDN, Montserrat/Inter, Material Symbols, TopBar & Bottom Nav.
-- ** Beranda Admin (`app/Views/admin/beranda.php`)**: Ringkasan Statistik Card, Quick Action Menu, Pantauan Jadwal Mengajar.
-- ** Direktori Siswa (`app/Views/admin/siswa/index.php`)**: Card Siswa, Sekolah, Wali Murid, Live Search.
-- ** Master Data Tentor (`app/Views/admin/tentor/index.php`)**: Titik status aktif, Avatar, Univ, Telp, Live Search.
-- ** Manajemen Jadwal (`app/Views/admin/jadwal/index.php`)**: Card Sesi Mengajar, Jenjang, Program, Ruangan.
-- ** Pusat Pertemuan & Presensi (`app/Views/admin/pertemuan/index.php`)**: Sesi Pertemuan, Badge Presensi.
-- ** Manajemen Berita (`app/Views/admin/berita/index.php`)**: Thumbnail Foto, Status Terbit/Draft.
+- ✅ Layout & Design System (`app/Views/admin/layout.php`): Tailwind CSS CDN, Montserrat/Inter, Material Symbols, TopBar & Bottom Nav.
+- ✅ Beranda Admin (`app/Views/admin/beranda.php`): Ringkasan Statistik Card, Quick Action Menu, Pantauan Jadwal Mengajar.
+- ✅ Direktori Siswa (`app/Views/admin/siswa/index.php`): Card Siswa, Sekolah, Wali Murid, Live Search.
+- ✅ Master Data Tentor (`app/Views/admin/tentor/index.php`): Titik status aktif, Avatar, Univ, Telp, Live Search.
+- ✅ Manajemen Jadwal (`app/Views/admin/jadwal/index.php`): Card Sesi Mengajar, Jenjang, Program, Ruangan.
+- ✅ Pusat Pertemuan & Presensi (`app/Views/admin/pertemuan/index.php`): Sesi Pertemuan, Badge Presensi.
+- ✅ Manajemen Berita (`app/Views/admin/berita/index.php`): Thumbnail Foto, Status Terbit/Draft.
 
 ---
 
 ### 🔵 3. Penyesuaian UI Draft - Modul Tentor (100% Selesai)
-- ** Layout Tentor (`app/Views/tentor/layout.php`)**: TopBar profil tentor & Bottom Nav 3 Menu.
-- ** Beranda Tentor (`app/Views/tentor/beranda.php`)**: Banner Pengumuman, Widget Statistik Sesi, Card Jadwal Hari Ini.
-- ** Jadwal Saya Tentor (`app/Views/tentor/jadwal/index.php`)**: Header Jadwal, Live Search, Jam & Ruangan.
-- ** Laporan & Pertemuan Tentor (`app/Views/tentor/pertemuan/index.php`)**: Card Sesi Pertemuan, Catat Presensi Siswa.
+- ✅ Layout Tentor (`app/Views/tentor/layout.php`): TopBar profil tentor & Bottom Nav 3 Menu.
+- ✅ Beranda Tentor (`app/Views/tentor/beranda.php`): Banner Pengumuman, Widget Statistik Sesi, Card Jadwal Hari Ini.
+- ✅ Jadwal Saya Tentor (`app/Views/tentor/jadwal/index.php`): Header Jadwal, Live Search, Jam & Ruangan.
+- ✅ Laporan & Pertemuan Tentor (`app/Views/tentor/pertemuan/index.php`): Card Sesi Pertemuan, Catat Presensi Siswa.
 
 ---
 
 ### 🔵 4. Penyesuaian UI Draft - Modul Publik / User Landing Page (100% Selesai)
-- ** Layout Publik (`app/Views/public/layout.php`)**: Navbar Brand Siatama Privat & Bottom Nav Publik.
-- ** Beranda Publik (`app/Views/public/home.php`)**: Hero Section "Apa itu Siatama Privat?", Program Belajar, Tentor Kami, Berita.
+- ✅ Layout Publik (`app/Views/public/layout.php`): Navbar Brand Siatama Privat & Bottom Nav Publik.
+- ✅ Beranda Publik (`app/Views/public/home.php`): Hero Section "Apa itu Siatama Privat?", Program Belajar, Tentor Kami, Berita.
+- ✅ Cek Presensi Publik (`app/Views/public/cek_presensi.php`): Pencarian NIS/Nama/Sekolah, filter Bulan & Tahun, card identitas siswa, ringkasan kehadiran dengan progress bar % hadir, badge status semantik per kehadiran, dan nilai sikap/akademik dengan keterangan huruf.
 
 ---
 
-## 📌 Catatan Rencana Pengembangan Backend Spesifik Berdasarkan `@instructions/todo.md`
+### 🔵 5. Backend Gaps — Database, Models, Controllers & Helpers (100% Selesai)
 
-1. **Database Schema (`database/schema.sql`)**:
-   - `tentor`: Penambahan `rate_gaji_per_jam` / `tarif_per_sesi`.
-   - `pengumuman`: Penambahan `tipe_broadcast` dan `kategori`.
-   - `notifikasi`: Pembuatan tabel baru untuk mendukung lonceng notifikasi pengguna.
-2. **Models & Logic (`app/Models/`)**:
-   - `Tentor.php`: Method `getMonthlyPayrollSummary()` & `getTeachingPerformance()`.
-   - `Jadwal.php`: Method `getTodayRealtimeScheduleWithStatus()` (Status Realtime Selesai/Sedang Berlangsung/Belum Mulai).
-   - `Pertemuan.php`: Method `getMonthlyReportByClass()`.
-   - `Pengumuman.php`: Method `getLatestActiveAnnouncements()`.
-3. **Controllers & Business Logic (`app/Controllers/`)**:
-   - `Admin\DashboardController.php`: Integrasi pantauan realtime mengajar.
-   - `Admin\LaporanController.php` (Baru): Controller khusus laporan rekap siswa & honorarium tentor.
-   - `Tentor\DashboardController.php`: Agregasi kinerja bulan berjalan (jam ajar & % presensi).
-   - `PublicController.php`: Filter program publik berbasis jenjang dinamis.
-4. **Helpers (`app/Support/helpers.php`)**:
-   - Helper `status_sesi_mengajar()`, `format_rupiah()`, dan `konversi_nilai_huruf()`.
+#### Database Schema (`database/schema.sql`)
+- ✅ `tentor`: Penambahan kolom `rate_gaji_per_jam` & `tarif_per_sesi` (DECIMAL).
+- ✅ `pengumuman`: Penambahan kolom `tipe_broadcast` ENUM & `kategori` VARCHAR.
+- ✅ Tabel `notifikasi` baru: `id`, `pengguna_id`, `judul`, `pesan`, `sudah_dibaca`, `dibuat_pada`.
+
+#### Models (`app/Models/`)
+- ✅ `Tentor.php`: `getMonthlyPayrollSummary(month, year)` & `getTeachingPerformance(tentorId, month, year)`.
+- ✅ `Jadwal.php`: `getTodayRealtimeScheduleWithStatus()` — status realtime via `TIME(NOW())`.
+- ✅ `Pertemuan.php`: `getMonthlyReportByClass(kelasId, month, year)` — rekap bulanan + summary per siswa.
+- ✅ `Pengumuman.php`: `getLatestActiveAnnouncements(peran, limit)` — filter `target_peran`.
+
+#### Controllers (`app/Controllers/`)
+- ✅ `Admin\DashboardController.php`: Integrasi `getTodayRealtimeScheduleWithStatus()` via `AdminDashboardData.php`.
+- ✅ `Admin\LaporanController.php` (Baru): `index()`, `siswaBulanan()`, `tentorBulanan()`, `exportSiswaCsv()`, `exportTentorCsv()` — routes `/admin/laporan/*` terdaftar, nav item "Laporan" ditambah ke bottom nav admin.
+- ✅ `Tentor\DashboardController.php`: Agregasi `total_jam` & `persentase_kehadiran` bulan berjalan via `getTeachingPerformance()`.
+- ✅ `PublicController.php` — `cekPresensi()`: Pencarian NIS/Nama + filter Bulan/Tahun, resolve `$selectedSiswa`, pass `activeNav`.
+
+#### Helpers (`app/Support/helpers.php`)
+- ✅ `status_sesi_mengajar(jamMulai, jamSelesai)`.
+- ✅ `format_rupiah(nominal)`.
+- ✅ `konversi_nilai_huruf(nilai)`.
+
+---
+
+> ✅ **Semua item dari `todo.md` telah selesai dikerjakan.**

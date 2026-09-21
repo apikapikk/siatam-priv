@@ -17,4 +17,20 @@ class Pengumuman extends Model
         $stmt = $this->db->query($sql);
         return $stmt->fetchAll();
     }
+
+    public function getLatestActiveAnnouncements(string $peran, int $limit = 3): array
+    {
+        $allowedPeran = in_array($peran, ['admin', 'tentor'], true) ? $peran : 'admin';
+        $limit = max(1, min($limit, 10));
+
+        $sql = "SELECT judul, isi, target_peran, tipe_broadcast, kategori, diterbitkan_pada
+                FROM `pengumuman`
+                WHERE status_aktif = 1
+                  AND target_peran IN ('semua', :peran)
+                ORDER BY diterbitkan_pada DESC
+                LIMIT {$limit}";
+        $stmt = $this->db->prepare($sql);
+        $stmt->execute(['peran' => $allowedPeran]);
+        return $stmt->fetchAll();
+    }
 }

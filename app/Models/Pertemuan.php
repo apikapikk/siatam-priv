@@ -102,4 +102,57 @@ class Pertemuan extends Model
             throw $e;
         }
     }
+
+    public function getMonthlyReportByClass(int $kelasId, int $month, int $year): array
+    {
+        $sql = "SELECT p.id AS pertemuan_id, p.nomor_pertemuan, p.tanggal, p.jam_mulai, p.jam_selesai,
+                       t.nama_lengkap AS tentor_nama,
+                       s.id AS siswa_id, s.nama_lengkap AS siswa_nama, s.asal_sekolah,
+                       prs.status_kehadiran, prs.nilai_sikap, prs.nilai_akademik, prs.catatan
+                FROM `pertemuan` p
+                JOIN `jadwal` j ON j.id = p.jadwal_id
+                JOIN `tentor` t ON t.id = p.tentor_id
+                JOIN `presensi` prs ON prs.pertemuan_id = p.id
+                JOIN `siswa` s ON s.id = prs.siswa_id
+                WHERE j.kelas_id = :kelas_id
+                  AND MONTH(p.tanggal) = :month
+                  AND YEAR(p.tanggal) = :year
+                ORDER BY p.tanggal ASC, p.nomor_pertemuan ASC, s.nama_lengkap ASC";
+        $stmt = $this->db->prepare($sql);
+        $stmt->execute([
+            'kelas_id' => $kelasId,
+            'month' => $month,
+            'year' => $year,
+        ]);
+        $rows = $stmt->fetchAll();
+
+        $summaryByStudent = [];
+        foreach ($rows as $row) {
+            $siswaId = (int) $row['siswa_id'];
+            if (!isset($summaryByStudent[$siswaId])) {
+                $summaryByStudent[$siswaId] = [
+                    'siswa_id' => $siswaId,
+                    'siswa_nama' => $row['siswa_nama'],
+                    'asal_sekolah' => $row['asal_sekolah'],
+                    'total' => 0,
+                    'hadir' => 0,
+                    'sakit' => 0,
+                    'izin' => 0,
+                    'alfa' => 0,
+                    'none' => 0,
+                ];
+            }
+
+            $status = $row['status_kehadiran'] ?: 'none';
+            $summaryByStudent[$siswaId]['total']++;
+            if (isset($summaryByStudent[$siswaId][$status])) {
+                $summaryByStudent[$siswaId][$status]++;
+            }
+        }
+
+        return [
+            'rows' => $rows,
+            'summary_by_student' => array_values($summaryByStudent),
+        ];
+    }
 }

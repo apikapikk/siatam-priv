@@ -2,6 +2,9 @@
 
 require_once __DIR__ . '/../../config/database.php';
 
+use App\Models\Jadwal;
+use App\Models\Pengumuman;
+
 function get_admin_dashboard_data(): array
 {
     $fallback = get_admin_dashboard_fallback_data();
@@ -12,8 +15,8 @@ function get_admin_dashboard_data(): array
         return [
             'using_fallback' => false,
             'stats' => get_admin_stats($pdo),
-            'today_schedule' => get_today_schedule($pdo),
-            'announcements' => get_recent_announcements($pdo),
+            'today_schedule' => (new Jadwal())->getTodayRealtimeScheduleWithStatus(),
+            'announcements' => (new Pengumuman())->getLatestActiveAnnouncements('admin'),
             'news' => get_recent_news($pdo),
         ];
     } catch (Throwable $exception) {
@@ -129,6 +132,7 @@ function get_admin_dashboard_fallback_data(): array
                 'jenjang_nama' => 'SMP/MTs',
                 'program_nama' => 'Reguler',
                 'tentor_nama' => 'Budi Santoso, S.Pd.',
+                'status_realtime' => 'sedang_berlangsung',
             ],
             [
                 'hari' => 4,
@@ -139,6 +143,7 @@ function get_admin_dashboard_fallback_data(): array
                 'jenjang_nama' => 'SMA/MA',
                 'program_nama' => 'Private',
                 'tentor_nama' => 'Andi Wijaya, M.Si.',
+                'status_realtime' => 'belum_mulai',
             ],
         ],
         'announcements' => [

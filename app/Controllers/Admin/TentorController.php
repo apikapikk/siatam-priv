@@ -48,6 +48,8 @@ class TentorController extends Controller
         $asalUniversitas = trim($_POST['asal_universitas'] ?? '');
         $nomorTelepon = trim($_POST['nomor_telepon'] ?? '');
         $bio = trim($_POST['bio'] ?? '');
+        $rateGajiPerJam = (float) ($_POST['rate_gaji_per_jam'] ?? 0);
+        $tarifPerSesi = (float) ($_POST['tarif_per_sesi'] ?? 0);
         $penggunaId = (int) ($_POST['pengguna_id'] ?? 0);
         $statusAktif = isset($_POST['status_aktif']) ? 1 : 0;
 
@@ -91,6 +93,8 @@ class TentorController extends Controller
                     'asal_universitas' => $asalUniversitas,
                     'nomor_telepon' => $nomorTelepon,
                     'bio' => $bio,
+                    'rate_gaji_per_jam' => $rateGajiPerJam,
+                    'tarif_per_sesi' => $tarifPerSesi,
                     'pengguna_id' => $penggunaId,
                     'status_aktif' => $statusAktif,
                 ],
@@ -107,6 +111,8 @@ class TentorController extends Controller
             'nomor_telepon' => $nomorTelepon ?: null,
             'bio' => $bio ?: null,
             'foto' => $fotoPath,
+            'rate_gaji_per_jam' => $rateGajiPerJam,
+            'tarif_per_sesi' => $tarifPerSesi,
             'status_aktif' => $statusAktif,
             'dibuat_pada' => date('Y-m-d H:i:s'),
             'diubah_pada' => date('Y-m-d H:i:s'),
@@ -151,6 +157,8 @@ class TentorController extends Controller
         $asalUniversitas = trim($_POST['asal_universitas'] ?? '');
         $nomorTelepon = trim($_POST['nomor_telepon'] ?? '');
         $bio = trim($_POST['bio'] ?? '');
+        $rateGajiPerJam = (float) ($_POST['rate_gaji_per_jam'] ?? 0);
+        $tarifPerSesi = (float) ($_POST['tarif_per_sesi'] ?? 0);
         $penggunaId = (int) ($_POST['pengguna_id'] ?? 0);
         $statusAktif = isset($_POST['status_aktif']) ? 1 : 0;
 
@@ -196,6 +204,8 @@ class TentorController extends Controller
                     'asal_universitas' => $asalUniversitas,
                     'nomor_telepon' => $nomorTelepon,
                     'bio' => $bio,
+                    'rate_gaji_per_jam' => $rateGajiPerJam,
+                    'tarif_per_sesi' => $tarifPerSesi,
                     'pengguna_id' => $penggunaId,
                     'status_aktif' => $statusAktif,
                 ]),
@@ -212,6 +222,8 @@ class TentorController extends Controller
             'nomor_telepon' => $nomorTelepon ?: null,
             'bio' => $bio ?: null,
             'foto' => $fotoPath,
+            'rate_gaji_per_jam' => $rateGajiPerJam,
+            'tarif_per_sesi' => $tarifPerSesi,
             'status_aktif' => $statusAktif,
             'diubah_pada' => date('Y-m-d H:i:s'),
         ]);

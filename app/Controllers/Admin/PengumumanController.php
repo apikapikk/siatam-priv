@@ -44,6 +44,8 @@ class PengumumanController extends Controller
         $judul = trim($_POST['judul'] ?? '');
         $isi = trim($_POST['isi'] ?? '');
         $targetPeran = $_POST['target_peran'] ?? 'semua';
+        $tipeBroadcast = $_POST['tipe_broadcast'] ?? 'banner';
+        $kategori = trim($_POST['kategori'] ?? 'Umum');
         $statusAktif = isset($_POST['status_aktif']) ? 1 : 0;
 
         $errors = [];
@@ -60,6 +62,10 @@ class PengumumanController extends Controller
             $errors['target_peran'] = 'Target peran tidak valid.';
         }
 
+        if (!in_array($tipeBroadcast, ['banner', 'popup', 'push'])) {
+            $errors['tipe_broadcast'] = 'Tipe broadcast tidak valid.';
+        }
+
         if (!empty($errors)) {
             $this->render('admin/pengumuman/form', [
                 'pageTitle' => 'Buat Pengumuman Baru',
@@ -69,6 +75,8 @@ class PengumumanController extends Controller
                     'judul' => $judul,
                     'isi' => $isi,
                     'target_peran' => $targetPeran,
+                    'tipe_broadcast' => $tipeBroadcast,
+                    'kategori' => $kategori ?: 'Umum',
                     'status_aktif' => $statusAktif,
                 ],
                 'errors' => $errors
@@ -84,6 +92,8 @@ class PengumumanController extends Controller
             'isi' => $isi,
             'dibuat_oleh' => $dibuatOleh,
             'target_peran' => $targetPeran,
+            'tipe_broadcast' => $tipeBroadcast,
+            'kategori' => $kategori ?: 'Umum',
             'diterbitkan_pada' => date('Y-m-d H:i:s'),
             'status_aktif' => $statusAktif,
             'dibuat_pada' => date('Y-m-d H:i:s'),
@@ -126,6 +136,8 @@ class PengumumanController extends Controller
         $judul = trim($_POST['judul'] ?? '');
         $isi = trim($_POST['isi'] ?? '');
         $targetPeran = $_POST['target_peran'] ?? 'semua';
+        $tipeBroadcast = $_POST['tipe_broadcast'] ?? 'banner';
+        $kategori = trim($_POST['kategori'] ?? 'Umum');
         $statusAktif = isset($_POST['status_aktif']) ? 1 : 0;
 
         $errors = [];
@@ -138,6 +150,14 @@ class PengumumanController extends Controller
             $errors['isi'] = 'Isi pengumuman wajib diisi.';
         }
 
+        if (!in_array($targetPeran, ['semua', 'tentor', 'admin'])) {
+            $errors['target_peran'] = 'Target peran tidak valid.';
+        }
+
+        if (!in_array($tipeBroadcast, ['banner', 'popup', 'push'])) {
+            $errors['tipe_broadcast'] = 'Tipe broadcast tidak valid.';
+        }
+
         if (!empty($errors)) {
             $this->render('admin/pengumuman/form', [
                 'pageTitle' => 'Edit Pengumuman',
@@ -147,6 +167,8 @@ class PengumumanController extends Controller
                     'judul' => $judul,
                     'isi' => $isi,
                     'target_peran' => $targetPeran,
+                    'tipe_broadcast' => $tipeBroadcast,
+                    'kategori' => $kategori ?: 'Umum',
                     'status_aktif' => $statusAktif,
                 ]),
                 'errors' => $errors
@@ -158,6 +180,8 @@ class PengumumanController extends Controller
             'judul' => $judul,
             'isi' => $isi,
             'target_peran' => $targetPeran,
+            'tipe_broadcast' => $tipeBroadcast,
+            'kategori' => $kategori ?: 'Umum',
             'status_aktif' => $statusAktif,
             'diubah_pada' => date('Y-m-d H:i:s'),
         ]);

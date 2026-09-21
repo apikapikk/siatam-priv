@@ -14,7 +14,7 @@
 <?php endif; ?>
 
 <!-- Bagian Ringkasan Aktivitas (Widget Statistik Tentor) -->
-<section class="grid grid-cols-2 gap-3">
+<section class="grid grid-cols-2 md:grid-cols-4 gap-3">
     <div class="bg-white rounded-2xl p-4 border border-gray-200/80 shadow-sm flex flex-col justify-between gap-2">
         <div class="flex items-center justify-between">
             <span class="text-xs font-medium text-gray-500 leading-snug">Jadwal Ditugaskan</span>
@@ -38,6 +38,32 @@
         <div class="flex items-baseline gap-1 mt-1">
             <span class="text-3xl font-bold text-[#2D3E39]"><?= format_number($stats['sesi_bulan_ini']) ?></span>
             <span class="text-xs text-gray-500 font-medium">Sesi</span>
+        </div>
+    </div>
+
+    <div class="bg-white rounded-2xl p-4 border border-gray-200/80 shadow-sm flex flex-col justify-between gap-2">
+        <div class="flex items-center justify-between">
+            <span class="text-xs font-medium text-gray-500 leading-snug">Total Jam Bulan Ini</span>
+            <div class="w-7 h-7 rounded-lg bg-[#e8f0ec] flex items-center justify-center text-[#324f47]">
+                <span class="material-symbols-outlined text-[18px]">schedule</span>
+            </div>
+        </div>
+        <div class="flex items-baseline gap-1 mt-1">
+            <span class="text-3xl font-bold text-[#2D3E39]"><?= e((string) $stats['total_jam']) ?></span>
+            <span class="text-xs text-gray-500 font-medium">Jam</span>
+        </div>
+    </div>
+
+    <div class="bg-white rounded-2xl p-4 border border-gray-200/80 shadow-sm flex flex-col justify-between gap-2">
+        <div class="flex items-center justify-between">
+            <span class="text-xs font-medium text-gray-500 leading-snug">Kehadiran Siswa</span>
+            <div class="w-7 h-7 rounded-lg bg-emerald-100 text-[#324f47] flex items-center justify-center">
+                <span class="material-symbols-outlined text-[18px]">groups</span>
+            </div>
+        </div>
+        <div class="flex items-baseline gap-1 mt-1">
+            <span class="text-3xl font-bold text-[#2D3E39]"><?= e((string) $stats['persentase_kehadiran']) ?></span>
+            <span class="text-xs text-gray-500 font-medium">%</span>
         </div>
     </div>
 </section>

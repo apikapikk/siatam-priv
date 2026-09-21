@@ -8,6 +8,7 @@
 SET FOREIGN_KEY_CHECKS = 0;
 
 DROP TABLE IF EXISTS `berita`;
+DROP TABLE IF EXISTS `notifikasi`;
 DROP TABLE IF EXISTS `pengumuman`;
 DROP TABLE IF EXISTS `presensi`;
 DROP TABLE IF EXISTS `pertemuan`;
@@ -52,6 +53,8 @@ CREATE TABLE `tentor` (
   `nomor_telepon` VARCHAR(20) NULL,
   `bio` TEXT NULL,
   `foto` VARCHAR(255) NULL,
+  `rate_gaji_per_jam` DECIMAL(12,2) NOT NULL DEFAULT 0,
+  `tarif_per_sesi` DECIMAL(12,2) NOT NULL DEFAULT 0,
   `status_aktif` BOOLEAN NOT NULL DEFAULT TRUE,
   `dibuat_pada` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `diubah_pada` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
@@ -77,12 +80,14 @@ CREATE TABLE `orang_tua` (
 -- --------------------------------------------------------------------
 CREATE TABLE `siswa` (
   `id` BIGINT NOT NULL AUTO_INCREMENT,
+  `nis` VARCHAR(30) NULL,
   `nama_lengkap` VARCHAR(100) NOT NULL,
   `asal_sekolah` VARCHAR(150) NOT NULL,
   `status_aktif` BOOLEAN NOT NULL DEFAULT TRUE,
   `dibuat_pada` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `diubah_pada` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-  PRIMARY KEY (`id`)
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `uk_siswa_nis` (`nis`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- --------------------------------------------------------------------
@@ -238,6 +243,8 @@ CREATE TABLE `pengumuman` (
   `isi` TEXT NOT NULL,
   `dibuat_oleh` BIGINT NOT NULL,
   `target_peran` ENUM('semua', 'tentor', 'admin') NOT NULL DEFAULT 'semua',
+  `tipe_broadcast` ENUM('banner', 'popup', 'push') NOT NULL DEFAULT 'banner',
+  `kategori` VARCHAR(50) NOT NULL DEFAULT 'Umum',
   `diterbitkan_pada` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `status_aktif` BOOLEAN NOT NULL DEFAULT TRUE,
   `dibuat_pada` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -248,7 +255,23 @@ CREATE TABLE `pengumuman` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- --------------------------------------------------------------------
--- 15. Tabel berita
+-- 15. Tabel notifikasi
+-- --------------------------------------------------------------------
+CREATE TABLE `notifikasi` (
+  `id` BIGINT NOT NULL AUTO_INCREMENT,
+  `pengguna_id` BIGINT NOT NULL,
+  `judul` VARCHAR(150) NOT NULL,
+  `pesan` TEXT NOT NULL,
+  `sudah_dibaca` BOOLEAN NOT NULL DEFAULT FALSE,
+  `dibuat_pada` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`),
+  KEY `idx_notifikasi_pengguna` (`pengguna_id`),
+  KEY `idx_notifikasi_dibaca` (`sudah_dibaca`),
+  CONSTRAINT `fk_notifikasi_pengguna` FOREIGN KEY (`pengguna_id`) REFERENCES `pengguna` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- --------------------------------------------------------------------
+-- 16. Tabel berita
 -- --------------------------------------------------------------------
 CREATE TABLE `berita` (
   `id` BIGINT NOT NULL AUTO_INCREMENT,

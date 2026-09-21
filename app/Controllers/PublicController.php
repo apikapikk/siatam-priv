@@ -82,13 +82,26 @@ class PublicController extends Controller
     public function cekPresensi(): void
     {
         $keyword = trim($_GET['q'] ?? '');
+        $month = (int) ($_GET['bulan'] ?? date('n'));
+        $year = (int) ($_GET['tahun'] ?? date('Y'));
         $siswaResult = [];
         $presensiList = [];
+        $summary = ['total' => 0, 'hadir' => 0, 'sakit' => 0, 'izin' => 0, 'alfa' => 0, 'none' => 0];
 
         if (!empty($keyword)) {
             $db = \getDBConnection();
-            $stmtSiswa = $db->prepare("SELECT * FROM `siswa` WHERE `nama_lengkap` LIKE :q OR `asal_sekolah` LIKE :q LIMIT 10");
-            $stmtSiswa->execute(['q' => '%' . $keyword . '%']);
+            $stmtSiswa = $db->prepare(
+                "SELECT * FROM `siswa`
+                 WHERE `nama_lengkap` LIKE :q
+                    OR `asal_sekolah` LIKE :q
+                    OR `nis` LIKE :q
+                    OR `id` = :id_exact
+                 LIMIT 10"
+            );
+            $stmtSiswa->execute([
+                'q' => '%' . $keyword . '%',
+                'id_exact' => ctype_digit($keyword) ? (int) $keyword : 0,
+            ]);
             $siswaResult = $stmtSiswa->fetchAll();
 
             $siswaId = (int) ($_GET['siswa_id'] ?? 0);
@@ -109,19 +122,52 @@ class PublicController extends Controller
                      JOIN `program` pr ON pr.id = k.program_id
                      JOIN `tentor` t ON t.id = p.tentor_id
                      WHERE prs.siswa_id = :siswa_id
+                       AND MONTH(p.tanggal) = :month
+                       AND YEAR(p.tanggal) = :year
                      ORDER BY p.tanggal DESC, p.nomor_pertemuan DESC"
                 );
-                $stmtPresensi->execute(['siswa_id' => $siswaId]);
+                $stmtPresensi->execute([
+                    'siswa_id' => $siswaId,
+                    'month' => $month,
+                    'year' => $year,
+                ]);
                 $presensiList = $stmtPresensi->fetchAll();
+
+                foreach ($presensiList as $item) {
+                    $status = $item['status_kehadiran'] ?: 'none';
+                    $summary['total']++;
+                    if (isset($summary[$status])) {
+                        $summary[$status]++;
+                    }
+                }
             }
         }
 
+        // Ambil data siswa terpilih untuk ditampilkan di view
+        $selectedSiswaId = (int) ($_GET['siswa_id'] ?? 0);
+        $selectedSiswa = null;
+        if ($selectedSiswaId > 0) {
+            foreach ($siswaResult as $s) {
+                if ((int) $s['id'] === $selectedSiswaId) {
+                    $selectedSiswa = $s;
+                    break;
+                }
+            }
+        } elseif (!empty($siswaResult)) {
+            $selectedSiswa = $siswaResult[0];
+        }
+
         $this->render('public/cek_presensi', [
-            'pageTitle' => 'Cek Presensi & Laporan Siswa',
-            'keyword' => $keyword,
-            'siswaResult' => $siswaResult,
-            'presensiList' => $presensiList,
-            'selectedSiswaId' => $_GET['siswa_id'] ?? 0,
+            'pageTitle'       => 'Cek Presensi & Laporan Siswa',
+            'activeNav'       => 'cek_presensi',
+            'keyword'         => $keyword,
+            'siswaResult'     => $siswaResult,
+            'presensiList'    => $presensiList,
+            'selectedSiswaId' => $selectedSiswaId ?: ($selectedSiswa['id'] ?? 0),
+            'selectedSiswa'   => $selectedSiswa,
+            'bulan'           => $month,
+            'tahun'           => $year,
+            'summary'         => $summary,
         ], 'public/layout');
     }
 }

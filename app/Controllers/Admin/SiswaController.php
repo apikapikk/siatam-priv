@@ -40,6 +40,7 @@ class SiswaController extends Controller
     public function store(): void
     {
         $namaLengkap = trim($_POST['nama_lengkap'] ?? '');
+        $nis = trim($_POST['nis'] ?? '');
         $asalSekolah = trim($_POST['asal_sekolah'] ?? '');
         $statusAktif = isset($_POST['status_aktif']) ? 1 : 0;
 
@@ -62,6 +63,7 @@ class SiswaController extends Controller
                 'isEdit' => false,
                 'siswa' => [
                     'nama_lengkap' => $namaLengkap,
+                    'nis' => $nis,
                     'asal_sekolah' => $asalSekolah,
                     'status_aktif' => $statusAktif,
                 ],
@@ -73,6 +75,7 @@ class SiswaController extends Controller
 
         $siswaId = $this->siswaModel->create([
             'nama_lengkap' => $namaLengkap,
+            'nis' => $nis ?: null,
             'asal_sekolah' => $asalSekolah,
             'status_aktif' => $statusAktif,
             'dibuat_pada' => date('Y-m-d H:i:s'),
@@ -120,6 +123,7 @@ class SiswaController extends Controller
         }
 
         $namaLengkap = trim($_POST['nama_lengkap'] ?? '');
+        $nis = trim($_POST['nis'] ?? '');
         $asalSekolah = trim($_POST['asal_sekolah'] ?? '');
         $statusAktif = isset($_POST['status_aktif']) ? 1 : 0;
         $parentsInput = $_POST['parents'] ?? [];
@@ -141,6 +145,7 @@ class SiswaController extends Controller
                 'isEdit' => true,
                 'siswa' => array_merge($siswa, [
                     'nama_lengkap' => $namaLengkap,
+                    'nis' => $nis,
                     'asal_sekolah' => $asalSekolah,
                     'status_aktif' => $statusAktif,
                 ]),
@@ -152,6 +157,7 @@ class SiswaController extends Controller
 
         $this->siswaModel->update($idInt, [
             'nama_lengkap' => $namaLengkap,
+            'nis' => $nis ?: null,
             'asal_sekolah' => $asalSekolah,
             'status_aktif' => $statusAktif,
             'diubah_pada' => date('Y-m-d H:i:s'),

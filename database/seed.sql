@@ -15,9 +15,9 @@ INSERT INTO `pengguna` (`id`, `username`, `password`, `peran`, `status_aktif`) V
 (4, 'tentor2', '$2y$12$zeUoXpLs2rComQAnsTsAbOy07hHB/VPNaOogTKFZpmVOxvaXG4SuC', 'tentor', 1);
 
 -- 2. Data Tentor (Profil)
-INSERT INTO `tentor` (`id`, `pengguna_id`, `nama_lengkap`, `asal_universitas`, `nomor_telepon`, `bio`, `status_aktif`) VALUES
-(1, 3, 'Budi Santoso, S.Pd.', 'Universitas Negeri Jakarta', '081234567890', 'Tentor pengajar Matematika & IPA dengan pengalaman > 5 tahun.', 1),
-(2, 4, 'Andi Wijaya, M.Si.', 'Universitas Indonesia', '081987654321', 'Tentor Spesialis Fisika & Kimia SMA.', 1);
+INSERT INTO `tentor` (`id`, `pengguna_id`, `nama_lengkap`, `asal_universitas`, `nomor_telepon`, `bio`, `rate_gaji_per_jam`, `tarif_per_sesi`, `status_aktif`) VALUES
+(1, 3, 'Budi Santoso, S.Pd.', 'Universitas Negeri Jakarta', '081234567890', 'Tentor pengajar Matematika & IPA dengan pengalaman > 5 tahun.', 75000, 0, 1),
+(2, 4, 'Andi Wijaya, M.Si.', 'Universitas Indonesia', '081987654321', 'Tentor Spesialis Fisika & Kimia SMA.', 90000, 0, 1);
 
 -- 3. Data Master Jenjang
 INSERT INTO `jenjang` (`id`, `nama`) VALUES
@@ -49,9 +49,9 @@ INSERT INTO `orang_tua` (`id`, `nama_lengkap`, `nomor_telepon`) VALUES
 (2, 'Siti Rahma (Ibu)', '082111222334');
 
 -- 8. Data Siswa
-INSERT INTO `siswa` (`id`, `nama_lengkap`, `asal_sekolah`, `status_aktif`) VALUES
-(1, 'Citra Lestari', 'SMP Negeri 1 Jakarta', 1),
-(2, 'Deni Kurniawan', 'SMP Negeri 1 Jakarta', 1);
+INSERT INTO `siswa` (`id`, `nis`, `nama_lengkap`, `asal_sekolah`, `status_aktif`) VALUES
+(1, 'SIS-0001', 'Citra Lestari', 'SMP Negeri 1 Jakarta', 1),
+(2, 'SIS-0002', 'Deni Kurniawan', 'SMP Negeri 1 Jakarta', 1);
 
 -- 9. Relasi Siswa - Orang Tua
 INSERT INTO `siswa_orang_tua` (`id`, `siswa_id`, `orang_tua_id`, `hubungan`) VALUES
@@ -82,8 +82,8 @@ INSERT INTO `presensi` (`id`, `pertemuan_id`, `siswa_id`, `status_kehadiran`, `n
 (4, 2, 2, 'izin', NULL, NULL, 'Izin sakit dengan surat dokter.');
 
 -- 14. Pengumuman Internal
-INSERT INTO `pengumuman` (`id`, `judul`, `isi`, `dibuat_oleh`, `target_peran`, `status_aktif`) VALUES
-(1, 'Batas Pengisian Presensi', 'Dimohon kepada seluruh tentor untuk menginputkan presensi & nilai paling lambat 24 jam setelah sesi berakhir.', 1, 'tentor', 1);
+INSERT INTO `pengumuman` (`id`, `judul`, `isi`, `dibuat_oleh`, `target_peran`, `tipe_broadcast`, `kategori`, `status_aktif`) VALUES
+(1, 'Batas Pengisian Presensi', 'Dimohon kepada seluruh tentor untuk menginputkan presensi & nilai paling lambat 24 jam setelah sesi berakhir.', 1, 'tentor', 'banner', 'Akademik', 1);
 
 -- 15. Berita Publik Landing Page
 INSERT INTO `berita` (`id`, `judul`, `slug`, `isi`, `dibuat_oleh`, `diterbitkan_pada`, `status_terbit`) VALUES

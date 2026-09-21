@@ -87,6 +87,24 @@
                 <textarea name="bio" rows="3" placeholder="Informasi singkat atau pengalaman mengajar tentor..." class="w-full px-4 py-2.5 bg-[#FAF9F7] text-sm text-gray-800 rounded-xl border border-gray-200 focus:outline-none focus:border-[#324f47] focus:ring-1 focus:ring-[#324f47] transition-all"><?= e($tentor['bio'] ?? '') ?></textarea>
             </div>
 
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                <div class="flex flex-col gap-1.5">
+                    <label class="text-xs font-semibold text-gray-700">Rate Gaji per Jam</label>
+                    <div class="relative flex items-center">
+                        <span class="material-symbols-outlined absolute left-3.5 text-gray-400 text-[18px]">payments</span>
+                        <input type="number" name="rate_gaji_per_jam" min="0" step="1000" value="<?= e((string) ($tentor['rate_gaji_per_jam'] ?? 0)) ?>" placeholder="Contoh: 75000" class="w-full pl-10 pr-4 py-2.5 bg-[#FAF9F7] text-sm text-gray-800 rounded-xl border border-gray-200 focus:outline-none focus:border-[#324f47] focus:ring-1 focus:ring-[#324f47] transition-all">
+                    </div>
+                </div>
+
+                <div class="flex flex-col gap-1.5">
+                    <label class="text-xs font-semibold text-gray-700">Tarif per Sesi</label>
+                    <div class="relative flex items-center">
+                        <span class="material-symbols-outlined absolute left-3.5 text-gray-400 text-[18px]">receipt_long</span>
+                        <input type="number" name="tarif_per_sesi" min="0" step="1000" value="<?= e((string) ($tentor['tarif_per_sesi'] ?? 0)) ?>" placeholder="Isi jika pakai tarif tetap" class="w-full pl-10 pr-4 py-2.5 bg-[#FAF9F7] text-sm text-gray-800 rounded-xl border border-gray-200 focus:outline-none focus:border-[#324f47] focus:ring-1 focus:ring-[#324f47] transition-all">
+                    </div>
+                </div>
+            </div>
+
             <div class="pt-1">
                 <label class="inline-flex items-center gap-2 text-xs font-semibold text-gray-700 cursor-pointer">
                     <input type="checkbox" name="status_aktif" value="1" <?= (!isset($tentor['status_aktif']) || $tentor['status_aktif']) ? 'checked' : '' ?> class="w-4 h-4 rounded text-[#324f47] focus:ring-[#324f47]">

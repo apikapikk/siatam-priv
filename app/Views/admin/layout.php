@@ -97,6 +97,10 @@
                 <span class="material-symbols-outlined text-xl group-hover:scale-110 transition-transform">assessment</span>
                 <span class="text-[11px] mt-0.5 leading-none">Pertemuan</span>
             </a>
+            <a class="flex flex-col items-center justify-center py-1 px-3 rounded-xl transition-all group <?= ($activeNav ?? '') === 'laporan' ? 'text-[#2d5a4c] font-semibold bg-[#e8f0ec]/70' : 'text-gray-500 hover:text-[#2d5a4c] font-medium' ?>" href="/admin/laporan">
+                <span class="material-symbols-outlined text-xl group-hover:scale-110 transition-transform">summarize</span>
+                <span class="text-[11px] mt-0.5 leading-none">Laporan</span>
+            </a>
         </nav>
     </div>
 </body>

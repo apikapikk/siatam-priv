@@ -84,6 +84,19 @@
         <?php endif; ?>
 
         <?php foreach ($dashboard['today_schedule'] as $schedule): ?>
+            <?php
+                $status = $schedule['status_realtime'] ?? status_sesi_mengajar($schedule['jam_mulai'], $schedule['jam_selesai']);
+                $statusLabel = [
+                    'selesai' => 'Selesai',
+                    'sedang_berlangsung' => 'Sedang Berlangsung',
+                    'belum_mulai' => 'Belum Mulai',
+                ][$status] ?? 'Belum Mulai';
+                $statusClass = [
+                    'selesai' => 'bg-gray-100 text-gray-600',
+                    'sedang_berlangsung' => 'bg-emerald-50 text-emerald-700',
+                    'belum_mulai' => 'bg-amber-50 text-amber-700',
+                ][$status] ?? 'bg-amber-50 text-amber-700';
+            ?>
             <div class="rounded-2xl bg-white p-4 shadow-sm border border-gray-100 flex items-center justify-between gap-3 hover:border-gray-200 transition-all">
                 <div class="flex items-center gap-3">
                     <div class="w-10 h-10 rounded-xl bg-[#e8f0ec] text-[#2d5a4c] flex items-center justify-center font-bold text-sm">
@@ -103,6 +116,7 @@
                         <?= e(substr($schedule['jam_mulai'], 0, 5)) ?> - <?= e(substr($schedule['jam_selesai'], 0, 5)) ?> WIB
                     </span>
                     <span class="text-[11px] text-gray-400 mt-1"><?= e($schedule['ruangan'] ?: hari_indonesia((int) $schedule['hari'])) ?></span>
+                    <span class="mt-1 px-2 py-0.5 rounded-full text-[11px] font-semibold <?= $statusClass ?>"><?= e($statusLabel) ?></span>
                 </div>
             </div>
         <?php endforeach; ?>

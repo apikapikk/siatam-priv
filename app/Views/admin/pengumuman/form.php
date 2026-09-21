@@ -25,6 +25,31 @@
                 </select>
             </div>
 
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+                <div class="form-group">
+                    <label class="form-label">Kategori</label>
+                    <select name="kategori" required class="form-control">
+                        <?php $kategori = $pengumuman['kategori'] ?? 'Umum'; ?>
+                        <option value="Umum" <?= $kategori === 'Umum' ? 'selected' : '' ?>>Umum</option>
+                        <option value="Penting" <?= $kategori === 'Penting' ? 'selected' : '' ?>>Penting</option>
+                        <option value="Akademik" <?= $kategori === 'Akademik' ? 'selected' : '' ?>>Akademik</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Tipe Broadcast</label>
+                    <select name="tipe_broadcast" required class="form-control">
+                        <?php $tipeBroadcast = $pengumuman['tipe_broadcast'] ?? 'banner'; ?>
+                        <option value="banner" <?= $tipeBroadcast === 'banner' ? 'selected' : '' ?>>Banner</option>
+                        <option value="popup" <?= $tipeBroadcast === 'popup' ? 'selected' : '' ?>>Popup</option>
+                        <option value="push" <?= $tipeBroadcast === 'push' ? 'selected' : '' ?>>Push</option>
+                    </select>
+                    <?php if (isset($errors['tipe_broadcast'])): ?>
+                        <small class="form-error"><?= e($errors['tipe_broadcast']) ?></small>
+                    <?php endif; ?>
+                </div>
+            </div>
+
             <div class="form-group">
                 <label class="form-label">Isi Pengumuman</label>
                 <textarea name="isi" rows="5" placeholder="Tuliskan detail pengumuman..." required class="form-control <?= isset($errors['isi']) ? 'is-invalid' : '' ?>"><?= e($pengumuman['isi'] ?? '') ?></textarea>

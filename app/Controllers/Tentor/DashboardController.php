@@ -38,6 +38,8 @@ class DashboardController extends Controller
         $stats = [
             'total_jadwal' => 0,
             'sesi_bulan_ini' => 0,
+            'total_jam' => 0,
+            'persentase_kehadiran' => 0,
         ];
 
         $jadwalHariIni = [];
@@ -61,6 +63,9 @@ class DashboardController extends Controller
             );
             $stmtSesiCount->execute(['t_id' => $tentorId]);
             $stats['sesi_bulan_ini'] = (int) $stmtSesiCount->fetchColumn();
+            $performance = $this->tentorModel->getTeachingPerformance($tentorId, (int) date('n'), (int) date('Y'));
+            $stats['total_jam'] = $performance['total_jam'];
+            $stats['persentase_kehadiran'] = $performance['persentase_kehadiran'];
 
             // Jadwal tentor hari ini
             $stmtToday = $db->prepare(
@@ -80,14 +85,7 @@ class DashboardController extends Controller
         }
 
         // Pengumuman khusus tentor/semua
-        $db = \getDBConnection();
-        $stmtAnn = $db->prepare(
-            "SELECT judul, isi, diterbitkan_pada FROM `pengumuman`
-             WHERE status_aktif = 1 AND target_peran IN ('semua', 'tentor')
-             ORDER BY diterbitkan_pada DESC LIMIT 3"
-        );
-        $stmtAnn->execute();
-        $announcements = $stmtAnn->fetchAll();
+        $announcements = $this->pengumumanModel->getLatestActiveAnnouncements('tentor');
 
         $this->render('tentor/beranda', [
             'pageTitle' => 'Beranda Tentor',

@@ -38,6 +38,7 @@ use App\Controllers\Admin\JadwalController;
 use App\Controllers\Admin\PengumumanController;
 use App\Controllers\Admin\BeritaController;
 use App\Controllers\Admin\PertemuanController;
+use App\Controllers\Admin\LaporanController;
 use App\Controllers\Tentor\DashboardController as TentorDashboardController;
 use App\Controllers\Tentor\AkademikController as TentorAkademikController;
 
@@ -158,6 +159,13 @@ $router->post('/admin/berita/simpan', [BeritaController::class, 'store']);
 $router->get('/admin/berita/{id}/edit', [BeritaController::class, 'edit']);
 $router->post('/admin/berita/{id}/update', [BeritaController::class, 'update']);
 $router->post('/admin/berita/{id}/hapus', [BeritaController::class, 'delete']);
+
+// Pusat Laporan & Rekap
+$router->get('/admin/laporan', [LaporanController::class, 'index']);
+$router->get('/admin/laporan/siswa-bulanan', [LaporanController::class, 'siswaBulanan']);
+$router->get('/admin/laporan/siswa-bulanan/export-csv', [LaporanController::class, 'exportSiswaCsv']);
+$router->get('/admin/laporan/tentor-bulanan', [LaporanController::class, 'tentorBulanan']);
+$router->get('/admin/laporan/tentor-bulanan/export-csv', [LaporanController::class, 'exportTentorCsv']);
 
 // Dispatch HTTP request
 $router->dispatch($_SERVER['REQUEST_METHOD'], $_SERVER['REQUEST_URI']);

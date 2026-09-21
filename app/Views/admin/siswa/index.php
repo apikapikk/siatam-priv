@@ -55,6 +55,12 @@
                             </div>
 
                             <div class="flex items-center gap-3 text-xs text-gray-500 mt-1 flex-wrap">
+                                <?php if (!empty($siswa['nis'])): ?>
+                                    <span class="flex items-center gap-1">
+                                        <span class="material-symbols-outlined text-[14px]">tag</span>
+                                        NIS: <?= e($siswa['nis']) ?>
+                                    </span>
+                                <?php endif; ?>
                                 <span class="flex items-center gap-1">
                                     <span class="material-symbols-outlined text-[14px]">school</span>
                                     Sekolah: <?= e($siswa['asal_sekolah'] ?: '-') ?>
