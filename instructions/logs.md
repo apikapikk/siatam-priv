@@ -1,80 +1,70 @@
-# Log Perkembangan Backend — Siatama Privat
+# Log Perkembangan Frontend & Integration — Siatama Privat
 
-Dokumen ini mencatat histori perubahan backend, modul yang telah selesai dibangun, serta rencana langkah selanjutnya (*next steps*).
+Dokumen ini mencatat histori perubahan frontend, penyelarasan tampilan views PHP dengan `@ui-draft`, serta pencatatan todo/gap analisis backend.
 
 > **Note (Metode Agile):** Seluruh arsitektur & modul backend ini dikembangkan dengan pendekatan **Agile (Iteratif & Inkremental)**. Kode dibuat sangat modular dan reusable sehingga sewaktu-waktu dapat dengan mudah disesuaikan jika ada perubahan kebutuhan dari tim UI/UX maupun perkembangan bisnis bimbel di masa mendatang.
 
 ---
 
-## 📌 Status Terakhir (2026-09-19)
+## 📌 Status Terakhir (2026-09-21)
 
-### 🟢 1. Modul Admin (100% Selesai)
-- **Arsitektur Utama**:
-  - Custom HTTP Router & Autoloader PSR-4 (`/public/index.php`, `App\Core\Router`).
-  - Base Model PDO Prepared Statement (`App\Core\Model`).
-  - Base Controller & Flash Session Notification (`App\Core\Controller`, `App\Views\admin\layout.php`).
-  - Reusable CSS Utilities Design System (`/public/assets/admin.css`) berbasis `ui-guide.md`.
-- **Modul CRUD Admin**:
-  - **Manajemen Pengguna (`pengguna`)**: Login credentials & peran (`owner`, `admin`, `tentor`).
-  - **Master Data**: `jenjang`, `program`, `paket`, `kelas`.
-  - **Master Entitas**: `tentor` (Profil 1:1), `siswa`, `orang_tua`, `siswa_orang_tua` (Multi-Wali dengan Dynamic JS Form).
-  - **Akademik & Transaksi**: `pendaftaran_siswa` (Penempatan kelas & histori perpindahan), `jadwal` (Penjadwalan hari/jam mengajar).
-  - **Sesi Pertemuan & Presensi**: `pertemuan` (Pertemuan mengajar aktual tentor) & `presensi` (Kehadiran `hadir`/`sakit`/`izin`/`alfa`, nilai sikap & akademik A-D, catatan tentor).
-  - **Informasi & Publikasi**: `pengumuman` (Broadcast internal) & `berita` (Artikel landing page & slug generator).
-
----
-
-### 🟢 2. Modul Tentor (100% Selesai)
-- **🟢 Auth & Portal Login (`/login`, `/logout`)**:
-  - `AuthController.php`, view `auth/login.php` & `auth/layout.php`.
-  - Verifikasi hash password aman (`password_verify()`), pencatatan `terakhir_login`, penanganan session akun & pengarahan sesuai peran (`tentor` vs `admin/owner`).
-- **🟢 Dashboard Tentor (`/tentor/beranda`)**:
-  - `Tentor\DashboardController.php`, view `tentor/beranda.php` & `tentor/layout.php`.
-  - Proteksi middleware session khusus peran `tentor`.
-  - Menampilkan ringkasan statistik mengajar tentor login, jadwal mengajar hari ini, & pengumuman.
-- **🟢 Jadwal Saya (`/tentor/jadwal`)**:
-  - `Tentor\AkademikController::jadwal()`, view `tentor/jadwal/index.php`.
-  - Menampilkan jadwal aktif yang ditugaskan khusus untuk tentor yang sedang login.
-- **🟢 Sesi Pertemuan & Presensi (`/tentor/pertemuan`)**:
-  - `Tentor\AkademikController::pertemuan()`, `createPertemuan()`, `presensi()`, & `updatePresensi()`.
-  - Tentor dapat mencatat sesi mengajar aktual, memilih kelas jadwal, serta mengisi kehadiran (`hadir`/`sakit`/`izin`/`alfa`), nilai sikap & akademik (A-D), dan catatan perkembangan siswa.
-
-### 🟢 3. Modul Sisi Publik / Landing Page (100% Selesai)
-- **🟢 Beranda Publik (`/`)**:
-  - `PublicController::index()`, view `public/home.php` & `public/layout.php`.
-  - Menampilkan hero banner, pilihan program pembelajaran, profil tentor/pengajar, serta berita terbaru.
-- **🟢 Berita Publik & Detail Artikel (`/berita`, `/berita/{slug}`)**:
-  - `PublicController::beritaList()` & `beritaDetail()`, view `public/berita/index.php` & `public/berita/detail.php`.
-  - Menampilkan berita publik dengan pencarian berbasis slug unik.
-- **🟢 Cek Presensi Siswa Publik (`/cek-presensi`)**:
-  - `PublicController::cekPresensi()`, view `public/cek_presensi.php`.
-  - Memungkinkan orang tua/publik mencari riwayat kehadiran, nilai sikap, nilai akademik, dan catatan perkembangan siswa tanpa perlu proses login (sesuai spesifikasi `2.3`).
-
-### 🟢 4. Verification & Validation (V&V) (100% Selesai)
-- **🟢 Automated Test Suite (`/tests/run_all_tests.php`)**:
-  - Dibuat suite pengujian otomatis untuk Unit Testing & Whitebox Testing.
-  - Memverifikasi pattern matching HTTP Router, sanitasi slug artikel berita, enkripsi hash password akun, relasi 1:1 profil tentor, serta sinkronisasi otomatis presensi siswa saat sesi pertemuan dibuat.
-- **🟢 Laporan Formal V&V IEEE/ISO/IEC 15288:2023 (`/instructions/vv-log.md`)**:
-  - Dokumentasi formal pengujian V&V sesuai standar internasional IEEE/ISO/IEC 15288:2023 (Clause 6.4.9 Verification Process & Clause 6.4.11 Validation Process).
-- **🟢 Dokumen Ringkasan Unit & Whitebox Test (`/instructions/unit-and-whitebox-test-summary.md`)**:
-  - Dokumentasi khusus teknis pengujian Unit Test (Router parameter extraction, Berita Slug generator) dan Whitebox Test (Branch Coverage 404, Enkripsi Hash Password, Relasi Data 1:1, Rule No-Login Siswa/Wali, Auto-sync Presensi).
-- **🟢 Panduan Blackbox Testing (`/instructions/blackbox-testing-guide.md`)**:
-  - Panduan langkah demi langkah pengujian UI/UX untuk Windows & Linux/macOS, perintah `php -S`, kredensial akun uji coba, serta daftar checklist test cases.
-
-
-
+### 🔵 1. Penyesuaian UI Draft - Modul Admin (100% Selesai)
+- ** Layout & Design System (`app/Views/admin/layout.php`)**:
+  - Diupdate menggunakan Tailwind CSS CDN, Google Fonts (Inter, Montserrat), dan Material Symbols Outlined sesuai spesifikasi `@ui-draft`.
+  - TopBar Header disesuaikan dengan avatar inisial, nama pengguna session (`$_SESSION['user_nama']`), badge peran, serta tombol logout.
+  - Bottom Navigation Bar disesuaikan dengan ikon modern (Beranda, Jadwal, Siswa, Tentor, Pertemuan).
+- ** Beranda Admin (`app/Views/admin/beranda.php`)**:
+  - Disesuaikan dengan mockup `admin_dashboard_siatama_privat_updated/code.html` (Statistik Card, Quick Action, Pantauan Jadwal Hari Ini, Pengumuman).
+- ** Direktori Siswa (`app/Views/admin/siswa/index.php`)**:
+  - Disesuaikan dengan mockup `direktori_siswa_siatama_privat/code.html` (Card Siswa, Sekolah, Wali Murid, Live Search).
+- ** Master Data Tentor (`app/Views/admin/tentor/index.php`)**:
+  - Disesuaikan dengan mockup `master_data_tentor_siatama_privat/code.html` (Indikator titik status aktif, Foto/Avatar, Univ, Telp, Live Search).
+- ** Manajemen Jadwal (`app/Views/admin/jadwal/index.php`)**:
+  - Disesuaikan dengan mockup `jadwal_harian_admin_siatama_privat/code.html` (Hari & Jam Mengajar, Jenjang, Program, Kelas, Tentor, Ruangan).
+- ** Pusat Pertemuan & Presensi (`app/Views/admin/pertemuan/index.php`)**:
+  - Disesuaikan dengan mockup `pusat_laporan_rekap_siatama_privat/code.html` (Sesi Pertemuan, Badge Presensi Hadir/Total, Tombol Kelola Presensi).
+- ** Manajemen Berita (`app/Views/admin/berita/index.php`)**:
+  - Disesuaikan dengan mockup `manajemen_berita_siatama_privat/code.html` (Thumbnail Foto/Placeholder, Status Terbit/Draft, Date).
 
 ---
 
-## ✅ Ringkasan Status Proyek Backend
+### 🔵 2. Penyesuaian UI Draft - Modul Tentor (100% Selesai)
+- ** Layout Tentor (`app/Views/tentor/layout.php`)**:
+  - Di-refactor dengan Tailwind CSS CDN, Material Symbols Outlined, TopBar profil tentor, serta Bottom Nav 3 Menu (Beranda, Jadwal Saya, Sesi & Presensi).
+- ** Beranda Tentor (`app/Views/tentor/beranda.php`)**:
+  - Disesuaikan dengan mockup `tutor_dashboard_siatama_privat_modern/code.html` (Banner Pengumuman Penting, Widget Statistik Sesi Bulan Ini, Card Jadwal Mengajar Hari Ini).
+- ** Jadwal Saya Tentor (`app/Views/tentor/jadwal/index.php`)**:
+  - Disesuaikan dengan mockup `jadwal_mengajar_siatama_privat_scroll_lancar/code.html` (Header Jadwal Tentor, Live Search Bar, Detail Jam & Ruangan).
+- ** Laporan & Pertemuan Tentor (`app/Views/tentor/pertemuan/index.php`)**:
+  - Disesuaikan dengan mockup `laporan_mengajar_siatama_privat_baru/code.html` (Card Sesi Pertemuan, Badge Presensi Hadir/Total, Tombol Catat/Edit Presensi Siswa).
 
-- **Modul Admin**: 100% Selesai
-- **Modul Tentor**: 100% Selesai
-- **Modul Publik**: 100% Selesai
-- **Verification & Validation (V&V)**: 100% Selesai (9/9 Test Passed)
+---
 
-Backend aplikasi Sistem Informasi Bimbingan Belajar Siatama Privat telah teruji secara penuh, modular, maintainable, dan sesuai dengan dokumen spesifikasi database & UI guide!
+### 🔵 3. Penyesuaian UI Draft - Modul Publik / User Landing Page (100% Selesai)
+- ** Layout Publik (`app/Views/public/layout.php`)**:
+  - Di-refactor dengan Tailwind CSS CDN, Navbar Brand Siatama Privat, Top Login Button, serta Bottom Nav 3 Menu (Beranda, Berita, Cek Presensi).
+- ** Beranda Publik (`app/Views/public/home.php`)**:
+  - Disesuaikan dengan mockup `dashboard_siatama_privat_updated_contact/code.html` (Hero Section "Apa itu Siatama Privat?", Grid Program Pembelajaran, Profil Tentor Berkualitas, serta Berita Terbaru).
 
+---
 
+## 📌 Catatan Rencana Pengembangan Backend Spesifik Berdasarkan `@instructions/todo.md`
 
+Berdasarkan hasil audit komprehensif antara `@ui-draft`, database, models, controllers, & helpers, berikut adalah perincian teknis backend yang dicatat di `instructions/todo.md`:
 
+1. **Database Schema (`database/schema.sql`)**:
+   - `tentor`: Penambahan atribut `rate_gaji_per_jam` / `tarif_per_sesi` untuk penghitungan honorarium.
+   - `pengumuman`: Penambahan `tipe_broadcast` dan `kategori` untuk kategorisasi pengumuman.
+   - `notifikasi`: Pembuatan tabel baru untuk mendukung lonceng notifikasi pengguna.
+2. **Models & Logic (`app/Models/`)**:
+   - `Tentor.php`: Method `getMonthlyPayrollSummary()` & `getTeachingPerformance()`.
+   - `Jadwal.php`: Method `getTodayRealtimeScheduleWithStatus()` (Penentuan status Realtime Selesai/Sedang Berlangsung/Belum Mulai).
+   - `Pertemuan.php`: Method `getMonthlyReportByClass()`.
+   - `Pengumuman.php`: Method `getLatestActiveAnnouncements()`.
+3. **Controllers & Business Logic (`app/Controllers/`)**:
+   - `Admin\DashboardController.php`: Integrasi pantauan realtime mengajar berbasis jam server.
+   - `Admin\LaporanController.php` (Baru): Controller khusus laporan rekap siswa & honorarium tentor.
+   - `Tentor\DashboardController.php`: Agregasi kinerja bulan berjalan (jam ajar & % presensi).
+   - `PublicController.php`: Filter program publik berbasis jenjang dinamis.
+4. **Helpers (`app/Support/helpers.php`)**:
+   - Helper `status_sesi_mengajar()`, `format_rupiah()`, dan `konversi_nilai_huruf()`.

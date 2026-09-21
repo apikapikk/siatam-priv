@@ -1,0 +1,232 @@
+<!DOCTYPE html><html lang="id"><head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Edit Data Siswa - Siatama Privat</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200">
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            brand: {
+              DEFAULT: '#1B4332',
+              dark: '#143326',
+              light: '#2D6A4F',
+              soft: '#E8F3EE',
+              surface: '#FAF9F7',
+              card: '#FFFFFF',
+              border: '#EBE9E4',
+              muted: '#6C757D',
+              darker: '#2B2D42'
+            }
+          },
+          fontFamily: {
+            sans: ['Montserrat', 'sans-serif']
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    body {
+      font-family: 'Montserrat', sans-serif;
+      background-color: #F4F3F0;
+      color: #2B2D42;
+      -webkit-tap-highlight-color: transparent;
+    }
+    .material-symbols-outlined {
+      font-variation-settings: 'FILL' 0, 'wght' 500, 'GRAD' 0, 'opsz' 24;
+    }
+    .material-symbols-outlined.fill {
+      font-variation-settings: 'FILL' 1, 'wght' 500, 'GRAD' 0, 'opsz' 24;
+    }
+    /* Hide scrollbar for neatness */
+    ::-webkit-scrollbar {
+      display: none;
+    }
+  </style>
+</head>
+<body class="flex justify-center min-h-screen">
+  <!-- Mobile Container (390px max-width standard viewport) -->
+  <div class="w-full max-w-[420px] bg-brand-surface min-h-screen flex flex-col shadow-xl relative pb-10">
+
+    <!-- Bagian 1: Header Form -->
+    <header class="sticky top-0 z-40 bg-brand-surface/95 backdrop-blur-md border-b border-brand-border px-4 py-3.5 flex items-center justify-between">
+      <button onclick="history.back()" class="w-10 h-10 rounded-full flex items-center justify-center text-brand-darker hover:bg-black/5 active:scale-95 transition-all">
+        <span class="material-symbols-outlined text-[24px]">arrow_back</span>
+      </button>
+      <div class="text-center">
+        <h1 class="text-[17px] font-bold text-brand-darker tracking-tight">Edit Data Siswa</h1>
+        <p class="text-[11px] font-medium text-brand-muted">ID: ST-2024-07B01</p>
+      </div>
+      <div class="w-10 h-10 rounded-full flex items-center justify-center bg-brand-soft text-brand">
+        <span class="material-symbols-outlined text-[20px]">badge</span>
+      </div>
+    </header>
+
+    <!-- Content Area -->
+    <main class="flex-1 px-4 py-5 space-y-5">
+
+      <!-- Banner Info Siswa Singkat -->
+      <div class="bg-white rounded-2xl p-4 border border-brand-border flex items-center gap-3.5 shadow-sm">
+        <div class="w-12 h-12 rounded-full bg-brand-soft text-brand flex items-center justify-center font-bold text-lg border border-brand/10">
+          AQ
+        </div>
+        <div class="flex-1">
+          <div class="flex items-center gap-2">
+            <h2 class="text-base font-bold text-brand-darker">Aqilah</h2>
+            <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-semibold bg-emerald-100 text-emerald-800 border border-emerald-200">
+              <span class="w-1.5 h-1.5 rounded-full bg-emerald-600 animate-pulse"></span>
+              Aktif
+            </span>
+          </div>
+          <p class="text-xs text-brand-muted mt-0.5">Kelas 7B • SMPN 3 Surabaya</p>
+        </div>
+      </div>
+
+      <!-- Bagian 2: Informasi Data Diri (Terisi Otomatis) -->
+      <div class="bg-white rounded-2xl p-5 border border-brand-border shadow-sm space-y-4">
+        <div class="flex items-center justify-between border-b border-brand-border/70 pb-3">
+          <div class="flex items-center gap-2">
+            <span class="w-7 h-7 rounded-lg bg-brand-soft text-brand flex items-center justify-center">
+              <span class="material-symbols-outlined text-[17px]">person</span>
+            </span>
+            <h3 class="text-sm font-bold text-brand-darker uppercase tracking-wider">Ubah Data</h3>
+          </div>
+          <span class="text-[11px] font-medium text-brand-muted">Otomatis Terisi</span>
+        </div>
+
+        <!-- Input 1: Nama Lengkap -->
+        <div class="space-y-1.5">
+          <label class="block text-xs font-semibold text-brand-darker">
+            Nama Lengkap <span class="text-red-500">*</span>
+          </label>
+          <div class="relative">
+            <input type="text" value="Aqilah" placeholder="Masukkan nama lengkap siswa" class="w-full bg-[#FAF9F7] text-brand-darker font-medium text-sm rounded-xl px-3.5 py-3 border border-brand-border focus:bg-white focus:border-brand focus:ring-2 focus:ring-brand/15 outline-none transition-all">
+            <span class="material-symbols-outlined absolute right-3 top-3 text-brand-muted text-[19px]">edit</span>
+          </div>
+        </div>
+
+        <!-- Input 2: Asal Sekolah -->
+        <div class="space-y-1.5">
+          <label class="block text-xs font-semibold text-brand-darker">
+            Asal Sekolah <span class="text-red-500">*</span>
+          </label>
+          <div class="relative">
+            <input type="text" value="SMPN 3 Surabaya" placeholder="Contoh: SMPN 3 Surabaya" class="w-full bg-[#FAF9F7] text-brand-darker font-medium text-sm rounded-xl px-3.5 py-3 border border-brand-border focus:bg-white focus:border-brand focus:ring-2 focus:ring-brand/15 outline-none transition-all">
+            <span class="material-symbols-outlined absolute right-3 top-3 text-brand-muted text-[19px]">school</span>
+          </div>
+        </div>
+
+        <!-- Input 3: Nomor WhatsApp Wali Murid -->
+        <div class="space-y-1.5">
+          <div class="flex items-center justify-between">
+            <label class="block text-xs font-semibold text-brand-darker">
+              Nomor WhatsApp Wali Murid <span class="text-red-500">*</span>
+            </label>
+            <span class="text-[11px] font-medium text-emerald-700 flex items-center gap-1">
+              <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
+              Terhubung WA
+            </span>
+          </div>
+          <div class="relative flex items-center">
+            <div class="absolute left-3 flex items-center gap-1 text-brand-muted pointer-events-none">
+              <span class="material-symbols-outlined text-[19px]">call</span>
+            </div>
+            <input type="tel" value="081234567890" placeholder="08xx-xxxx-xxxx" class="w-full bg-[#FAF9F7] text-brand-darker font-medium text-sm rounded-xl pl-10 pr-3.5 py-3 border border-brand-border focus:bg-white focus:border-brand focus:ring-2 focus:ring-brand/15 outline-none transition-all font-mono">
+          </div>
+          <p class="text-[11px] text-brand-muted leading-tight">Digunakan untuk pengiriman rekap presensi dan perkembangan belajar otomatis.</p><div class="space-y-1.5 pt-2"><label class="block text-xs font-semibold text-brand-darker">Paket Bimbingan <span class="text-red-500">*</span></label><div class="relative"><select class="w-full appearance-none bg-[#FAF9F7] text-brand-darker font-medium text-sm rounded-xl px-3.5 py-3 border border-brand-border focus:bg-white focus:border-brand focus:ring-2 focus:ring-brand/15 outline-none transition-all cursor-pointer"><option value="Paket A">Paket A</option><option value="Paket B" selected="">Paket B</option><option value="Paket C">Paket C</option></select><div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-3.5 text-brand-muted"><span class="material-symbols-outlined text-[20px]">expand_more</span></div></div></div>
+        </div>
+      </div>
+
+      <!-- Bagian 3: Penempatan Kelas & Status -->
+      <div class="bg-white rounded-2xl p-5 border border-brand-border shadow-sm space-y-4">
+        <div class="flex items-center justify-between border-b border-brand-border/70 pb-3">
+          <div class="flex items-center gap-2">
+            <span class="w-7 h-7 rounded-lg bg-brand-soft text-brand flex items-center justify-center">
+              <span class="material-symbols-outlined text-[17px]">tune</span>
+            </span>
+            <h3 class="text-sm font-bold text-brand-darker uppercase tracking-wider">Status &amp; Kelas</h3>
+          </div>
+          <span class="text-[11px] font-medium text-brand-muted">Penempatan</span>
+        </div>
+
+        <!-- Dropdown: Pilih Kelas / Program -->
+        <div class="space-y-1.5">
+          <label class="block text-xs font-semibold text-brand-darker">
+            Pilih Kelas / Program <span class="text-red-500">*</span>
+          </label>
+          <div class="relative">
+            <select class="w-full appearance-none bg-[#FAF9F7] text-brand-darker font-medium text-sm rounded-xl px-3.5 py-3 border border-brand-border focus:bg-white focus:border-brand focus:ring-2 focus:ring-brand/15 outline-none transition-all cursor-pointer">
+              <option value="7B" selected="">Kelas 7B</option>
+              <option value="7A">Kelas 7A</option>
+              <option value="8A">Kelas 8A</option>
+              <option value="8B">Kelas 8B</option>
+              <option value="9A">Kelas 9A</option>
+              <option value="Privat">Program Privat Khusus</option>
+            </select>
+            <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-3.5 text-brand-muted">
+              <span class="material-symbols-outlined text-[20px]">expand_more</span>
+            </div>
+          </div>
+          <p class="text-[11px] text-brand-muted">Siswa saat ini berada di kelompok bimbingan reguler siang.</p>
+        </div>
+
+        <!-- Status Siswa (Radio Buttons) -->
+        <div class="space-y-2 pt-1">
+          <label class="block text-xs font-semibold text-brand-darker">
+            Status Siswa <span class="text-red-500">*</span>
+          </label>
+          <div class="grid grid-cols-2 gap-3">
+            <!-- Pilihan 1: Aktif (Selected) -->
+            <label class="relative flex items-center justify-between p-3.5 rounded-xl border-2 border-brand bg-brand-soft/60 cursor-pointer transition-all">
+              <div class="flex items-center gap-2.5">
+                <span class="w-2.5 h-2.5 rounded-full bg-emerald-600"></span>
+                <span class="text-xs font-bold text-brand-dark">Aktif</span>
+              </div>
+              <input type="radio" name="student_status" value="active" checked="" class="w-4 h-4 accent-brand cursor-pointer">
+            </label>
+
+            <!-- Pilihan 2: Nonaktif / Cuti -->
+            <label class="relative flex items-center justify-between p-3.5 rounded-xl border border-brand-border bg-[#FAF9F7] hover:bg-white cursor-pointer transition-all">
+              <div class="flex items-center gap-2.5">
+                <span class="w-2.5 h-2.5 rounded-full bg-gray-400"></span>
+                <span class="text-xs font-semibold text-brand-muted">Nonaktif</span>
+              </div>
+              <input type="radio" name="student_status" value="inactive" class="w-4 h-4 accent-brand cursor-pointer">
+            </label>
+          </div>
+        </div>
+      </div>
+
+      <!-- Bagian 4: Tombol Aksi Simpan & Hapus -->
+      <div class="pt-3 space-y-3">
+        <!-- Tombol Utama: Simpan Perubahan -->
+        <button type="button" class="w-full bg-brand hover:bg-brand-dark active:scale-[0.98] text-white font-bold text-sm py-3.5 px-4 rounded-xl shadow-md shadow-brand/20 flex items-center justify-center gap-2 transition-all">
+          <span class="material-symbols-outlined text-[20px]">check_circle</span>
+          Simpan Perubahan
+        </button>
+
+        <!-- Tombol Sekunder: Hapus Siswa dari Sistem -->
+        <button type="button" class="w-full bg-white hover:bg-red-50 active:scale-[0.98] text-red-600 font-semibold text-sm py-3.5 px-4 rounded-xl border border-red-300 hover:border-red-400 flex items-center justify-center gap-2 transition-all">
+          <span class="material-symbols-outlined text-[20px] text-red-600">delete_outline</span>
+          Hapus Siswa dari Sistem
+        </button>
+
+        <p class="text-center text-[11px] text-brand-muted pt-1">
+          Perubahan data langsung disinkronkan ke daftar kelas &amp; presensi tentor.
+        </p>
+      </div>
+
+    </main>
+
+  </div>
+
+
+
+
+</body></html>

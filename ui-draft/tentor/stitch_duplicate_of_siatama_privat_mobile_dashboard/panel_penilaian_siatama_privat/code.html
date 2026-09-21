@@ -1,0 +1,217 @@
+<!DOCTYPE html><html lang="en" style=""><head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>Siatama Privat - Penilaian Siswa</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&amp;family=Montserrat:wght@600;700&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<script id="tailwind-config">
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              "colors": {
+                      "on-primary": "#ffffff",
+                      "surface-container-high": "#e9e8e6",
+                      "surface-container-highest": "#e3e2e1",
+                      "on-primary-container": "#c4e4d8",
+                      "on-background": "#1a1c1b",
+                      "on-primary-fixed": "#022019",
+                      "on-error-container": "#93000a",
+                      "surface-warm": "#FAF9F6",
+                      "surface-container-low": "#f4f3f2",
+                      "surface-container": "#eeeeec",
+                      "background": "#faf9f7",
+                      "error-container": "#ffdad6",
+                      "secondary-fixed-dim": "#eac249",
+                      "gold-contrast": "#8C711C",
+                      "surface-container-lowest": "#ffffff",
+                      "on-secondary-fixed-variant": "#584400",
+                      "primary": "#324f47",
+                      "secondary-container": "#fcd358",
+                      "outline": "#727975",
+                      "on-secondary": "#ffffff",
+                      "inverse-on-surface": "#f1f1ef",
+                      "forest-deep": "#2D3E39",
+                      "surface-dim": "#dadad8",
+                      "secondary-fixed": "#ffe08b",
+                      "inverse-primary": "#aecdc2",
+                      "surface-bright": "#faf9f7",
+                      "tertiary-container": "#7d5853",
+                      "on-secondary-container": "#735a00",
+                      "surface-tint": "#47645b",
+                      "tertiary-fixed": "#ffdad5",
+                      "error": "#ba1a1a",
+                      "tertiary": "#63413c",
+                      "on-tertiary-container": "#ffd3cd",
+                      "on-primary-fixed-variant": "#304c44",
+                      "primary-fixed": "#c9e9de",
+                      "primary-container": "#4a675e",
+                      "surface": "#faf9f7",
+                      "on-error": "#ffffff",
+                      "inverse-surface": "#2f3130",
+                      "surface-variant": "#e3e2e1",
+                      "on-tertiary-fixed": "#2e1411",
+                      "surface-tan": "#F2EFE9",
+                      "secondary": "#745b00",
+                      "tertiary-fixed-dim": "#ebbbb5",
+                      "outline-variant": "#c1c8c4",
+                      "primary-fixed-dim": "#aecdc2",
+                      "on-secondary-fixed": "#241a00",
+                      "on-tertiary": "#ffffff",
+                      "on-surface": "#1a1c1b",
+                      "on-tertiary-fixed-variant": "#603e3a",
+                      "on-surface-variant": "#414845"
+              },
+              "borderRadius": {
+                      "DEFAULT": "0.25rem",
+                      "lg": "0.5rem",
+                      "xl": "0.75rem",
+                      "full": "9999px"
+              },
+              "spacing": {
+                      "gutter": "1rem",
+                      "stack-sm": "0.5rem",
+                      "padding-card": "1.5rem",
+                      "stack-xl": "4rem",
+                      "stack-md": "1rem",
+                      "stack-lg": "2rem",
+                      "stack-xs": "0.25rem",
+                      "margin-page": "1.5rem"
+              },
+              "fontFamily": {
+                      "label-md": ["Inter"],
+                      "body-lg": ["Inter"],
+                      "headline-lg": ["Montserrat"],
+                      "headline-md": ["Montserrat"],
+                      "body-md": ["Inter"],
+                      "headline-lg-mobile": ["Montserrat"],
+                      "headline-sm": ["Montserrat"],
+                      "label-lg": ["Inter"]
+              },
+              "fontSize": {
+                      "label-md": ["12px", {"lineHeight": "1.2", "fontWeight": "500"}],
+                      "body-lg": ["18px", {"lineHeight": "1.6", "fontWeight": "400"}],
+                      "headline-lg": ["32px", {"lineHeight": "1.2", "letterSpacing": "-0.01em", "fontWeight": "600"}],
+                      "headline-md": ["24px", {"lineHeight": "1.3", "fontWeight": "600"}],
+                      "body-md": ["16px", {"lineHeight": "1.5", "fontWeight": "400"}],
+                      "headline-lg-mobile": ["26px", {"lineHeight": "1.2", "fontWeight": "600"}],
+                      "headline-sm": ["20px", {"lineHeight": "1.4", "fontWeight": "600"}],
+                      "label-lg": ["14px", {"lineHeight": "1.2", "letterSpacing": "0.02em", "fontWeight": "600"}]
+              }
+            }
+          }
+        }
+    </script>
+<style>
+        .sheet-slide-up {
+            animation: slideUp 0.3s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+        }
+        @keyframes slideUp {
+            from { transform: translateY(100%); }
+            to { transform: translateY(0); }
+        }
+    </style>
+</head>
+<body class="bg-background text-on-surface min-h-screen relative overflow-hidden flex justify-center">
+<!-- Mock Background: Attendance Form -->
+<div class="w-full max-w-[1200px] h-screen flex flex-col pointer-events-none select-none blur-[2px] opacity-70">
+<!-- Mock Header -->
+<header class="flex justify-between items-center h-16 px-margin-page w-full bg-background">
+<h1 class="font-headline-md text-headline-md text-primary flex items-center gap-2">
+<span class="material-symbols-outlined">school</span>
+                Siatama Privat
+            </h1>
+<div class="w-10 h-10 rounded-full bg-surface-variant"></div>
+</header>
+<!-- Mock Content -->
+<main class="flex-1 px-margin-page py-stack-lg flex flex-col gap-stack-lg">
+<div class="bg-surface-container-lowest p-padding-card rounded-xl shadow-[0px_2px_12px_rgba(74,103,94,0.05)]">
+<div class="h-6 w-1/3 bg-surface-variant rounded mb-4"></div>
+<div class="h-10 w-full bg-surface-tan rounded mb-4"></div>
+<div class="h-10 w-full bg-surface-tan rounded mb-4"></div>
+</div>
+<div class="bg-surface-container-lowest p-padding-card rounded-xl shadow-[0px_2px_12px_rgba(74,103,94,0.05)]">
+<div class="h-6 w-1/4 bg-surface-variant rounded mb-4"></div>
+<div class="h-24 w-full bg-surface-tan rounded"></div>
+</div>
+</main>
+</div>
+<!-- Overlay -->
+<div class="absolute inset-0 bg-on-background/40 z-40 transition-opacity"></div>
+<!-- Bottom Sheet -->
+<div class="absolute bottom-0 left-0 w-full z-50 flex justify-center">
+<div class="bg-surface-container-lowest w-full max-w-[1200px] rounded-t-3xl shadow-2xl px-margin-page pt-6 pb-safe sheet-slide-up md:max-w-[600px] md:mx-auto md:rounded-t-3xl flex flex-col gap-stack-md">
+<!-- Drag Handle (Mobile) -->
+<div class="w-12 h-1.5 bg-surface-dim rounded-full mx-auto mb-2 md:hidden"></div>
+<!-- Header -->
+<div class="flex items-center justify-between">
+<h2 class="font-headline-sm text-headline-sm text-on-surface">Penilaian Siswa</h2>
+<button class="text-on-surface-variant hover:text-on-surface transition-colors">
+<span class="material-symbols-outlined">close</span>
+</button>
+</div>
+<!-- Content -->
+<div class="flex flex-col gap-stack-md mt-stack-xs">
+<!-- Dropdown: Nilai Kemampuan -->
+<div class="flex flex-col gap-stack-xs">
+<label class="font-label-lg text-label-lg text-on-surface">Nilai Kemampuan</label>
+<div class="relative">
+<select class="w-full appearance-none bg-surface-tan border-transparent focus:border-forest-deep focus:ring-0 text-on-surface font-body-md text-body-md rounded-lg min-h-[52px] px-4 py-3 cursor-pointer outline-none transition-colors">
+<option disabled="" selected="" value="">Pilih nilai kemampuan</option>
+<option value="A">Sangat Baik (A)</option>
+<option value="B">Baik (B)</option>
+<option value="C">Cukup (C)</option>
+<option value="D">Kurang (D)</option>
+</select>
+<div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-4 text-on-surface-variant">
+<span class="material-symbols-outlined">keyboard_arrow_down</span>
+</div>
+</div>
+</div>
+<!-- Dropdown: Nilai Sikap -->
+<div class="flex flex-col gap-stack-xs">
+<label class="font-label-lg text-label-lg text-on-surface">Nilai Sikap</label>
+<div class="relative">
+<select class="w-full appearance-none bg-surface-tan border-transparent focus:border-forest-deep focus:ring-0 text-on-surface font-body-md text-body-md rounded-lg min-h-[52px] px-4 py-3 cursor-pointer outline-none transition-colors">
+<option disabled="" selected="" value="">Pilih nilai sikap</option>
+<option value="A">Sangat Baik (A)</option>
+<option value="B">Baik (B)</option>
+<option value="C">Cukup (C)</option>
+<option value="D">Kurang (D)</option>
+</select>
+<div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-4 text-on-surface-variant">
+<span class="material-symbols-outlined">keyboard_arrow_down</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Actions -->
+<div class="flex items-center justify-end gap-stack-sm mt-stack-md pt-stack-sm mb-6">
+<a href="{{DATA:SCREEN:SCREEN_6}}" class="min-h-[52px] px-6 rounded-full font-label-lg text-label-lg text-on-surface-variant hover:bg-surface-container transition-colors flex items-center justify-center">
+                    Batal
+                </a>
+<a href="{{DATA:SCREEN:SCREEN_4}}" class="min-h-[52px] px-8 rounded-full bg-primary text-on-primary font-label-lg text-label-lg hover:bg-primary-container hover:text-on-primary-container transition-colors shadow-sm flex-1 md:flex-none text-center flex items-center justify-center">
+                    Simpan Penilaian
+                </a>
+</div>
+<!-- Safe Area Bottom padding for mobile -->
+<div class="h-safe"></div>
+</div>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</body></html>

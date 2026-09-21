@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+
+<html lang="id">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Laporan Tentor (Harian) - Siatama Privat</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet">
+<script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            brand: {
+              DEFAULT: '#1B4332',
+              dark: '#143326',
+              light: '#2D6A4F',
+              soft: '#E8F3EE',
+              surface: '#FAF9F7'
+            }
+          },
+          fontFamily: {
+            sans: ['Montserrat', 'sans-serif']
+          }
+        }
+      }
+    }
+  </script>
+<style>
+    .material-symbols-outlined {
+      font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+    }
+    .material-symbols-outlined.fill-1 {
+      font-variation-settings: 'FILL' 1, 'wght' 500, 'GRAD' 0, 'opsz' 24;
+    }
+    /* Hide scrollbar */
+    .no-scrollbar::-webkit-scrollbar {
+      display: none;
+    }
+    .no-scrollbar {
+      -ms-overflow-style: none;
+      scrollbar-width: none;
+    }
+  </style>
+</link></head>
+<body class="bg-brand-surface font-sans text-stone-800 antialiased min-h-screen flex justify-center selection:bg-brand-soft selection:text-brand">
+<!-- Mobile Container (Max width 430px for standard mobile preview) -->
+<div class="w-full max-w-[430px] min-h-screen bg-[#FAF9F7] flex flex-col relative pb-28 border-x border-stone-200/60 shadow-xl">
+<!-- Bagian 1: Header & Tab Mode -->
+<header class="sticky top-0 z-30 bg-[#FAF9F7]/95 backdrop-blur-md px-5 pt-4 pb-3 border-b border-stone-200/50">
+<div class="flex items-center justify-between mb-3.5">
+<button class="w-10 h-10 rounded-full bg-white border border-stone-200/80 flex items-center justify-center text-stone-700 hover:bg-stone-50 active:scale-95 transition-all shadow-sm">
+<span class="material-symbols-outlined text-[22px]">arrow_back</span>
+</button>
+<div class="text-center">
+<h1 class="text-base font-bold text-stone-900 tracking-tight">Laporan Tentor</h1>
+<p class="text-[11px] font-medium text-stone-500">Log Pengajar &amp; Verifikasi Honor</p>
+</div>
+<button class="w-10 h-10 rounded-full bg-white border border-stone-200/80 flex items-center justify-center text-stone-700 hover:bg-stone-50 active:scale-95 transition-all shadow-sm">
+<span class="material-symbols-outlined text-[20px]">tune</span>
+</button>
+</div>
+<!-- Tab Mode: Harian (Aktif) vs Bulanan -->
+<div class="bg-stone-200/70 p-1 rounded-2xl flex items-center gap-1 shadow-inner">
+<button class="flex-1 py-2.5 rounded-xl bg-[#1B4332] text-white text-xs font-bold shadow-sm flex items-center justify-center gap-1.5 transition-all">
+<span class="material-symbols-outlined text-[17px]">today</span>
+<span>Harian</span>
+</button>
+<button class="flex-1 py-2.5 rounded-xl text-stone-600 hover:text-stone-900 text-xs font-semibold flex items-center justify-center gap-1.5 transition-all">
+<span class="material-symbols-outlined text-[17px]">calendar_month</span>
+<span>Bulanan</span>
+</button>
+</div>
+</header>
+<!-- Main Content Area -->
+<main class="flex-1 px-5 pt-4 space-y-4">
+<!-- Bagian 2: Pemilih Tanggal Harian -->
+<section class="bg-white rounded-2xl p-3.5 border border-stone-200/80 shadow-[0_2px_10px_rgba(0,0,0,0.03)] flex items-center justify-between">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-xl bg-[#E8F3EE] flex items-center justify-center text-[#1B4332]">
+<span class="material-symbols-outlined text-[22px] fill-1">calendar_today</span>
+</div>
+<div>
+<span class="text-[10px] font-semibold uppercase tracking-wider text-stone-400">Tanggal Log Selesai</span>
+<div class="text-xs font-bold text-stone-800">Senin, 07 September 2026</div>
+</div>
+</div>
+<div class="flex items-center gap-1">
+<button aria-label="Hari Sebelumnya" class="w-8 h-8 rounded-lg bg-stone-100 flex items-center justify-center text-stone-600 hover:bg-[#E8F3EE] hover:text-[#1B4332] active:scale-95 transition-all">
+<span class="material-symbols-outlined text-[18px]">chevron_left</span>
+</button>
+<button aria-label="Hari Berikutnya" class="w-8 h-8 rounded-lg bg-stone-100 flex items-center justify-center text-stone-600 hover:bg-[#E8F3EE] hover:text-[#1B4332] active:scale-95 transition-all">
+<span class="material-symbols-outlined text-[18px]">chevron_right</span>
+</button>
+</div>
+</section>
+<!-- Bagian 3: Ringkasan Sesi Hari Ini -->
+<section class="grid grid-cols-2 gap-3">
+<!-- Kartu 1: Total Sesi Selesai -->
+<div class="bg-white rounded-2xl p-3.5 border border-stone-200/80 shadow-[0_2px_10px_rgba(0,0,0,0.03)] relative overflow-hidden flex flex-col justify-between">
+<div class="flex items-center justify-between mb-2">
+<span class="text-[11px] font-medium text-stone-500">Total Sesi Selesai</span>
+<div class="w-7 h-7 rounded-lg bg-emerald-50 text-[#1B4332] flex items-center justify-center">
+<span class="material-symbols-outlined text-[18px]">task_alt</span>
+</div>
+</div>
+<div class="flex items-baseline gap-1.5">
+<span class="text-2xl font-bold text-[#1B4332]">6</span>
+<span class="text-xs font-semibold text-stone-500">Sesi Berjalan</span>
+</div>
+<div class="mt-2 text-[10px] font-medium text-emerald-700 bg-emerald-50/80 px-2 py-0.5 rounded-full w-fit flex items-center gap-1">
+<span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
+<span>100% Selesai Tepat Waktu</span>
+</div>
+</div>
+<!-- Kartu 2: Tentor Hadir -->
+<div class="bg-white rounded-2xl p-3.5 border border-stone-200/80 shadow-[0_2px_10px_rgba(0,0,0,0.03)] relative overflow-hidden flex flex-col justify-between">
+<div class="flex items-center justify-between mb-2">
+<span class="text-[11px] font-medium text-stone-500">Tentor Hadir</span>
+<div class="w-7 h-7 rounded-lg bg-[#E8F3EE] text-[#1B4332] flex items-center justify-center">
+<span class="material-symbols-outlined text-[18px]">group</span>
+</div>
+</div>
+<div class="flex items-baseline gap-1.5">
+<span class="text-2xl font-bold text-[#1B4332]">5</span>
+<span class="text-xs font-semibold text-stone-500">Pengajar</span>
+</div>
+<div class="mt-2 text-[10px] font-medium text-stone-600 bg-stone-100 px-2 py-0.5 rounded-full w-fit flex items-center gap-1">
+<span class="w-1.5 h-1.5 rounded-full bg-[#1B4332]"></span>
+<span>Semua Terverifikasi</span>
+</div>
+</div>
+</section>
+<!-- Bagian 4: Daftar Log Pengajar Selesai Mengajar (List View) -->
+<section class="space-y-3">
+<div class="flex items-center justify-between pt-1">
+<div>
+<h2 class="text-xs font-bold uppercase tracking-wider text-stone-700">Log Pengajar Hari Ini</h2>
+<p class="text-[11px] text-stone-500">Daftar presensi dan riwayat sesi tentor</p>
+</div>
+<span class="text-[11px] font-semibold text-[#1B4332] bg-[#E8F3EE] px-2.5 py-1 rounded-full">
+            Real-time
+          </span>
+</div>
+<!-- Baris 1: Brina -->
+<div class="bg-white rounded-2xl p-3.5 border border-stone-200/80 shadow-[0_2px_10px_rgba(0,0,0,0.03)] hover:border-[#1B4332]/40 transition-all flex items-center justify-between gap-3">
+<div class="flex items-center gap-3">
+<!-- Round Avatar -->
+<div class="relative w-12 h-12 rounded-full overflow-hidden border-2 border-[#E8F3EE] flex-shrink-0 bg-stone-100 flex items-center justify-center shadow-inner">
+<img alt="Brina" class="w-full h-full object-cover" src="https://www.gstatic.com/labs-code/stitch/stitch-placeholder-300x300.svg"/>
+<span class="absolute bottom-0 right-0 w-3 h-3 bg-emerald-500 border-2 border-white rounded-full"></span>
+</div>
+<!-- Info Tentor -->
+<div class="space-y-0.5">
+<div class="flex items-center gap-1.5">
+<span class="text-sm font-bold text-stone-900">Brina</span>
+<span class="text-[10px] font-semibold bg-stone-100 text-stone-600 px-1.5 py-0.5 rounded">Matematika</span>
+</div>
+<p class="text-[11px] text-stone-600 font-medium flex items-center gap-1.5">
+<span class="font-semibold text-stone-800">Kelas: Kelas 7A</span>
+<span class="text-stone-300">•</span>
+<span>Jam: 15.00 - 16.30</span>
+</p>
+<div class="text-[10px] text-stone-500 flex items-center gap-1">
+<span>Status:</span>
+<span class="text-emerald-700 font-semibold">Selesai (Jurnal Terisi)</span>
+</div>
+</div>
+</div>
+<!-- Status Kanan -->
+<div class="flex flex-col items-end gap-1 flex-shrink-0">
+<span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-emerald-50 text-emerald-700 text-xs font-bold border border-emerald-200/60 shadow-xs">
+<span class="material-symbols-outlined text-[16px] text-emerald-600">check_circle</span>
+              Hadir
+            </span>
+<span class="text-[10px] text-stone-400 font-medium">Honor OK</span>
+</div>
+</div>
+<!-- Baris 2: Zaini -->
+<div class="bg-white rounded-2xl p-3.5 border border-stone-200/80 shadow-[0_2px_10px_rgba(0,0,0,0.03)] hover:border-[#1B4332]/40 transition-all flex items-center justify-between gap-3">
+<div class="flex items-center gap-3">
+<!-- Round Avatar -->
+<div class="relative w-12 h-12 rounded-full overflow-hidden border-2 border-[#E8F3EE] flex-shrink-0 bg-stone-100 flex items-center justify-center shadow-inner">
+<img alt="Zaini" class="w-full h-full object-cover" src="https://www.gstatic.com/labs-code/stitch/stitch-placeholder-300x300.svg"/>
+<span class="absolute bottom-0 right-0 w-3 h-3 bg-emerald-500 border-2 border-white rounded-full"></span>
+</div>
+<!-- Info Tentor -->
+<div class="space-y-0.5">
+<div class="flex items-center gap-1.5">
+<span class="text-sm font-bold text-stone-900">Zaini</span>
+<span class="text-[10px] font-semibold bg-stone-100 text-stone-600 px-1.5 py-0.5 rounded">IPA Terpadu</span>
+</div>
+<p class="text-[11px] text-stone-600 font-medium flex items-center gap-1.5">
+<span class="font-semibold text-stone-800">Kelas: Kelas 7B</span>
+<span class="text-stone-300">•</span>
+<span>Jam: 16.30 - 18.00</span>
+</p>
+<div class="text-[10px] text-stone-500 flex items-center gap-1">
+<span>Status:</span>
+<span class="text-emerald-700 font-semibold">Selesai (Presensi 100%)</span>
+</div>
+</div>
+</div>
+<!-- Status Kanan -->
+<div class="flex flex-col items-end gap-1 flex-shrink-0">
+<span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-emerald-50 text-emerald-700 text-xs font-bold border border-emerald-200/60 shadow-xs">
+<span class="material-symbols-outlined text-[16px] text-emerald-600">check_circle</span>
+              Hadir
+            </span>
+<span class="text-[10px] text-stone-400 font-medium">Honor OK</span>
+</div>
+</div>
+<!-- Baris 3: Meylina -->
+<div class="bg-white rounded-2xl p-3.5 border border-stone-200/80 shadow-[0_2px_10px_rgba(0,0,0,0.03)] hover:border-[#1B4332]/40 transition-all flex items-center justify-between gap-3">
+<div class="flex items-center gap-3">
+<!-- Round Avatar -->
+<div class="relative w-12 h-12 rounded-full overflow-hidden border-2 border-[#E8F3EE] flex-shrink-0 bg-stone-100 flex items-center justify-center shadow-inner">
+<img alt="Meylina" class="w-full h-full object-cover" src="https://www.gstatic.com/labs-code/stitch/stitch-placeholder-300x300.svg"/>
+<span class="absolute bottom-0 right-0 w-3 h-3 bg-emerald-500 border-2 border-white rounded-full"></span>
+</div>
+<!-- Info Tentor -->
+<div class="space-y-0.5">
+<div class="flex items-center gap-1.5">
+<span class="text-sm font-bold text-stone-900">Meylina</span>
+<span class="text-[10px] font-semibold bg-emerald-100/70 text-[#1B4332] px-1.5 py-0.5 rounded">Privat 1-on-1</span>
+</div>
+<p class="text-[11px] text-stone-600 font-medium flex items-center gap-1.5">
+<span class="font-semibold text-stone-800">Kelas: SD Privat</span>
+<span class="text-stone-300">•</span>
+<span>Jam: 19.00 - 20.30</span>
+</p>
+<div class="text-[10px] text-stone-500 flex items-center gap-1">
+<span>Status:</span>
+<span class="text-emerald-700 font-semibold">Selesai (Materi Tematik)</span>
+</div>
+</div>
+</div>
+<!-- Status Kanan -->
+<div class="flex flex-col items-end gap-1 flex-shrink-0">
+<span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-emerald-50 text-emerald-700 text-xs font-bold border border-emerald-200/60 shadow-xs">
+<span class="material-symbols-outlined text-[16px] text-emerald-600">check_circle</span>
+              Hadir
+            </span>
+<span class="text-[10px] text-stone-400 font-medium">Honor OK</span>
+</div>
+</div>
+<!-- Kartu Tambahan: Wahyu Ramadhan (Mendukung total 5 pengajar & 6 sesi) -->
+<div class="bg-white rounded-2xl p-3.5 border border-stone-200/80 shadow-[0_2px_10px_rgba(0,0,0,0.03)] hover:border-[#1B4332]/40 transition-all flex items-center justify-between gap-3">
+<div class="flex items-center gap-3">
+<div class="relative w-12 h-12 rounded-full overflow-hidden border-2 border-[#E8F3EE] flex-shrink-0 bg-stone-100 flex items-center justify-center shadow-inner">
+<img alt="Wahyu Ramadhan" class="w-full h-full object-cover" src="https://www.gstatic.com/labs-code/stitch/stitch-placeholder-300x300.svg"/>
+<span class="absolute bottom-0 right-0 w-3 h-3 bg-emerald-500 border-2 border-white rounded-full"></span>
+</div>
+<div class="space-y-0.5">
+<div class="flex items-center gap-1.5">
+<span class="text-sm font-bold text-stone-900">Wahyu Ramadhan</span>
+<span class="text-[10px] font-semibold bg-stone-100 text-stone-600 px-1.5 py-0.5 rounded">Fisika</span>
+</div>
+<p class="text-[11px] text-stone-600 font-medium flex items-center gap-1.5">
+<span class="font-semibold text-stone-800">Kelas: Kelas 8A</span>
+<span class="text-stone-300">•</span>
+<span>Jam: 13.30 - 15.00</span>
+</p>
+<div class="text-[10px] text-stone-500 flex items-center gap-1">
+<span>Status:</span>
+<span class="text-emerald-700 font-semibold">Selesai (2 Sesi Hari Ini)</span>
+</div>
+</div>
+</div>
+<div class="flex flex-col items-end gap-1 flex-shrink-0">
+<span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-emerald-50 text-emerald-700 text-xs font-bold border border-emerald-200/60 shadow-xs">
+<span class="material-symbols-outlined text-[16px] text-emerald-600">check_circle</span>
+              Hadir
+            </span>
+<span class="text-[10px] text-stone-400 font-medium">Honor OK</span>
+</div>
+</div>
+<!-- Note info banner -->
+<div class="bg-[#E8F3EE]/80 border border-[#1B4332]/15 rounded-2xl p-3 flex items-start gap-2.5 text-stone-700">
+<span class="material-symbols-outlined text-[20px] text-[#1B4332] shrink-0 mt-0.5">verified_user</span>
+<p class="text-[11px] leading-relaxed">
+            Data log pengajar harian terhubung otomatis dengan modul perhitungan honor bulanan tentor. Verifikasi dapat ditinjau ulang kapan saja.
+          </p>
+</div>
+</section>
+</main>
+<!-- Bagian 5: Footer Navigasi Admin (4 Menu Navigasi Bawah) -->
+<nav class="fixed bottom-0 left-1/2 -translate-x-1/2 w-full max-w-[430px] bg-white/95 backdrop-blur-md border-t border-stone-200/80 px-4 py-2.5 z-40 shadow-[0_-4px_20px_rgba(0,0,0,0.06)] flex justify-between items-center">
+<!-- 1. Beranda -->
+<button class="flex flex-col items-center justify-center gap-1 px-3 py-1 text-stone-400 hover:text-stone-700 active:scale-95 transition-all">
+<span class="material-symbols-outlined text-[22px]">home</span>
+<span class="text-[10px] font-medium tracking-tight">Beranda</span>
+</button>
+<!-- 2. Manajemen Kelas -->
+<button class="flex flex-col items-center justify-center gap-1 px-3 py-1 text-stone-400 hover:text-stone-700 active:scale-95 transition-all">
+<span class="material-symbols-outlined text-[22px]">calendar_month</span>
+<span class="text-[10px] font-medium tracking-tight">Kelas</span>
+</button>
+<!-- 3. Data Tentor -->
+<button class="flex flex-col items-center justify-center gap-1 px-3 py-1 text-stone-400 hover:text-stone-700 active:scale-95 transition-all">
+<span class="material-symbols-outlined text-[22px]">badge</span>
+<span class="text-[10px] font-medium tracking-tight">Tentor</span>
+</button>
+<!-- 4. Laporan (Aktif / Hijau Tua) -->
+<button class="flex flex-col items-center justify-center gap-1 px-3.5 py-1 rounded-xl bg-[#E8F3EE] text-[#1B4332] active:scale-95 transition-all relative">
+<span class="material-symbols-outlined text-[22px] fill-1">description</span>
+<span class="text-[10px] font-bold tracking-tight">Laporan</span>
+<span class="w-1.5 h-1.5 rounded-full bg-[#1B4332] absolute -top-0.5"></span>
+</button>
+</nav>
+</div>
+</body>
+</html>
