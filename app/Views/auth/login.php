@@ -1,37 +1,47 @@
-<div class="ui-card" style="padding: 24px; text-align: center;">
-    <div style="margin-bottom: 20px;">
-        <div style="width: 56px; height: 56px; border-radius: 12px; background: #e8f0ec; display: grid; place-items: center; margin: 0 auto 12px; color: #1b4332; font-weight: 800; font-size: 20px;">
-            ST
+<div class="max-w-md mx-auto py-6 px-4">
+    <div class="bg-white rounded-2xl p-6 shadow-sm border border-gray-200/80">
+        <div class="text-center mb-6">
+            <div class="w-12 h-12 rounded-2xl bg-[#324f47] text-white flex items-center justify-center mx-auto mb-3 shadow-xs">
+                <span class="material-symbols-outlined text-2xl">school</span>
+            </div>
+            <h1 class="text-xl font-bold text-[#2D3E39] tracking-tight">Siatama Privat</h1>
+            <p class="text-xs text-gray-500 mt-1">Silakan masuk ke akun Admin / Tentor Anda</p>
         </div>
-        <h1 style="font-size: 22px; font-weight: 700; margin: 0; color: #1f2937;">Siatama Privat</h1>
-        <p style="color: #6b7280; font-size: 13px; margin-top: 4px;">Masuk ke portal Admin / Tentor</p>
+
+        <?php if (isset($errors['general'])): ?>
+            <div class="bg-red-50 border border-red-200 text-red-800 px-4 py-3 rounded-xl mb-4 text-xs flex items-center gap-2">
+                <span class="material-symbols-outlined text-red-600 text-sm">error</span>
+                <div><?= e($errors['general']) ?></div>
+            </div>
+        <?php endif; ?>
+
+        <form action="/login" method="POST" class="flex flex-col gap-4">
+            <div class="flex flex-col gap-1.5">
+                <label class="text-xs font-semibold text-gray-700 px-0.5">Username</label>
+                <div class="relative flex items-center">
+                    <span class="material-symbols-outlined absolute left-3.5 text-gray-400 text-[18px]">person</span>
+                    <input type="text" name="username" value="<?= e($username ?? '') ?>" placeholder="Masukkan username" required class="w-full pl-10 pr-4 py-2.5 bg-[#FAF9F7] text-sm text-gray-800 rounded-xl border border-gray-200 focus:outline-none focus:border-[#324f47] focus:ring-1 focus:ring-[#324f47] transition-all">
+                </div>
+                <?php if (isset($errors['username'])): ?>
+                    <small class="text-xs text-red-600 mt-0.5 px-0.5"><?= e($errors['username']) ?></small>
+                <?php endif; ?>
+            </div>
+
+            <div class="flex flex-col gap-1.5">
+                <label class="text-xs font-semibold text-gray-700 px-0.5">Password</label>
+                <div class="relative flex items-center">
+                    <span class="material-symbols-outlined absolute left-3.5 text-gray-400 text-[18px]">lock</span>
+                    <input type="password" name="password" placeholder="Masukkan password" required class="w-full pl-10 pr-4 py-2.5 bg-[#FAF9F7] text-sm text-gray-800 rounded-xl border border-gray-200 focus:outline-none focus:border-[#324f47] focus:ring-1 focus:ring-[#324f47] transition-all">
+                </div>
+                <?php if (isset($errors['password'])): ?>
+                    <small class="text-xs text-red-600 mt-0.5 px-0.5"><?= e($errors['password']) ?></small>
+                <?php endif; ?>
+            </div>
+
+            <button type="submit" class="w-full mt-2 py-3 px-4 bg-[#324f47] hover:bg-[#2D3E39] active:scale-[0.99] text-white font-semibold text-sm rounded-xl shadow-md transition-all flex items-center justify-center gap-2">
+                <span class="material-symbols-outlined text-[18px]">login</span>
+                Masuk ke Portal
+            </button>
+        </form>
     </div>
-
-    <?php if (isset($errors['general'])): ?>
-        <div class="soft-alert tone-red" style="background: #fef2f2; color: #991b1b; border-color: #fecaca; margin-bottom: 16px; text-align: left;">
-            <?= e($errors['general']) ?>
-        </div>
-    <?php endif; ?>
-
-    <form action="/login" method="POST" style="text-align: left;">
-        <div class="form-group">
-            <label class="form-label">Username</label>
-            <input type="text" name="username" value="<?= e($username ?? '') ?>" placeholder="Masukkan username" required class="form-control <?= isset($errors['username']) ? 'is-invalid' : '' ?>">
-            <?php if (isset($errors['username'])): ?>
-                <small class="form-error"><?= e($errors['username']) ?></small>
-            <?php endif; ?>
-        </div>
-
-        <div class="form-group">
-            <label class="form-label">Password</label>
-            <input type="password" name="password" placeholder="Masukkan password" required class="form-control <?= isset($errors['password']) ? 'is-invalid' : '' ?>">
-            <?php if (isset($errors['password'])): ?>
-                <small class="form-error"><?= e($errors['password']) ?></small>
-            <?php endif; ?>
-        </div>
-
-        <button type="submit" class="btn btn-primary" style="width: 100%; margin-top: 10px; padding: 12px;">
-            Masuk ke Aplikasi
-        </button>
-    </form>
 </div>

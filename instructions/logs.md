@@ -8,61 +8,56 @@ Dokumen ini mencatat histori perubahan frontend, penyelarasan tampilan views PHP
 
 ## 📌 Status Terakhir (2026-09-21)
 
-### 🔵 1. Penyesuaian UI Draft - Modul Admin (100% Selesai)
-- ** Layout & Design System (`app/Views/admin/layout.php`)**:
-  - Diupdate menggunakan Tailwind CSS CDN, Google Fonts (Inter, Montserrat), dan Material Symbols Outlined sesuai spesifikasi `@ui-draft`.
-  - TopBar Header disesuaikan dengan avatar inisial, nama pengguna session (`$_SESSION['user_nama']`), badge peran, serta tombol logout.
-  - Bottom Navigation Bar disesuaikan dengan ikon modern (Beranda, Jadwal, Siswa, Tentor, Pertemuan).
-- ** Beranda Admin (`app/Views/admin/beranda.php`)**:
-  - Disesuaikan dengan mockup `admin_dashboard_siatama_privat_updated/code.html` (Statistik Card, Quick Action, Pantauan Jadwal Hari Ini, Pengumuman).
-- ** Direktori Siswa (`app/Views/admin/siswa/index.php`)**:
-  - Disesuaikan dengan mockup `direktori_siswa_siatama_privat/code.html` (Card Siswa, Sekolah, Wali Murid, Live Search).
-- ** Master Data Tentor (`app/Views/admin/tentor/index.php`)**:
-  - Disesuaikan dengan mockup `master_data_tentor_siatama_privat/code.html` (Indikator titik status aktif, Foto/Avatar, Univ, Telp, Live Search).
-- ** Manajemen Jadwal (`app/Views/admin/jadwal/index.php`)**:
-  - Disesuaikan dengan mockup `jadwal_harian_admin_siatama_privat/code.html` (Hari & Jam Mengajar, Jenjang, Program, Kelas, Tentor, Ruangan).
-- ** Pusat Pertemuan & Presensi (`app/Views/admin/pertemuan/index.php`)**:
-  - Disesuaikan dengan mockup `pusat_laporan_rekap_siatama_privat/code.html` (Sesi Pertemuan, Badge Presensi Hadir/Total, Tombol Kelola Presensi).
-- ** Manajemen Berita (`app/Views/admin/berita/index.php`)**:
-  - Disesuaikan dengan mockup `manajemen_berita_siatama_privat/code.html` (Thumbnail Foto/Placeholder, Status Terbit/Draft, Date).
+### 🔵 1. Modernisasi Styling Input Form & UI Components (100% Selesai)
+Seluruh elemen form `input`, `select`, `textarea`, dan `button` pada seluruh halaman views telah di-refactor penuh dari styling HTML native lama menjadi UI komponen modern Tailwind CSS berbasis `@ui-draft`:
+- **Auth Login (`app/Views/auth/login.php`)**: Form login dengan input group icon, rounded-xl border, dan fokus ring emerald.
+- **Form Admin Siswa (`app/Views/admin/siswa/form.php`)**: Form identitas siswa & dynamic row wali murid menggunakan rounded-xl inputs dengan icon label.
+- **Form Admin Tentor (`app/Views/admin/tentor/form.php`)**: Form profil tentor dengan select dropdown modern, file uploader, dan textarea bio.
+- **Form Admin Jadwal (`app/Views/admin/jadwal/form.php`)**: Form penugasan jadwal dengan time picker & select dropdown modern.
+- **Form Presensi Admin (`app/Views/admin/pertemuan/presensi.php`)**: Grid input presensi siswa, status kehadiran, nilai sikap & akademik.
+- **Form Pertemuan Tentor (`app/Views/tentor/pertemuan/form.php`)**: Form catat sesi pertemuan mengajar aktual.
+- **Form Cek Presensi Publik (`app/Views/public/cek_presensi.php`)**: Search card presensi publik dengan rounded-xl input & badge status.
 
 ---
 
-### 🔵 2. Penyesuaian UI Draft - Modul Tentor (100% Selesai)
-- ** Layout Tentor (`app/Views/tentor/layout.php`)**:
-  - Di-refactor dengan Tailwind CSS CDN, Material Symbols Outlined, TopBar profil tentor, serta Bottom Nav 3 Menu (Beranda, Jadwal Saya, Sesi & Presensi).
-- ** Beranda Tentor (`app/Views/tentor/beranda.php`)**:
-  - Disesuaikan dengan mockup `tutor_dashboard_siatama_privat_modern/code.html` (Banner Pengumuman Penting, Widget Statistik Sesi Bulan Ini, Card Jadwal Mengajar Hari Ini).
-- ** Jadwal Saya Tentor (`app/Views/tentor/jadwal/index.php`)**:
-  - Disesuaikan dengan mockup `jadwal_mengajar_siatama_privat_scroll_lancar/code.html` (Header Jadwal Tentor, Live Search Bar, Detail Jam & Ruangan).
-- ** Laporan & Pertemuan Tentor (`app/Views/tentor/pertemuan/index.php`)**:
-  - Disesuaikan dengan mockup `laporan_mengajar_siatama_privat_baru/code.html` (Card Sesi Pertemuan, Badge Presensi Hadir/Total, Tombol Catat/Edit Presensi Siswa).
+### 🔵 2. Penyesuaian UI Draft - Modul Admin (100% Selesai)
+- ** Layout & Design System (`app/Views/admin/layout.php`)**: Tailwind CSS CDN, Montserrat/Inter, Material Symbols, TopBar & Bottom Nav.
+- ** Beranda Admin (`app/Views/admin/beranda.php`)**: Ringkasan Statistik Card, Quick Action Menu, Pantauan Jadwal Mengajar.
+- ** Direktori Siswa (`app/Views/admin/siswa/index.php`)**: Card Siswa, Sekolah, Wali Murid, Live Search.
+- ** Master Data Tentor (`app/Views/admin/tentor/index.php`)**: Titik status aktif, Avatar, Univ, Telp, Live Search.
+- ** Manajemen Jadwal (`app/Views/admin/jadwal/index.php`)**: Card Sesi Mengajar, Jenjang, Program, Ruangan.
+- ** Pusat Pertemuan & Presensi (`app/Views/admin/pertemuan/index.php`)**: Sesi Pertemuan, Badge Presensi.
+- ** Manajemen Berita (`app/Views/admin/berita/index.php`)**: Thumbnail Foto, Status Terbit/Draft.
 
 ---
 
-### 🔵 3. Penyesuaian UI Draft - Modul Publik / User Landing Page (100% Selesai)
-- ** Layout Publik (`app/Views/public/layout.php`)**:
-  - Di-refactor dengan Tailwind CSS CDN, Navbar Brand Siatama Privat, Top Login Button, serta Bottom Nav 3 Menu (Beranda, Berita, Cek Presensi).
-- ** Beranda Publik (`app/Views/public/home.php`)**:
-  - Disesuaikan dengan mockup `dashboard_siatama_privat_updated_contact/code.html` (Hero Section "Apa itu Siatama Privat?", Grid Program Pembelajaran, Profil Tentor Berkualitas, serta Berita Terbaru).
+### 🔵 3. Penyesuaian UI Draft - Modul Tentor (100% Selesai)
+- ** Layout Tentor (`app/Views/tentor/layout.php`)**: TopBar profil tentor & Bottom Nav 3 Menu.
+- ** Beranda Tentor (`app/Views/tentor/beranda.php`)**: Banner Pengumuman, Widget Statistik Sesi, Card Jadwal Hari Ini.
+- ** Jadwal Saya Tentor (`app/Views/tentor/jadwal/index.php`)**: Header Jadwal, Live Search, Jam & Ruangan.
+- ** Laporan & Pertemuan Tentor (`app/Views/tentor/pertemuan/index.php`)**: Card Sesi Pertemuan, Catat Presensi Siswa.
+
+---
+
+### 🔵 4. Penyesuaian UI Draft - Modul Publik / User Landing Page (100% Selesai)
+- ** Layout Publik (`app/Views/public/layout.php`)**: Navbar Brand Siatama Privat & Bottom Nav Publik.
+- ** Beranda Publik (`app/Views/public/home.php`)**: Hero Section "Apa itu Siatama Privat?", Program Belajar, Tentor Kami, Berita.
 
 ---
 
 ## 📌 Catatan Rencana Pengembangan Backend Spesifik Berdasarkan `@instructions/todo.md`
 
-Berdasarkan hasil audit komprehensif antara `@ui-draft`, database, models, controllers, & helpers, berikut adalah perincian teknis backend yang dicatat di `instructions/todo.md`:
-
 1. **Database Schema (`database/schema.sql`)**:
-   - `tentor`: Penambahan atribut `rate_gaji_per_jam` / `tarif_per_sesi` untuk penghitungan honorarium.
-   - `pengumuman`: Penambahan `tipe_broadcast` dan `kategori` untuk kategorisasi pengumuman.
+   - `tentor`: Penambahan `rate_gaji_per_jam` / `tarif_per_sesi`.
+   - `pengumuman`: Penambahan `tipe_broadcast` dan `kategori`.
    - `notifikasi`: Pembuatan tabel baru untuk mendukung lonceng notifikasi pengguna.
 2. **Models & Logic (`app/Models/`)**:
    - `Tentor.php`: Method `getMonthlyPayrollSummary()` & `getTeachingPerformance()`.
-   - `Jadwal.php`: Method `getTodayRealtimeScheduleWithStatus()` (Penentuan status Realtime Selesai/Sedang Berlangsung/Belum Mulai).
+   - `Jadwal.php`: Method `getTodayRealtimeScheduleWithStatus()` (Status Realtime Selesai/Sedang Berlangsung/Belum Mulai).
    - `Pertemuan.php`: Method `getMonthlyReportByClass()`.
    - `Pengumuman.php`: Method `getLatestActiveAnnouncements()`.
 3. **Controllers & Business Logic (`app/Controllers/`)**:
-   - `Admin\DashboardController.php`: Integrasi pantauan realtime mengajar berbasis jam server.
+   - `Admin\DashboardController.php`: Integrasi pantauan realtime mengajar.
    - `Admin\LaporanController.php` (Baru): Controller khusus laporan rekap siswa & honorarium tentor.
    - `Tentor\DashboardController.php`: Agregasi kinerja bulan berjalan (jam ajar & % presensi).
    - `PublicController.php`: Filter program publik berbasis jenjang dinamis.
