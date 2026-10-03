@@ -632,10 +632,28 @@ Pilih Kelas + Bulan + Tahun → klik "Tampilkan Rekap"
 **Route:** `GET /tentor/jadwal`  
 **View:** `tentor/jadwal/index.php`
 
-- Menampilkan jadwal aktif milik tentor yang login
-- Diurutkan hari → jam mulai
-- Tombol **← (back)** → `/tentor/beranda`
-- Info: hari, jam, kelas, jenjang, program, ruangan
+- Menampilkan jadwal aktif milik tentor yang login.
+- Parameter `bulan=YYYY-MM` mengganti bulan kalender; parameter `tanggal=YYYY-MM-DD` memilih tanggal aktif.
+- Date strip menampilkan satu minggu di sekitar tanggal aktif dan menandai hari yang memiliki jadwal.
+- Bagian **Jadwal Hari Ini** menampilkan jadwal pada tanggal aktif, termasuk jam, kelas, mata pelajaran, jenjang, dan ruangan.
+- Tombol **← (back)** → `/tentor/beranda`.
+- Tombol **Lihat Detail Kelas** → `/tentor/jadwal/kelas/{kelas_id}`.
+
+#### Detail Kelas dan Riwayat (`/tentor/jadwal/kelas/{kelas_id}`)
+
+**View:** `tentor/jadwal/detail-kelas.php`
+
+- Menampilkan identitas kelas dan daftar pertemuan milik tentor tersebut.
+- Tombol **Tambah Presensi Baru** → `/tentor/presensi`.
+- Tombol **Lihat Detail** pada pertemuan → `/tentor/jadwal/pertemuan/{pertemuan_id}`.
+
+#### Detail Kehadiran (`/tentor/jadwal/pertemuan/{pertemuan_id}`)
+
+**View:** `tentor/jadwal/detail-kehadiran.php`
+
+- Menampilkan tanggal, waktu, kelas, mata pelajaran, status kehadiran, serta nilai kemampuan dan sikap tiap siswa.
+- Tombol **Edit Data** → `/tentor/presensi` sesuai alur draft.
+- Akses dibatasi dengan `pertemuan.tentor_id` agar data tentor lain tidak dapat dibuka.
 
 ---
 
@@ -857,3 +875,4 @@ Tidak ada polling/AJAX — status dikalkulasi saat page load.
 |-------|---------|-----------|
 | `1.0.0` | 2026-09-21 | Dokumentasi awal — semua alur UI portal publik, admin, dan tentor |
 | `1.1.0` | 2026-10-03 | Menambahkan dokumentasi alur dashboard presensi tentor, filter kelas, status H/S/I/A/N, dan panel penilaian siswa |
+| `1.2.0` | 2026-10-03 | Menambahkan alur Jadwal Saya dengan filter bulan/tanggal, detail kelas, riwayat pertemuan, dan detail kehadiran |

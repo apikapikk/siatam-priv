@@ -34,6 +34,16 @@ class AkademikController extends Controller
     public function jadwal(): void
     {
         $db = \getDBConnection();
+        $selectedMonth = trim($_GET['bulan'] ?? date('Y-m'));
+        if (!preg_match('/^\\d{4}-\\d{2}$/', $selectedMonth)) {
+            $selectedMonth = date('Y-m');
+        }
+        $selectedDate = trim($_GET['tanggal'] ?? date('Y-m-d'));
+        $monthStart = $selectedMonth . '-01';
+        $monthEnd = date('Y-m-t', strtotime($monthStart));
+        if (!preg_match('/^\\d{4}-\\d{2}-\\d{2}$/', $selectedDate) || $selectedDate < $monthStart || $selectedDate > $monthEnd) {
+            $selectedDate = date('Y-m-d') >= $monthStart && date('Y-m-d') <= $monthEnd ? date('Y-m-d') : $monthStart;
+        }
         $sql = "SELECT j.*,
                        k.nama AS kelas_nama, jg.nama AS jenjang_nama, pr.nama AS program_nama
                 FROM `jadwal` j
@@ -46,11 +56,89 @@ class AkademikController extends Controller
         $stmt = $db->prepare($sql);
         $stmt->execute(['tentor_id' => $this->tentorId]);
         $jadwalList = $stmt->fetchAll();
+        $weekday = (int) date('N', strtotime($selectedDate));
+        $jadwalHariIni = array_values(array_filter($jadwalList, static fn (array $item): bool => (int) $item['hari'] === $weekday));
+
+        $calendarStart = new \DateTime($selectedDate);
+        $calendarStart->modify('monday this week');
+        $calendarDates = [];
+        for ($i = 0; $i < 7; $i++) {
+            $date = (clone $calendarStart)->modify('+' . $i . ' days');
+            $dateValue = $date->format('Y-m-d');
+            $calendarDates[] = [
+                'value' => $dateValue,
+                'day' => $date->format('D'),
+                'number' => $date->format('d'),
+                'has_schedule' => (bool) array_filter($jadwalList, static fn (array $item): bool => (int) $item['hari'] === (int) $date->format('N')),
+            ];
+        }
 
         $this->render('tentor/jadwal/index', [
-            'pageTitle' => 'Jadwal Mengajar Saya',
+            'pageTitle' => 'Jadwal Saya',
             'activeNav' => 'jadwal',
             'jadwalList' => $jadwalList,
+            'jadwalHariIni' => $jadwalHariIni,
+            'selectedMonth' => $selectedMonth,
+            'selectedDate' => $selectedDate,
+            'calendarDates' => $calendarDates,
+        ], 'tentor/layout');
+    }
+
+    public function detailKelas(string $id): void
+    {
+        $kelasIdInt = (int) $id;
+        $db = \getDBConnection();
+        $stmtKelas = $db->prepare(
+            "SELECT k.*, jg.nama AS jenjang_nama, pr.nama AS program_nama, pr.tipe AS program_tipe
+             FROM kelas k JOIN jenjang jg ON jg.id = k.jenjang_id JOIN program pr ON pr.id = k.program_id
+             WHERE k.id = :kelas_id LIMIT 1"
+        );
+        $stmtKelas->execute(['kelas_id' => $kelasIdInt]);
+        $kelas = $stmtKelas->fetch();
+        $stmtJadwal = $db->prepare("SELECT * FROM jadwal WHERE kelas_id = :kelas_id AND tentor_id = :tentor_id AND status_aktif = 1 ORDER BY hari, jam_mulai");
+        $stmtJadwal->execute(['kelas_id' => $kelasIdInt, 'tentor_id' => $this->tentorId]);
+        $jadwalKelas = $stmtJadwal->fetchAll();
+        if (!$kelas || empty($jadwalKelas)) {
+            $_SESSION['flash_error'] = 'Detail kelas tidak ditemukan atau bukan kelas Anda.';
+            $this->redirect('/tentor/jadwal');
+        }
+        $stmtPertemuan = $db->prepare(
+            "SELECT p.*, j.mata_pelajaran, j.ruangan,
+                    (SELECT COUNT(*) FROM presensi prs WHERE prs.pertemuan_id = p.id) AS total_presensi,
+                    (SELECT COUNT(*) FROM presensi prs WHERE prs.pertemuan_id = p.id AND prs.status_kehadiran = 'hadir') AS total_hadir
+             FROM pertemuan p JOIN jadwal j ON j.id = p.jadwal_id
+             WHERE j.kelas_id = :kelas_id AND p.tentor_id = :tentor_id
+             ORDER BY p.tanggal DESC, p.nomor_pertemuan DESC"
+        );
+        $stmtPertemuan->execute(['kelas_id' => $kelasIdInt, 'tentor_id' => $this->tentorId]);
+        $this->render('tentor/jadwal/detail-kelas', [
+            'pageTitle' => 'Detail Kelas & Riwayat', 'activeNav' => 'jadwal', 'kelas' => $kelas,
+            'jadwalKelas' => $jadwalKelas, 'pertemuanList' => $stmtPertemuan->fetchAll(),
+        ], 'tentor/layout');
+    }
+
+    public function detailKehadiran(string $id): void
+    {
+        $pertemuanId = (int) $id;
+        $pertemuan = $this->pertemuanModel->find($pertemuanId);
+        if (!$pertemuan || (int) $pertemuan['tentor_id'] !== $this->tentorId) {
+            $_SESSION['flash_error'] = 'Detail kehadiran tidak ditemukan atau bukan milik Anda.';
+            $this->redirect('/tentor/jadwal');
+        }
+        $db = \getDBConnection();
+        $stmt = $db->prepare(
+            "SELECT p.*, j.kelas_id, j.mata_pelajaran, j.ruangan,
+                    k.nama AS kelas_nama, jg.nama AS jenjang_nama, pr.nama AS program_nama
+             FROM pertemuan p JOIN jadwal j ON j.id = p.jadwal_id JOIN kelas k ON k.id = j.kelas_id
+             JOIN jenjang jg ON jg.id = k.jenjang_id JOIN program pr ON pr.id = k.program_id
+             WHERE p.id = :id AND p.tentor_id = :tentor_id LIMIT 1"
+        );
+        $stmt->execute(['id' => $pertemuanId, 'tentor_id' => $this->tentorId]);
+        $detail = $stmt->fetch();
+        $this->populateInitialPresensi($pertemuanId, (int) $detail['kelas_id']);
+        $this->render('tentor/jadwal/detail-kehadiran', [
+            'pageTitle' => 'Detail Kehadiran', 'activeNav' => 'jadwal', 'pertemuan' => $detail,
+            'presensiList' => $this->pertemuanModel->getPresensiList($pertemuanId),
         ], 'tentor/layout');
     }
 

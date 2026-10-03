@@ -1,5 +1,25 @@
 # Log Perkembangan Frontend & Integration — Siatama Privat
 
+## 2026-10-03 — Perapihan Indentasi View Tentor
+
+- Markup view jadwal, detail kelas, detail kehadiran, dan presensi dirapikan agar struktur HTML/PHP serta JavaScript lebih mudah dibaca dan dipelihara.
+- Perapihan hanya menyentuh formatting/indentasi; route, field form, class Tailwind, dan perilaku interaktif tetap dipertahankan.
+
+## 2026-10-03 — Revisi Responsivitas dan Fix Route Detail Jadwal
+
+- Date strip pada `/tentor/jadwal` diubah dari horizontal overflow menjadi grid tujuh kolom agar lebih responsif di layar HP.
+- Pemilih bulan diubah dari input month menjadi dropdown bulan.
+- Error `Unknown named parameter $id` pada tombol detail kelas diperbaiki dengan menyamakan signature `detailKelas(string $id)` dengan route `/tentor/jadwal/kelas/{id}`.
+
+## 2026-10-03 — Penyelarasan Jadwal Saya Tentor dengan Draft Jadwal
+
+- Halaman `/tentor/jadwal` diubah menjadi **Jadwal Saya** dengan pemilih bulan dan date strip mingguan yang dapat digunakan untuk memfilter jadwal berdasarkan tanggal.
+- Ditambahkan tampilan jadwal pada tanggal terpilih, indikator tanggal yang memiliki jadwal, informasi kelas/mapel/ruangan, dan tombol **Lihat Detail Kelas**.
+- Ditambahkan halaman detail kelas `/tentor/jadwal/kelas/{id}` yang menampilkan riwayat pertemuan, tombol **Tambah Presensi Baru** ke `/tentor/presensi`, serta tombol **Lihat Detail** per pertemuan.
+- Ditambahkan halaman detail kehadiran `/tentor/jadwal/pertemuan/{id}` yang menampilkan metadata pertemuan, data kehadiran/nilai siswa, dan tombol **Edit Data** ke `/tentor/presensi`.
+- Backend menambahkan query filter tanggal, endpoint detail kelas, endpoint detail kehadiran, dan guard `tentor_id` agar tentor hanya dapat melihat kelas/pertemuannya sendiri.
+- File utama: `app/Views/tentor/jadwal/index.php`, `app/Views/tentor/jadwal/detail-kelas.php`, `app/Views/tentor/jadwal/detail-kehadiran.php`, `app/Controllers/Tentor/AkademikController.php`, dan `public/index.php`.
+
 ## 2026-10-03 — Implementasi Alur Dashboard Presensi Tentor
 
 - Dashboard tentor: tombol **Catat / Isi Presensi Sesi** sekarang menuju `/tentor/presensi` untuk memulai alur presensi dari pemilihan kelas.

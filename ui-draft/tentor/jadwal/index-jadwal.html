@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+
+<html class="bg-[#FAF9F7]" lang="id" style="min-height: 100vh; height: auto; overflow-y: auto; -webkit-overflow-scrolling: touch;"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" name="viewport"/>
+<title>Jadwal Mengajar - Siatama</title>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=Montserrat:wght@500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+tailwind.config = {
+  darkMode: "class",
+  theme: {
+    extend: {
+      colors: {
+        "on-secondary": "#ffffff",
+        "on-tertiary": "#ffffff",
+        "secondary-container": "#fcd358",
+        "on-error": "#ffffff",
+        "tertiary-container": "#7d5853",
+        "surface-container": "#eeeeec",
+        "inverse-surface": "#2f3130",
+        "on-tertiary-fixed": "#2e1411",
+        "tertiary": "#63413c",
+        "on-primary-container": "#c4e4d8",
+        "surface-container-lowest": "#ffffff",
+        "on-tertiary-container": "#ffd3cd",
+        "on-secondary-fixed": "#241a00",
+        "on-primary-fixed-variant": "#304c44",
+        "on-primary": "#ffffff",
+        "on-secondary-fixed-variant": "#584400",
+        "on-background": "#1a1c1b",
+        "primary-fixed-dim": "#aecdc2",
+        "gold-contrast": "#8C711C",
+        "tertiary-fixed-dim": "#ebbbb5",
+        "tertiary-fixed": "#ffdad5",
+        "on-secondary-container": "#735a00",
+        "on-error-container": "#93000a",
+        "surface-warm": "#FAF9F6",
+        "surface-container-low": "#f4f3f2",
+        "primary-fixed": "#c9e9de",
+        "on-surface-variant": "#414845",
+        "secondary": "#745b00",
+        "surface": "#FAF9F7",
+        "on-tertiary-fixed-variant": "#603e3a",
+        "forest-deep": "#2D3E39",
+        "surface-tan": "#F2EFE9",
+        "error-container": "#ffdad6",
+        "outline": "#727975",
+        "surface-dim": "#dadad8",
+        "primary-container": "#4a675e",
+        "on-surface": "#1a1c1b",
+        "secondary-fixed": "#ffe08b",
+        "primary": "#324f47",
+        "on-primary-fixed": "#022019",
+        "inverse-primary": "#aecdc2",
+        "surface-tint": "#47645b",
+        "secondary-fixed-dim": "#eac249",
+        "background": "#FAF9F7",
+        "outline-variant": "#c1c8c4",
+        "surface-container-high": "#e9e8e6",
+        "surface-variant": "#e3e2e1",
+        "error": "#ba1a1a",
+        "surface-bright": "#FAF9F7",
+        "inverse-on-surface": "#f1f1ef",
+        "surface-container-highest": "#e3e2e1"
+      },
+      borderRadius: {
+        "DEFAULT": "0.25rem",
+        "lg": "0.5rem",
+        "xl": "0.75rem",
+        "full": "9999px"
+      },
+      spacing: {
+        "stack-xs": "0.25rem",
+        "stack-xl": "4rem",
+        "margin-page": "1.5rem",
+        "stack-md": "1rem",
+        "padding-card": "1.5rem",
+        "stack-lg": "2rem",
+        "gutter": "1rem",
+        "stack-sm": "0.5rem"
+      },
+      fontFamily: {
+        "body-lg": ["Inter", "sans-serif"],
+        "label-lg": ["Inter", "sans-serif"],
+        "headline-lg": ["Montserrat", "sans-serif"],
+        "headline-md": ["Montserrat", "sans-serif"],
+        "headline-lg-mobile": ["Montserrat", "sans-serif"],
+        "body-md": ["Inter", "sans-serif"],
+        "headline-sm": ["Montserrat", "sans-serif"],
+        "label-md": ["Inter", "sans-serif"],
+        sans: ["Inter", "sans-serif"],
+        headline: ["Montserrat", "sans-serif"]
+      },
+      fontSize: {
+        "body-lg": ["18px", { lineHeight: "1.6", fontWeight: "400" }],
+        "label-lg": ["14px", { lineHeight: "1.2", letterSpacing: "0.02em", fontWeight: "600" }],
+        "headline-lg": ["32px", { lineHeight: "1.2", letterSpacing: "-0.01em", fontWeight: "600" }],
+        "headline-md": ["24px", { lineHeight: "1.3", fontWeight: "600" }],
+        "headline-lg-mobile": ["26px", { lineHeight: "1.2", fontWeight: "600" }],
+        "body-md": ["16px", { lineHeight: "1.5", fontWeight: "400" }],
+        "headline-sm": ["20px", { lineHeight: "1.4", fontWeight: "600" }],
+        "label-md": ["12px", { lineHeight: "1.2", fontWeight: "500" }]
+      }
+    }
+  }
+};
+</script>
+<style>
+@layer base {
+  html, body {
+    width: 100%;
+    background-color: #FAF9F7;
+    margin: 0;
+    padding: 0;
+  }
+  body {
+    -webkit-tap-highlight-color: transparent;
+  }
+  .pb-safe {
+    padding-bottom: max(env(safe-area-inset-bottom, 0px), 16px);
+  }
+  .pt-safe {
+    padding-top: env(safe-area-inset-top, 0px);
+  }
+}
+::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+</style>
+</head>
+<body class="bg-[#FAF9F7] text-on-surface font-sans antialiased min-h-screen flex flex-col" style="min-height: 100vh; height: auto; overflow-y: auto; -webkit-overflow-scrolling: touch;">
+<!-- Fixed Top Header -->
+<header class="fixed top-0 inset-x-0 z-40 bg-[#FAF9F7]/90 backdrop-blur-xl border-b border-outline-variant/30 pt-safe">
+<div class="h-16 px-margin-page flex items-center justify-between max-w-lg mx-auto">
+<div class="w-10 flex items-center justify-start">
+<span class="text-label-md font-label-md text-forest-deep tracking-wider uppercase font-semibold">Siatama</span>
+</div>
+<h1 class="text-headline-sm font-headline-sm text-forest-deep text-center tracking-tight">Jadwal</h1>
+<div class="w-10 flex items-center justify-end">
+<div class="w-8 h-8 rounded-full bg-primary flex items-center justify-center shadow-xs">
+<span class="material-symbols-outlined text-on-primary text-[18px]">person</span>
+</div>
+</div>
+</div>
+</header>
+<!-- Main Scrollable Content -->
+<main class="flex-1 w-full max-w-lg mx-auto px-margin-page pt-20 pb-36 flex flex-col gap-stack-lg" style="height: auto; overflow: visible;">
+<!-- Hero / Header Visual & Greeting -->
+<section class="flex flex-col gap-stack-sm pt-2">
+<div class="flex items-center justify-between">
+<div class="flex flex-col">
+<span class="text-label-md font-label-md text-forest-deep/70 tracking-wide uppercase">Tahun Ajaran 2026/2027</span>
+<h2 class="text-headline-md font-headline-md text-forest-deep">Jadwal Mengajar</h2>
+</div>
+<div class="flex items-center gap-stack-xs bg-surface-tan px-3 py-1.5 rounded-full shadow-sm">
+<span class="material-symbols-outlined text-[18px] text-primary" style="font-variation-settings: 'FILL' 1;">event_available</span>
+<span class="text-label-md font-label-md text-forest-deep font-medium">2 Kelas Hari Ini</span>
+</div>
+</div>
+</section>
+<!-- Horizontal Calendar Week Selector -->
+<section class="flex flex-col gap-stack-sm">
+<div class="flex items-center justify-between px-1">
+<span class="text-label-md font-label-md text-on-surface-variant font-medium">September 2026</span>
+<button class="text-label-md font-label-md text-primary flex items-center gap-1 active:opacity-75 transition-opacity" type="button">
+<span>Bulan Ini</span>
+<span class="material-symbols-outlined text-[16px]">expand_more</span>
+</button>
+</div>
+<!-- Date strip -->
+<div class="flex items-center justify-between gap-2 overflow-x-auto no-scrollbar py-1">
+<!-- Sen 31 -->
+<button class="flex-1 min-w-[58px] py-3 px-1 rounded-2xl bg-surface-tan flex flex-col items-center justify-center gap-1 text-on-surface-variant active:scale-95 transition-all shadow-sm" type="button">
+<span class="text-label-md font-label-md text-on-surface-variant/80">Sen</span>
+<span class="text-headline-sm font-headline-sm text-forest-deep">31</span>
+<span class="w-1.5 h-1.5 rounded-full bg-transparent"></span>
+</button>
+<!-- Sel 01 -->
+<button class="flex-1 min-w-[58px] py-3 px-1 rounded-2xl bg-surface-tan flex flex-col items-center justify-center gap-1 text-on-surface-variant active:scale-95 transition-all shadow-sm" type="button">
+<span class="text-label-md font-label-md text-on-surface-variant/80">Sel</span>
+<span class="text-headline-sm font-headline-sm text-forest-deep">01</span>
+<span class="w-1.5 h-1.5 rounded-full bg-outline-variant"></span>
+</button>
+<!-- Rab 02 -->
+<button class="flex-1 min-w-[58px] py-3 px-1 rounded-2xl bg-surface-tan flex flex-col items-center justify-center gap-1 text-on-surface-variant active:scale-95 transition-all shadow-sm" type="button">
+<span class="text-label-md font-label-md text-on-surface-variant/80">Rab</span>
+<span class="text-headline-sm font-headline-sm text-forest-deep">02</span>
+<span class="w-1.5 h-1.5 rounded-full bg-outline-variant"></span>
+</button>
+<!-- Kam 03 (Active Date) -->
+<button class="flex-1 min-w-[62px] py-3 px-1 rounded-2xl bg-primary text-on-primary flex flex-col items-center justify-center gap-1 shadow-md scale-105 transition-all" type="button">
+<span class="text-label-md font-label-md text-on-primary-container font-semibold">Kam</span>
+<span class="text-headline-sm font-headline-sm text-on-primary font-bold">03</span>
+<span class="w-1.5 h-1.5 rounded-full bg-secondary-container"></span>
+</button>
+<!-- Jum 04 -->
+<button class="flex-1 min-w-[58px] py-3 px-1 rounded-2xl bg-surface-tan flex flex-col items-center justify-center gap-1 text-on-surface-variant active:scale-95 transition-all shadow-sm" type="button">
+<span class="text-label-md font-label-md text-on-surface-variant/80">Jum</span>
+<span class="text-headline-sm font-headline-sm text-forest-deep">04</span>
+<span class="w-1.5 h-1.5 rounded-full bg-outline-variant"></span>
+</button>
+</div>
+</section>
+<!-- Schedule Header Info -->
+<section class="flex items-center justify-between mt-1">
+<div class="flex flex-col">
+<h3 class="text-headline-sm font-headline-sm text-forest-deep">Jadwal Hari Ini</h3>
+<p class="text-label-md font-label-md text-on-surface-variant">Kamis, 03 September 2026</p>
+</div>
+<span class="px-3 py-1 bg-primary/10 text-forest-deep text-label-md font-label-md rounded-full font-medium">
+      Sesi Aktif
+    </span>
+</section>
+<!-- Schedule Cards List -->
+<section class="flex flex-col gap-stack-md">
+<!-- Card 1: Kelas 9B Reguler -->
+<article class="bg-surface-container-lowest rounded-2xl p-padding-card shadow-sm border border-outline-variant/30 flex flex-col gap-stack-md transition-all">
+<!-- Time & Badges Top Row -->
+<div class="flex items-start justify-between gap-2">
+<div class="flex items-center gap-stack-xs bg-primary/10 px-3 py-1.5 rounded-xl">
+<span class="material-symbols-outlined text-[18px] text-primary" style="font-variation-settings: 'FILL' 1;">schedule</span>
+<span class="text-label-lg font-label-lg text-primary font-semibold">16:00 - 17:30 WIB</span>
+</div>
+<span class="bg-surface-tan text-forest-deep px-2.5 py-1 rounded-full text-label-md font-label-md font-semibold">
+          SMP/MTs
+        </span>
+</div>
+<!-- Main Course Details with Teacher Photo Context -->
+<div class="flex items-center gap-stack-md">
+<div class="w-14 h-14 rounded-xl overflow-hidden bg-surface-container-low shrink-0 shadow-sm border border-outline-variant/30">
+<img class="w-full h-full object-cover" data-alt="Close up warm shot of a cheerful Indonesian female tutor holding modern mathematics notebook in a clean studio setting with subtle sage green background lighting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuC3WnibvFaW6cwe_XCob2zsMIhCeGigDeIXS7X_EsBpgZCcFryXwq8wpwknJ7nApvmq1cUvouZZr09cWW9MbU3UMxXYTfbHdmfScBHajNlmtCwHFxi_769YlpXJzSctqiTfFm1aIhdBfU4C_6ZiBgOpqlMNdwFh79jjSv1eDBChNDXt5TOYXc3_GqMZ0Sj-WAF_Lj3Aw_UtXhAtqjctDZuH1eeNdTPKRS6WruJdFkNbbgX048C_G20UkQ"/>
+</div>
+<div class="flex flex-col min-w-0 flex-1">
+<h4 class="text-headline-sm font-headline-sm text-forest-deep truncate">Kelas 9B Reguler</h4>
+<span class="text-body-md font-body-md text-on-surface-variant font-medium truncate">Matematika Terpadu</span>
+<div class="flex items-center gap-1 text-label-md font-label-md text-on-surface-variant mt-0.5">
+<span class="material-symbols-outlined text-[16px] text-primary">place</span>
+<span class="truncate">Ruang Belajar A • Offline</span>
+</div>
+</div>
+</div>
+<!-- Card Action Button -->
+<button class="w-full min-h-[52px] rounded-xl bg-surface-container-low text-primary flex items-center justify-center gap-stack-xs text-label-lg font-label-lg font-semibold active:bg-primary/10 transition-colors shadow-sm" type="button">
+<span>Lihat Detail Kelas</span>
+<span class="material-symbols-outlined text-[18px]">arrow_forward</span>
+</button>
+</article>
+<!-- Card 2: Kelas 12 IPA Privat -->
+<article class="bg-surface-container-lowest rounded-2xl p-padding-card shadow-sm border border-outline-variant/30 flex flex-col gap-stack-md transition-all">
+<!-- Time & Badges Top Row -->
+<div class="flex items-start justify-between gap-2">
+<div class="flex items-center gap-stack-xs bg-secondary-fixed/50 px-3 py-1.5 rounded-xl">
+<span class="material-symbols-outlined text-[18px] text-gold-contrast" style="font-variation-settings: 'FILL' 1;">videocam</span>
+<span class="text-label-lg font-label-lg text-forest-deep font-semibold">18:30 - 20:00 WIB</span>
+</div>
+<span class="bg-secondary-fixed/40 text-gold-contrast px-2.5 py-1 rounded-full text-label-md font-label-md font-semibold">
+          SMA/MA
+        </span>
+</div>
+<!-- Main Course Details with Student Context -->
+<div class="flex items-center gap-stack-md">
+<div class="w-14 h-14 rounded-xl overflow-hidden bg-surface-container-low shrink-0 shadow-sm border border-outline-variant/30">
+<img class="w-full h-full object-cover" data-alt="Indonesian high school student studying physics using tablet and stylus at a cozy wooden desk, warm soft ambient lamp light with clean aesthetic" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAH14HtP7mgf-b5xVVW9C7_QtJZW-KFbXGpKy6XR9fNG_iSwZKUBk0bX_oggYunaYONAaDqA-45NuZRdvd-7PkFHt37xzhCdr_enYBsSN9ze-uKDe_s5TK2S7pyioqLRNvZIOswt53CoqqZNk7gE1L2z41JNQGu8tknNaWNTp5sNdR42RJiLy1KGY2Xc-eXexdNFzipN8HVNUxFhE2M2-wyAJUbVwPatTZLwarElPjWyxkZa22sYPZyRQ"/>
+</div>
+<div class="flex flex-col min-w-0 flex-1">
+<h4 class="text-headline-sm font-headline-sm text-forest-deep truncate">Kelas 12 IPA Privat</h4>
+<span class="text-body-md font-body-md text-on-surface-variant font-medium truncate">Fisika Intensif</span>
+<div class="flex items-center gap-1 text-label-md font-label-md text-on-surface-variant mt-0.5">
+<span class="material-symbols-outlined text-[16px] text-primary">video_camera_front</span>
+<span class="truncate">Online (Google Meet)</span>
+</div>
+</div>
+</div>
+<!-- Card Action Button -->
+<button class="w-full min-h-[52px] rounded-xl bg-surface-container-low text-primary flex items-center justify-center gap-stack-xs text-label-lg font-label-lg font-semibold active:bg-primary/10 transition-colors shadow-sm" type="button">
+<span>Lihat Detail Kelas</span>
+<span class="material-symbols-outlined text-[18px]">arrow_forward</span>
+</button>
+</article>
+</section>
+<!-- Teaching Summary & Delight Section -->
+<section class="bg-surface-tan rounded-2xl p-padding-card shadow-sm border border-outline-variant/40 flex flex-col gap-stack-sm">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-2">
+<div class="w-8 h-8 rounded-full bg-primary/15 flex items-center justify-center">
+<span class="material-symbols-outlined text-[18px] text-primary" style="font-variation-settings: 'FILL' 1;">tips_and_updates</span>
+</div>
+<span class="text-label-lg font-label-lg text-forest-deep font-semibold">Catatan Tentor Siatama</span>
+</div>
+<span class="text-label-md font-label-md text-gold-contrast font-semibold">Tips Mengajar</span>
+</div>
+<p class="text-body-md font-body-md text-on-surface-variant">
+      Modul latihan kinematika gerak telah disiapkan untuk sesi Fisika malam ini. Siapkan rangkuman materi 5 menit sebelum sesi daring dimulai.
+    </p>
+<div class="flex items-center justify-between pt-2">
+<div class="flex items-center -space-x-2">
+<div class="w-7 h-7 rounded-full overflow-hidden shadow-xs bg-surface-container border border-white">
+<img class="w-full h-full object-cover" data-alt="Portrait of Indonesian tutor smiling gently with spectacles in natural warm sunlight wearing olive shirt" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBaMuVV8UUtKgVCSEelnapwTFKnX1oXoFRg8AiYyKHz-76ELxNlqkqWkBh5dsuOhGspESaa6fd9i_Uz1R-7mjEgNheJeckcJN89XRiMe_Y8p0Ftf1p9ZyNGCSy2VvtjS8gz-QiD9Lu7osbz3VNnZZpCxQplCxe37Cnd9MK0stSfTFBA5oQ9RjyUBa5IQxqdoUBJI1afEXw9ztmZBJcmwXRGBjWmet4TEmMbjUrc9O6IHlwBOlVOkR-vng"/>
+</div>
+<div class="w-7 h-7 rounded-full bg-forest-deep text-on-primary flex items-center justify-center text-label-md font-label-md shadow-xs border border-white">
+          +3
+        </div>
+</div>
+<span class="text-label-md font-label-md text-forest-deep font-semibold">Kompilasi Modul Siap</span>
+</div>
+</section>
+</main>
+<!-- Fixed Bottom Navigation Bar -->
+<nav class="fixed bottom-0 inset-x-0 z-50 bg-[#FAF9F7]/95 backdrop-blur-lg border-t border-outline-variant/40 pb-safe pointer-events-auto">
+<div class="flex justify-around items-center h-16 max-w-lg mx-auto px-gutter">
+<a class="flex flex-col items-center justify-center min-w-[56px] min-h-[44px] gap-stack-xs text-on-surface-variant hover:text-primary transition-colors" data-path="beranda" href="#">
+<span class="material-symbols-outlined text-[22px]">home</span>
+<span class="text-label-md font-label-md">Beranda</span>
+</a>
+<a aria-current="page" class="flex flex-col items-center justify-center min-w-[56px] min-h-[44px] gap-stack-xs transition-colors text-primary font-semibold" data-path="jadwal" href="#">
+<span class="material-symbols-outlined text-[22px] text-primary" style="font-variation-settings: 'FILL' 1;">calendar_month</span>
+<span class="text-label-md font-label-md text-primary">Jadwal</span>
+</a>
+<a class="flex flex-col items-center justify-center min-w-[56px] min-h-[44px] gap-stack-xs text-on-surface-variant hover:text-primary transition-colors" data-path="laporan" href="#">
+<span class="material-symbols-outlined text-[22px]">assessment</span>
+<span class="text-label-md font-label-md">Laporan</span>
+</a>
+<a class="flex flex-col items-center justify-center min-w-[56px] min-h-[44px] gap-stack-xs text-on-surface-variant hover:text-primary transition-colors" data-path="profil" href="#">
+<span class="material-symbols-outlined text-[22px]">person</span>
+<span class="text-label-md font-label-md">Profil</span>
+</a>
+</div>
+</nav>
+</body></html>

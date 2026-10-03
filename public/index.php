@@ -65,6 +65,8 @@ $router->get('/tentor/beranda', [TentorDashboardController::class, 'index']);
 
 // Tentor Akademik & Presensi
 $router->get('/tentor/jadwal', [TentorAkademikController::class, 'jadwal']);
+$router->get('/tentor/jadwal/kelas/{id}', [TentorAkademikController::class, 'detailKelas']);
+$router->get('/tentor/jadwal/pertemuan/{id}', [TentorAkademikController::class, 'detailKehadiran']);
 $router->get('/tentor/pertemuan', [TentorAkademikController::class, 'pertemuan']);
 $router->get('/tentor/pertemuan/tambah', [TentorAkademikController::class, 'createPertemuan']);
 $router->post('/tentor/pertemuan/simpan', [TentorAkademikController::class, 'storePertemuan']);
@@ -180,6 +182,5 @@ $router->get('/admin/laporan/tentor-bulanan/export-csv', [LaporanController::cla
 
 // Dispatch HTTP request
 $router->dispatch($_SERVER['REQUEST_METHOD'], $_SERVER['REQUEST_URI']);
-
 
 
