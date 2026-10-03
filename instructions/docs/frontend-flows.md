@@ -29,7 +29,9 @@
    - [Beranda Tentor](#51-beranda-tentor)
    - [Jadwal Saya](#52-jadwal-saya)
    - [Dashboard Presensi Tentor](#53-dashboard-presensi-tentor)
-   - [Sesi & Presensi (Tentor)](#54-sesi--presensi-tentor)
+   - [Sesi & Presensi (Tentor)](#55-sesi--presensi-tentor)
+   - [Laporan Mengajar Tentor](#56-laporan-mengajar-tentor)
+   - [Profil Tentor](#57-profil-tentor)
 6. [Komponen UI Global](#6-komponen-ui-global)
 7. [JavaScript Behaviors](#7-javascript-behaviors)
 8. [Changelog](#8-changelog)
@@ -740,6 +742,33 @@ POST /tentor/pertemuan/simpan
 
 > Route daftar pertemuan dan route lama edit presensi tetap tersedia sebagai kompatibilitas. Alur baru dari dashboard menggunakan `/tentor/presensi` dan `/tentor/presensi/isi`.
 
+### 5.6 Laporan Mengajar Tentor
+
+**Route:** `GET /tentor/laporan`
+**View:** `tentor/laporan.php`
+
+- Filter bulan menggunakan parameter `bulan=YYYY-MM`.
+- Ringkasan menampilkan total hadir siswa, total izin/sakit, total jam mengajar, dan persentase kehadiran.
+- Riwayat sesi menampilkan nomor pertemuan, kelas, mata pelajaran/program, tanggal, dan jam mengajar.
+- Data hanya berasal dari pertemuan milik tentor yang sedang login.
+
+### 5.7 Profil Tentor
+
+**Route:** `GET /tentor/profil`
+**View:** `tentor/profil.php`
+
+#### Update Profil
+
+| Field | Name | Keterangan |
+|---|---|---|
+| Nama Lengkap | `nama_lengkap` | Wajib |
+| Asal Universitas | `asal_universitas` | Wajib |
+| Username Akun | `username` | Wajib dan unik |
+| Password Baru | `password_baru` | Opsional, minimal 6 karakter |
+| Konfirmasi Password | `konfirmasi_password` | Harus sama jika password diisi |
+
+Submit form → `POST /tentor/profil/update` → validasi → update tabel `tentor`/`pengguna` → redirect `/tentor/profil` dengan flash message.
+
 ---
 
 ## 6. Komponen UI Global
@@ -871,8 +900,20 @@ Tidak ada polling/AJAX — status dikalkulasi saat page load.
 
 ## 8. Changelog
 
+### Alur Menu Publik (2026-10-03)
+
+- Berita: `/berita` menyediakan filter tombol Semua, Bakti Sosial, dan Rekap Bulanan.
+- Absensi Siswa: `/cek-presensi` menyediakan filter tipe belajar dan jenjang, pencarian siswa, serta filter bulan/tahun.
+- Profil Tentor: `/profil-tentor` menampilkan daftar tentor aktif dengan pencarian nama atau universitas.
+- Login: `/login` menggunakan navigasi publik yang sama dan tetap meneruskan proses autentikasi yang sudah ada.
+- Beranda: `/` menampilkan informasi Siatama, program, tentor, dan berita terbaru.
+- Beranda mengikuti draft dengan hero logo, review pelajar, lokasi, dan kontak.
+- Kartu tentor pada `/profil-tentor` memiliki tautan ke `/profil-tentor/{id}` untuk detail profil.
+
 | Versi | Tanggal | Perubahan |
 |-------|---------|-----------|
 | `1.0.0` | 2026-09-21 | Dokumentasi awal — semua alur UI portal publik, admin, dan tentor |
 | `1.1.0` | 2026-10-03 | Menambahkan dokumentasi alur dashboard presensi tentor, filter kelas, status H/S/I/A/N, dan panel penilaian siswa |
 | `1.2.0` | 2026-10-03 | Menambahkan alur Jadwal Saya dengan filter bulan/tanggal, detail kelas, riwayat pertemuan, dan detail kehadiran |
+| `1.3.0` | 2026-10-03 | Menambahkan alur menu publik Berita, Absensi Siswa, Profil Tentor, dan Login sesuai UI draft |
+| `1.4.0` | 2026-10-03 | Menyelaraskan beranda/berita dengan draft, memasang logo resmi, dan menambahkan detail profil tentor |

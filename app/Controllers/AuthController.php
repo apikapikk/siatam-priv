@@ -88,6 +88,7 @@ class AuthController extends Controller
             if ($tentorProfil) {
                 $_SESSION['tentor_id'] = (int) $tentorProfil['id'];
                 $_SESSION['nama_lengkap'] = $tentorProfil['nama_lengkap'];
+                $_SESSION['user_nama'] = $tentorProfil['nama_lengkap'];
             }
         }
 

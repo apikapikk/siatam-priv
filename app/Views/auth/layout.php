@@ -20,7 +20,7 @@
     </script>
     <link rel="stylesheet" href="/assets/admin.css">
 </head>
-<body class="font-sans bg-[#FAF9F7] text-gray-900">
+<body class="font-sans bg-[#FAF9F7] text-gray-900 pb-24">
     <div class="min-h-screen grid place-items-center px-4 py-8">
         <main class="w-full">
             <?php if (isset($_SESSION['flash_success'])): ?>
@@ -40,5 +40,11 @@
             <?php require $contentView; ?>
         </main>
     </div>
+    <nav class="fixed bottom-0 left-0 w-full bg-white border-t border-gray-200 z-50 py-2.5 px-6 flex justify-around items-center shadow-sm">
+        <a class="flex flex-col items-center text-gray-500 text-[11px]" href="/berita"><span class="material-symbols-outlined text-xl">newspaper</span>Berita</a>
+        <a class="flex flex-col items-center text-gray-500 text-[11px]" href="/cek-presensi"><span class="material-symbols-outlined text-xl">co_present</span>Absensi Siswa</a>
+        <a class="flex flex-col items-center text-gray-500 text-[11px]" href="/profil-tentor"><span class="material-symbols-outlined text-xl">person_search</span>Profil Tentor</a>
+        <a class="flex flex-col items-center text-[#2d5a4c] font-semibold text-[11px]" href="/login"><span class="material-symbols-outlined text-xl">login</span>Login</a>
+    </nav>
 </body>
 </html>

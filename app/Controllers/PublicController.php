@@ -41,6 +41,7 @@ class PublicController extends Controller
 
         $this->render('public/home', [
             'pageTitle' => 'Sistem Informasi Bimbingan Belajar',
+            'activeNav' => 'home',
             'programList' => $programList,
             'paketList' => $paketList,
             'tentorList' => $tentorList,
@@ -51,12 +52,48 @@ class PublicController extends Controller
     public function beritaList(): void
     {
         $db = \getDBConnection();
-        $stmtBerita = $db->query("SELECT * FROM `berita` WHERE `status_terbit` = 1 ORDER BY `diterbitkan_pada` DESC");
+        $filter = trim($_GET['filter'] ?? 'semua');
+        $where = "`status_terbit` = 1";
+        if ($filter === 'bakti-sosial') {
+            $where .= " AND (`judul` LIKE '%sosial%' OR `isi` LIKE '%sosial%')";
+        } elseif ($filter === 'rekap-bulanan') {
+            $where .= " AND (`judul` LIKE '%rekap%' OR `isi` LIKE '%rekap%' OR `judul` LIKE '%bulanan%' OR `isi` LIKE '%bulanan%')";
+        } else {
+            $filter = 'semua';
+        }
+        $stmtBerita = $db->query("SELECT * FROM `berita` WHERE {$where} ORDER BY `diterbitkan_pada` DESC");
         $beritaList = $stmtBerita->fetchAll();
 
         $this->render('public/berita/index', [
             'pageTitle' => 'Berita & Informasi Publik',
+            'activeNav' => 'berita',
             'beritaList' => $beritaList,
+            'filter' => $filter,
+        ], 'public/layout');
+    }
+
+    public function tentorList(): void
+    {
+        $this->render('public/tentor/index', [
+            'pageTitle' => 'Profil Tentor',
+            'activeNav' => 'tentor',
+            'tentorList' => $this->tentorModel->allWithPengguna(),
+        ], 'public/layout');
+    }
+
+    public function tentorDetail(string $id): void
+    {
+        $tentor = $this->tentorModel->findWithPengguna((int) $id);
+        if (!$tentor || (int) ($tentor['status_aktif'] ?? 0) !== 1) {
+            http_response_code(404);
+            $this->render('404', ['pageTitle' => 'Profil Tentor Tidak Ditemukan']);
+            return;
+        }
+
+        $this->render('public/tentor/detail', [
+            'pageTitle' => 'Profil ' . $tentor['nama_lengkap'],
+            'activeNav' => 'tentor',
+            'tentor' => $tentor,
         ], 'public/layout');
     }
 
@@ -82,6 +119,20 @@ class PublicController extends Controller
     public function cekPresensi(): void
     {
         $keyword = trim($_GET['q'] ?? '');
+        $tipe = trim($_GET['tipe'] ?? '');
+        $jenjang = trim($_GET['jenjang'] ?? '');
+        $kelas = trim($_GET['kelas'] ?? '');
+        $tipeDb = match (strtolower($tipe)) {
+            'reguler' => 'reguler',
+            'privat', 'private' => 'private',
+            default => $tipe,
+        };
+        $jenjangDb = match (strtoupper($jenjang)) {
+            'SD' => 'SD',
+            'SMP' => 'SMP/MTs',
+            'SMA' => 'SMA/MA',
+            default => $jenjang,
+        };
         $month = (int) ($_GET['bulan'] ?? date('n'));
         $year = (int) ($_GET['tahun'] ?? date('Y'));
         $siswaResult = [];
@@ -91,16 +142,31 @@ class PublicController extends Controller
         if (!empty($keyword)) {
             $db = \getDBConnection();
             $stmtSiswa = $db->prepare(
-                "SELECT * FROM `siswa`
-                 WHERE `nama_lengkap` LIKE :q
-                    OR `asal_sekolah` LIKE :q
-                    OR `nis` LIKE :q
-                    OR `id` = :id_exact
+                "SELECT DISTINCT s.* FROM `siswa` s
+                 LEFT JOIN `pendaftaran_siswa` ps ON ps.siswa_id = s.id AND ps.status = 'aktif'
+                 LEFT JOIN `kelas` k ON k.id = ps.kelas_id
+                 LEFT JOIN `jenjang` jg ON jg.id = k.jenjang_id
+                 LEFT JOIN `program` pr ON pr.id = k.program_id
+                 WHERE (s.`nama_lengkap` LIKE :q_nama
+                    OR s.`asal_sekolah` LIKE :q_sekolah
+                    OR s.`nis` LIKE :q_nis
+                    OR s.`id` = :id_exact)
+                   AND (:tipe_empty = '' OR pr.tipe = :tipe_value)
+                   AND (:jenjang_empty = '' OR jg.nama = :jenjang_value)
+                   AND (:kelas_empty = '' OR k.nama = :kelas_value)
                  LIMIT 10"
             );
             $stmtSiswa->execute([
-                'q' => '%' . $keyword . '%',
+                'q_nama' => '%' . $keyword . '%',
+                'q_sekolah' => '%' . $keyword . '%',
+                'q_nis' => '%' . $keyword . '%',
                 'id_exact' => ctype_digit($keyword) ? (int) $keyword : 0,
+                'tipe_empty' => $tipeDb,
+                'tipe_value' => $tipeDb,
+                'jenjang_empty' => $jenjangDb,
+                'jenjang_value' => $jenjangDb,
+                'kelas_empty' => $kelas,
+                'kelas_value' => $kelas,
             ]);
             $siswaResult = $stmtSiswa->fetchAll();
 
@@ -161,6 +227,9 @@ class PublicController extends Controller
             'pageTitle'       => 'Cek Presensi & Laporan Siswa',
             'activeNav'       => 'cek_presensi',
             'keyword'         => $keyword,
+            'tipe'            => $tipe,
+            'jenjang'         => $jenjang,
+            'kelas'           => $kelas,
             'siswaResult'     => $siswaResult,
             'presensiList'    => $presensiList,
             'selectedSiswaId' => $selectedSiswaId ?: ($selectedSiswa['id'] ?? 0),

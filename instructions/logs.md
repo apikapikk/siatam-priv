@@ -1,5 +1,49 @@
 # Log Perkembangan Frontend & Integration — Siatama Privat
 
+## 2026-10-03 — Normalisasi Filter Tipe dan Jenjang Presensi
+
+- Status: **DONE**.
+- Penyebab data Citra Lestari tidak muncul: URL memakai `Reguler` dan `SMP`, sedangkan database memakai `reguler` dan `SMP/MTs`.
+- Backend: filter presensi sekarang menormalisasi label UI ke nilai database (`Reguler` → `reguler`, `SMP` → `SMP/MTs`, `SMA` → `SMA/MA`, serta Privat → `private`).
+- Validasi: `PublicController.php` lolos `php -l`.
+
+## 2026-10-03 — Perbaikan Lanjutan Error Filter Presensi
+
+- Status: **DONE**.
+- Pencarian `Bintang` masih menghasilkan `SQLSTATE[HY093]` karena placeholder filter `:tipe`, `:jenjang`, dan `:kelas` juga digunakan dua kali dalam query.
+- Backend: seluruh placeholder kondisi filter dibuat unik (`*_empty` dan `*_value`) dengan nilai parameter yang sama.
+- Validasi: query untuk URL `/cek-presensi?tipe=&jenjang=&q=Bintang&bulan=10&tahun=2026` tidak lagi memiliki named parameter berulang; file PHP lolos syntax check.
+
+## 2026-10-03 — Perbaikan Error Pencarian Presensi Publik
+
+- Status: **DONE**.
+- Ditemukan error `SQLSTATE[HY093]` saat pencarian siswa karena placeholder `:q` digunakan berulang pada query PDO.
+- Backend: placeholder pencarian dipisah menjadi `:q_nama`, `:q_sekolah`, dan `:q_nis` dengan parameter masing-masing.
+- Validasi: `PublicController.php` lolos `php -l` dan query tidak lagi menggunakan nama placeholder berulang.
+
+## 2026-10-03 — Revisi Beranda, Berita, Logo, dan Detail Profil Tentor
+
+- Status: **DONE**.
+- Membaca ulang draft `ui-draft/public/index-public.html` dan `ui-draft/public/index-menu-berita.html` sebelum implementasi.
+- Frontend: beranda `/` diselaraskan dengan draft melalui hero berlogo, review pelajar, lokasi, dan kontak.
+- Frontend: halaman `/berita` diselaraskan dengan draft melalui header, filter pill, kartu berita bergambar, dan responsivitas mobile.
+- Asset: logo dari `ui-draft/logo.png` dipasang sebagai `public/assets/logo.png` dan digunakan pada header publik, beranda, serta login.
+- Backend: ditambahkan route `GET /profil-tentor/{id}` dan method `PublicController::tentorDetail()`.
+- Frontend: tombol **Lihat Profil** pada `/profil-tentor` kini mengarah ke halaman detail profil tentor dinamis.
+- Frontend: halaman detail menampilkan foto/avatar, nama, universitas, bio, dan status tentor terverifikasi.
+- Validasi: seluruh file PHP terkait lolos `php -l`; tidak ada perubahan skema database.
+
+## 2026-10-03 — Penambahan Menu Laporan dan Profil Tentor
+
+- Bottom navigation tentor diselaraskan menjadi empat menu utama: Beranda, Jadwal, Laporan, dan Profil; akses presensi tetap tersedia melalui dashboard dan halaman kelas.
+- Menu **Laporan** mengikuti draft `ui-draft/tentor/index-laporan.html`, dengan filter bulan, ringkasan kehadiran/izin-sakit/durasi, progress kehadiran, dan riwayat sesi mengajar.
+- Menu **Profil** mengikuti draft `ui-draft/tentor/index-profil.html`, dengan data nama, universitas, username, perubahan password, dan tampilan foto/inisial profil.
+- Backend baru: `Tentor::getMonthlyTeachingReport()` untuk mengambil riwayat sesi serta rekap jumlah siswa hadir dan izin/sakit per bulan.
+- Backend baru: `Tentor\PortalController` dengan endpoint `/tentor/laporan`, `/tentor/profil`, dan `POST /tentor/profil/update`.
+- Update profil memvalidasi username unik, password minimal 6 karakter, konfirmasi password, menyimpan password menggunakan hash, dan memperbarui session nama tentor.
+- `AuthController` sekarang mengisi `$_SESSION['user_nama']` saat login tentor agar header layout konsisten.
+- File utama: `app/Controllers/Tentor/PortalController.php`, `app/Models/Tentor.php`, `app/Views/tentor/laporan.php`, `app/Views/tentor/profil.php`, `app/Views/tentor/layout.php`, `app/Controllers/AuthController.php`, dan `public/index.php`.
+
 ## 2026-10-03 — Perapihan Indentasi View Tentor
 
 - Markup view jadwal, detail kelas, detail kehadiran, dan presensi dirapikan agar struktur HTML/PHP serta JavaScript lebih mudah dibaca dan dipelihara.
@@ -167,3 +211,15 @@ Seluruh elemen form `input`, `select`, `textarea`, dan `button` pada seluruh hal
 - Laporan tentor harian kini menampilkan log pengajar per tanggal beserta sesi, kelas, dan jam.
 - Laporan tentor bulanan kini menampilkan akumulasi sesi dan total jam per tentor tanpa honor/gaji.
 - Backend menambahkan hitungan jumlah pertemuan bulanan per kelas untuk kebutuhan kartu folder.
+## 2026-10-03 — Penyelarasan Menu Publik dengan UI Draft
+
+- Status: **DONE**.
+- Membaca draft publik: beranda, berita, absensi, profil tentor, dan login sebelum implementasi.
+- Frontend: navigasi publik diselaraskan menjadi Berita, Absensi Siswa, Profil Tentor, dan Login.
+- Frontend: halaman berita mendapat filter tombol Semua, Bakti Sosial, dan Rekap Bulanan.
+- Frontend: halaman absensi mendapat filter tombol tipe belajar dan jenjang, tetap mempertahankan pencarian siswa serta filter bulan/tahun.
+- Frontend: halaman profil tentor baru dibuat dengan kartu tentor, foto/avatar, universitas, dan pencarian nama/universitas.
+- Frontend: layout login diberi bottom navigation publik sesuai draft login.
+- Backend: route baru `GET /profil-tentor` dan method `PublicController::tentorList()` ditambahkan untuk menyajikan data tentor publik.
+- Backend: `PublicController::beritaList()` mendukung parameter filter berita; `cekPresensi()` mendukung parameter tipe, jenjang, dan kelas saat pencarian.
+- Validasi: seluruh file PHP terkait lolos `php -l`; tidak ada perubahan skema database.

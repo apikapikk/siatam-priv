@@ -173,4 +173,27 @@ class Tentor extends Model
             'persentase_kehadiran' => $totalPresensi > 0 ? round(($totalHadir / $totalPresensi) * 100, 1) : 0,
         ];
     }
+
+    public function getMonthlyTeachingReport(int $tentorId, int $month, int $year): array
+    {
+        $sql = "SELECT p.id AS pertemuan_id, p.nomor_pertemuan, p.tanggal, p.jam_mulai, p.jam_selesai,
+                       j.mata_pelajaran, k.nama AS kelas_nama, pr.nama AS program_nama, pr.tipe AS program_tipe,
+                       COUNT(prs.id) AS total_siswa,
+                       SUM(CASE WHEN prs.status_kehadiran = 'hadir' THEN 1 ELSE 0 END) AS total_hadir,
+                       SUM(CASE WHEN prs.status_kehadiran IN ('izin', 'sakit') THEN 1 ELSE 0 END) AS total_izin_sakit
+                FROM pertemuan p
+                JOIN jadwal j ON j.id = p.jadwal_id
+                JOIN kelas k ON k.id = j.kelas_id
+                JOIN program pr ON pr.id = k.program_id
+                LEFT JOIN presensi prs ON prs.pertemuan_id = p.id
+                WHERE p.tentor_id = :tentor_id
+                  AND MONTH(p.tanggal) = :month
+                  AND YEAR(p.tanggal) = :year
+                GROUP BY p.id, p.nomor_pertemuan, p.tanggal, p.jam_mulai, p.jam_selesai,
+                         j.mata_pelajaran, k.nama, pr.nama, pr.tipe
+                ORDER BY p.tanggal DESC, p.nomor_pertemuan DESC";
+        $stmt = $this->db->prepare($sql);
+        $stmt->execute(['tentor_id' => $tentorId, 'month' => $month, 'year' => $year]);
+        return $stmt->fetchAll();
+    }
 }

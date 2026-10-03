@@ -76,7 +76,7 @@
         </main>
 
         <!-- Bottom Navigation Bar Tentor -->
-        <nav class="fixed bottom-0 left-0 w-full bg-white border-t border-gray-200 z-50 py-2.5 px-6 pb-safe flex justify-around items-center shadow-[0px_-4px_16px_rgba(0,0,0,0.04)]">
+        <nav class="fixed bottom-0 left-0 w-full bg-white border-t border-gray-200 z-50 py-2.5 px-3 sm:px-6 pb-safe flex justify-around items-center shadow-[0px_-4px_16px_rgba(0,0,0,0.04)]">
             <a class="flex flex-col items-center justify-center py-1 px-3 rounded-xl transition-all group <?= ($activeNav ?? '') === 'beranda' ? 'text-[#2d5a4c] font-semibold bg-[#e8f0ec]/70' : 'text-gray-500 hover:text-[#2d5a4c] font-medium' ?>" href="/tentor/beranda">
                 <span class="material-symbols-outlined text-xl group-hover:scale-110 transition-transform">home</span>
                 <span class="text-[11px] mt-0.5 leading-none">Beranda</span>
@@ -85,9 +85,13 @@
                 <span class="material-symbols-outlined text-xl group-hover:scale-110 transition-transform">calendar_month</span>
                 <span class="text-[11px] mt-0.5 leading-none">Jadwal Saya</span>
             </a>
-            <a class="flex flex-col items-center justify-center py-1 px-3 rounded-xl transition-all group <?= in_array(($activeNav ?? ''), ['pertemuan', 'presensi'], true) ? 'text-[#2d5a4c] font-semibold bg-[#e8f0ec]/70' : 'text-gray-500 hover:text-[#2d5a4c] font-medium' ?>" href="/tentor/presensi">
-                <span class="material-symbols-outlined text-xl group-hover:scale-110 transition-transform">fact_check</span>
-                <span class="text-[11px] mt-0.5 leading-none">Sesi & Presensi</span>
+            <a class="flex flex-col items-center justify-center py-1 px-2 sm:px-3 rounded-xl transition-all group <?= ($activeNav ?? '') === 'laporan' ? 'text-[#2d5a4c] font-semibold bg-[#e8f0ec]/70' : 'text-gray-500 hover:text-[#2d5a4c] font-medium' ?>" href="/tentor/laporan">
+                <span class="material-symbols-outlined text-xl group-hover:scale-110 transition-transform">description</span>
+                <span class="text-[11px] mt-0.5 leading-none">Laporan</span>
+            </a>
+            <a class="flex flex-col items-center justify-center py-1 px-2 sm:px-3 rounded-xl transition-all group <?= ($activeNav ?? '') === 'profil' ? 'text-[#2d5a4c] font-semibold bg-[#e8f0ec]/70' : 'text-gray-500 hover:text-[#2d5a4c] font-medium' ?>" href="/tentor/profil">
+                <span class="material-symbols-outlined text-xl group-hover:scale-110 transition-transform">person</span>
+                <span class="text-[11px] mt-0.5 leading-none">Profil</span>
             </a>
         </nav>
     </div>

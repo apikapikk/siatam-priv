@@ -1,8 +1,8 @@
 <div class="max-w-md mx-auto">
     <div class="bg-white rounded-2xl p-6 md:p-7 shadow-sm border border-gray-200/80">
         <div class="text-center mb-6">
-            <div class="w-14 h-14 rounded-2xl bg-[#324f47] text-white flex items-center justify-center mx-auto mb-3 shadow-sm">
-                <span class="material-symbols-outlined text-[30px]">school</span>
+            <div class="w-16 h-16 rounded-2xl bg-white flex items-center justify-center mx-auto mb-3 shadow-sm overflow-hidden">
+                <img src="/assets/logo.png" alt="Logo Siatama Privat" class="w-full h-full object-contain">
             </div>
             <h1 class="text-2xl font-bold text-[#2D3E39] tracking-tight">Siatama Privat</h1>
             <p class="text-xs text-gray-500 mt-1">Silakan masuk ke akun Admin / Tentor Anda</p>

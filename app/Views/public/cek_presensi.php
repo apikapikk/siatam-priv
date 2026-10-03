@@ -33,6 +33,24 @@ function label_status(string $status): string
     <!-- Search Card Container -->
     <div class="bg-white rounded-2xl p-5 shadow-sm border border-gray-200/80">
         <form action="/cek-presensi" method="GET" class="flex flex-col gap-3">
+            <div class="flex flex-col gap-2">
+                <label class="text-xs font-semibold text-gray-700">Tipe Belajar</label>
+                <div class="grid grid-cols-2 gap-2">
+                    <?php foreach (['' => 'Semua', 'Reguler' => 'Reguler', 'Privat' => 'Privat'] as $value => $label): ?>
+                        <button type="button" data-filter-name="tipe" data-filter-value="<?= e($value) ?>" class="filter-pill py-2 rounded-xl text-xs font-semibold border <?= ($tipe ?? '') === $value ? 'bg-[#324f47] text-white border-[#324f47]' : 'bg-white text-gray-600 border-gray-200' ?>"><?= e($label) ?></button>
+                    <?php endforeach; ?>
+                </div>
+                <input type="hidden" name="tipe" value="<?= e($tipe ?? '') ?>">
+            </div>
+            <div class="flex flex-col gap-2">
+                <label class="text-xs font-semibold text-gray-700">Pilih Jenjang</label>
+                <div class="flex gap-2 overflow-x-auto pb-1">
+                    <?php foreach (['' => 'Semua', 'SD' => 'SD', 'SMP' => 'SMP', 'SMA' => 'SMA'] as $value => $label): ?>
+                        <button type="button" data-filter-name="jenjang" data-filter-value="<?= e($value) ?>" class="filter-pill whitespace-nowrap px-4 py-2 rounded-full text-xs font-semibold border <?= ($jenjang ?? '') === $value ? 'bg-[#324f47] text-white border-[#324f47]' : 'bg-white text-gray-600 border-gray-200' ?>"><?= e($label) ?></button>
+                    <?php endforeach; ?>
+                </div>
+                <input type="hidden" name="jenjang" value="<?= e($jenjang ?? '') ?>">
+            </div>
             <div class="flex flex-col gap-1.5">
                 <label class="text-xs font-semibold text-gray-700">Cari NIS, Nama Siswa, atau Asal Sekolah</label>
                 <div class="relative flex items-center">
@@ -207,3 +225,12 @@ function label_status(string $status): string
         <?php endif; ?>
     <?php endif; ?>
 </div>
+<script>
+    document.querySelectorAll('.filter-pill').forEach((button) => {
+        button.addEventListener('click', () => {
+            const form = button.closest('form');
+            form.querySelector(`[name="${button.dataset.filterName}"]`).value = button.dataset.filterValue;
+            form.submit();
+        });
+    });
+</script>

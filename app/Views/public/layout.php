@@ -35,8 +35,8 @@
         <header class="bg-[#FAF9F7]/95 backdrop-blur-md w-full top-0 sticky z-40 border-b border-gray-200/60 h-16 flex items-center">
             <div class="max-w-[1200px] mx-auto px-4 w-full flex justify-between items-center">
                 <a class="flex items-center gap-2.5 group" href="/">
-                    <div class="w-9 h-9 rounded-xl bg-[#324f47] text-white flex items-center justify-center font-bold text-lg shadow-sm">
-                        <span class="material-symbols-outlined text-[20px]">school</span>
+                    <div class="w-9 h-9 rounded-xl bg-white flex items-center justify-center shadow-sm overflow-hidden">
+                        <img src="/assets/logo.png" alt="Logo Siatama Privat" class="w-full h-full object-contain">
                     </div>
                     <div class="flex flex-col">
                         <span class="font-bold text-base text-[#2D3E39] leading-none group-hover:text-[#324f47]">Siatama Privat</span>
@@ -59,17 +59,21 @@
 
         <!-- Bottom Navigation Bar Publik -->
         <nav class="fixed bottom-0 left-0 w-full bg-white border-t border-gray-200 z-50 py-2.5 px-6 pb-safe flex justify-around items-center shadow-[0px_-4px_16px_rgba(0,0,0,0.04)]">
-            <a class="flex flex-col items-center justify-center py-1 px-3 rounded-xl transition-all group <?= ($activeNav ?? '') === 'home' ? 'text-[#2d5a4c] font-semibold bg-[#e8f0ec]/70' : 'text-gray-500 hover:text-[#2d5a4c] font-medium' ?>" href="/">
-                <span class="material-symbols-outlined text-xl group-hover:scale-110 transition-transform">home</span>
-                <span class="text-[11px] mt-0.5 leading-none">Beranda</span>
-            </a>
             <a class="flex flex-col items-center justify-center py-1 px-3 rounded-xl transition-all group <?= ($activeNav ?? '') === 'berita' ? 'text-[#2d5a4c] font-semibold bg-[#e8f0ec]/70' : 'text-gray-500 hover:text-[#2d5a4c] font-medium' ?>" href="/berita">
                 <span class="material-symbols-outlined text-xl group-hover:scale-110 transition-transform">newspaper</span>
                 <span class="text-[11px] mt-0.5 leading-none">Berita</span>
             </a>
             <a class="flex flex-col items-center justify-center py-1 px-3 rounded-xl transition-all group <?= ($activeNav ?? '') === 'cek_presensi' ? 'text-[#2d5a4c] font-semibold bg-[#e8f0ec]/70' : 'text-gray-500 hover:text-[#2d5a4c] font-medium' ?>" href="/cek-presensi">
-                <span class="material-symbols-outlined text-xl group-hover:scale-110 transition-transform">find_in_page</span>
-                <span class="text-[11px] mt-0.5 leading-none">Cek Presensi</span>
+                <span class="material-symbols-outlined text-xl group-hover:scale-110 transition-transform">co_present</span>
+                <span class="text-[11px] mt-0.5 leading-none">Absensi Siswa</span>
+            </a>
+            <a class="flex flex-col items-center justify-center py-1 px-3 rounded-xl transition-all group <?= ($activeNav ?? '') === 'tentor' ? 'text-[#2d5a4c] font-semibold bg-[#e8f0ec]/70' : 'text-gray-500 hover:text-[#2d5a4c] font-medium' ?>" href="/profil-tentor">
+                <span class="material-symbols-outlined text-xl group-hover:scale-110 transition-transform">person_search</span>
+                <span class="text-[11px] mt-0.5 leading-none">Profil Tentor</span>
+            </a>
+            <a class="flex flex-col items-center justify-center py-1 px-3 rounded-xl transition-all group <?= ($activeNav ?? '') === 'login' ? 'text-[#2d5a4c] font-semibold bg-[#e8f0ec]/70' : 'text-gray-500 hover:text-[#2d5a4c] font-medium' ?>" href="/login">
+                <span class="material-symbols-outlined text-xl group-hover:scale-110 transition-transform">login</span>
+                <span class="text-[11px] mt-0.5 leading-none">Login</span>
             </a>
         </nav>
     </div>
