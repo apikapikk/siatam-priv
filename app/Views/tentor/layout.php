@@ -85,7 +85,7 @@
                 <span class="material-symbols-outlined text-xl group-hover:scale-110 transition-transform">calendar_month</span>
                 <span class="text-[11px] mt-0.5 leading-none">Jadwal Saya</span>
             </a>
-            <a class="flex flex-col items-center justify-center py-1 px-3 rounded-xl transition-all group <?= ($activeNav ?? '') === 'pertemuan' ? 'text-[#2d5a4c] font-semibold bg-[#e8f0ec]/70' : 'text-gray-500 hover:text-[#2d5a4c] font-medium' ?>" href="/tentor/pertemuan">
+            <a class="flex flex-col items-center justify-center py-1 px-3 rounded-xl transition-all group <?= in_array(($activeNav ?? ''), ['pertemuan', 'presensi'], true) ? 'text-[#2d5a4c] font-semibold bg-[#e8f0ec]/70' : 'text-gray-500 hover:text-[#2d5a4c] font-medium' ?>" href="/tentor/presensi">
                 <span class="material-symbols-outlined text-xl group-hover:scale-110 transition-transform">fact_check</span>
                 <span class="text-[11px] mt-0.5 leading-none">Sesi & Presensi</span>
             </a>

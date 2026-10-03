@@ -70,6 +70,10 @@ $router->get('/tentor/pertemuan/tambah', [TentorAkademikController::class, 'crea
 $router->post('/tentor/pertemuan/simpan', [TentorAkademikController::class, 'storePertemuan']);
 $router->get('/tentor/pertemuan/{id}/presensi', [TentorAkademikController::class, 'presensi']);
 $router->post('/tentor/pertemuan/{id}/presensi/update', [TentorAkademikController::class, 'updatePresensi']);
+$router->get('/tentor/presensi', [TentorAkademikController::class, 'pilihPresensi']);
+$router->get('/tentor/presensi/isi', [TentorAkademikController::class, 'isiPresensi']);
+$router->post('/tentor/presensi/simpan', [TentorAkademikController::class, 'simpanPresensi']);
+
 
 
 $router->get('/admin', function () {

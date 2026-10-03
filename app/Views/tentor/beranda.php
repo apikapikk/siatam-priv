@@ -107,7 +107,7 @@
                     </div>
                 </div>
 
-                <a href="/tentor/pertemuan" class="w-full mt-1 flex items-center justify-center gap-2 bg-[#324f47] hover:bg-[#2D3E39] active:scale-[0.99] text-white font-semibold text-sm py-2.5 px-4 rounded-xl shadow-xs transition-all">
+                <a href="/tentor/presensi" class="w-full mt-1 flex items-center justify-center gap-2 bg-[#324f47] hover:bg-[#2D3E39] active:scale-[0.99] text-white font-semibold text-sm py-2.5 px-4 rounded-xl shadow-xs transition-all">
                     <span class="material-symbols-outlined text-[18px]">assignment_turned_in</span>
                     Catat / Isi Presensi Sesi
                 </a>

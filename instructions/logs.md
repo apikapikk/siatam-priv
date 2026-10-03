@@ -1,5 +1,15 @@
 # Log Perkembangan Frontend & Integration — Siatama Privat
 
+## 2026-10-03 — Implementasi Alur Dashboard Presensi Tentor
+
+- Dashboard tentor: tombol **Catat / Isi Presensi Sesi** sekarang menuju `/tentor/presensi` untuk memulai alur presensi dari pemilihan kelas.
+- Halaman pemilihan presensi mengikuti draft: filter tipe kelas dan jenjang, daftar kelas aktif milik tentor, jumlah siswa aktif, serta riwayat presensi.
+- Halaman isi kehadiran menampilkan metadata pertemuan, daftar siswa, dan tombol status `H/S/I/A/N`.
+- Tombol `H` membuka panel penilaian siswa; nilai kemampuan dan nilai sikap disimpan sebagai bagian dari data presensi.
+- Navigasi bawah tentor pada menu **Sesi & Presensi** diarahkan ke `/tentor/presensi`; route lama pertemuan tetap dipertahankan untuk kompatibilitas.
+- File utama: `app/Views/tentor/beranda.php`, `app/Views/tentor/presensi/index.php`, `app/Views/tentor/presensi/form.php`, `app/Views/tentor/layout.php`, `app/Controllers/Tentor/AkademikController.php`, dan `public/index.php`.
+- Verifikasi: view/controller terkait lolos `php -l` dan `git diff --check`; suite terintegrasi belum selesai karena koneksi MySQL lokal tidak tersedia.
+
 ## 2026-09-29 — Penyelarasan Tambah Jadwal dengan Form Kelas
 
 - Frontend: /admin/jadwal/tambah sekarang memakai pola "Informasi Dasar Kelas" lalu "Atur Sesi & Tentor", dengan sesi yang dapat ditambah atau dihapus secara dinamis.

@@ -167,29 +167,197 @@ class AkademikController extends Controller
         $this->redirect('/tentor/pertemuan/' . $pertemuanId . '/presensi');
     }
 
+    public function pilihPresensi(): void
+    {
+        $db = \getDBConnection();
+        // Kelas aktif tentor
+        $sqlClasses = "SELECT k.id AS kelas_id, k.nama AS kelas_nama,
+                              jg.nama AS jenjang_nama, pr.nama AS program_nama, pr.tipe AS program_tipe,
+                              MIN(j.id) AS jadwal_id, MIN(j.mata_pelajaran) AS mata_pelajaran,
+                              (SELECT COUNT(*) FROM pendaftaran_siswa ps WHERE ps.kelas_id = k.id AND ps.status = 'aktif') AS total_siswa
+                       FROM jadwal j
+                       JOIN kelas k ON k.id = j.kelas_id
+                       JOIN jenjang jg ON jg.id = k.jenjang_id
+                       JOIN program pr ON pr.id = k.program_id
+                       WHERE j.tentor_id = :tentor_id AND j.status_aktif = 1
+                       GROUP BY k.id, k.nama, jg.nama, pr.nama, pr.tipe
+                       ORDER BY k.nama ASC";
+        $stmtC = $db->prepare($sqlClasses);
+        $stmtC->execute(['tentor_id' => $this->tentorId]);
+        $kelasList = $stmtC->fetchAll();
+
+        // Riwayat Presensi yang pernah diisi oleh tentor ini
+        $sqlHistory = "SELECT p.*, k.nama AS kelas_nama, jg.nama AS jenjang_nama, pr.nama AS program_nama, j.mata_pelajaran,
+                              (SELECT COUNT(*) FROM presensi prs WHERE prs.pertemuan_id = p.id) AS total_presensi,
+                              (SELECT COUNT(*) FROM presensi prs WHERE prs.pertemuan_id = p.id AND prs.status_kehadiran = 'hadir') AS total_hadir
+                       FROM pertemuan p
+                       JOIN jadwal j ON j.id = p.jadwal_id
+                       JOIN kelas k ON k.id = j.kelas_id
+                       JOIN jenjang jg ON jg.id = k.jenjang_id
+                       JOIN program pr ON pr.id = k.program_id
+                       WHERE p.tentor_id = :tentor_id
+                       ORDER BY p.tanggal DESC, p.id DESC
+                       LIMIT 5";
+        $stmtH = $db->prepare($sqlHistory);
+        $stmtH->execute(['tentor_id' => $this->tentorId]);
+        $riwayatList = $stmtH->fetchAll();
+
+        $this->render('tentor/presensi/index', [
+            'pageTitle'   => 'Presensi Siswa',
+            'activeNav'   => 'presensi',
+            'kelasList'   => $kelasList,
+            'riwayatList' => $riwayatList,
+        ], 'tentor/layout');
+    }
+
+    public function isiPresensi(): void
+    {
+        $db = \getDBConnection();
+        $pertemuanId = (int) ($_GET['pertemuan_id'] ?? 0);
+        $kelasId = (int) ($_GET['kelas_id'] ?? 0);
+        $pertemuan = null;
+        $jadwal = null;
+        $kelas = null;
+
+        if ($pertemuanId > 0) {
+            $pertemuan = $this->pertemuanModel->find($pertemuanId);
+            if ($pertemuan && (int)$pertemuan['tentor_id'] === $this->tentorId) {
+                $jadwal = $this->jadwalModel->find((int)$pertemuan['jadwal_id']);
+                if ($jadwal) {
+                    $kelasId = (int)$jadwal['kelas_id'];
+                }
+            } else {
+                $pertemuan = null;
+            }
+        }
+
+        if ($kelasId <= 0 && $jadwal) {
+            $kelasId = (int)$jadwal['kelas_id'];
+        }
+
+        if ($kelasId <= 0) {
+            $_SESSION['flash_error'] = 'Pilih kelas terlebih dahulu untuk mengisi presensi.';
+            $this->redirect('/tentor/presensi');
+        }
+
+        $stmtKelas = $db->prepare("SELECT k.*, jg.nama AS jenjang_nama, pr.nama AS program_nama, pr.tipe AS program_tipe
+                                   FROM kelas k
+                                   JOIN jenjang jg ON jg.id = k.jenjang_id
+                                   JOIN program pr ON pr.id = k.program_id
+                                   WHERE k.id = :id LIMIT 1");
+        $stmtKelas->execute(['id' => $kelasId]);
+        $kelas = $stmtKelas->fetch();
+
+        if (!$jadwal) {
+            $stmtJadwal = $db->prepare("SELECT * FROM jadwal WHERE kelas_id = :k_id AND tentor_id = :t_id AND status_aktif = 1 LIMIT 1");
+            $stmtJadwal->execute(['k_id' => $kelasId, 't_id' => $this->tentorId]);
+            $jadwal = $stmtJadwal->fetch();
+        }
+
+        if (!$jadwal) {
+            $stmtJadwal = $db->prepare("SELECT * FROM jadwal WHERE kelas_id = :k_id AND status_aktif = 1 LIMIT 1");
+            $stmtJadwal->execute(['k_id' => $kelasId]);
+            $jadwal = $stmtJadwal->fetch();
+        }
+
+        // Students & Presensi list
+        if ($pertemuan) {
+            $this->populateInitialPresensi((int)$pertemuan['id'], $kelasId);
+            $presensiList = $this->pertemuanModel->getPresensiList((int)$pertemuan['id']);
+            $nomorPertemuan = (int)$pertemuan['nomor_pertemuan'];
+            $tanggal = $pertemuan['tanggal'];
+            $jamMulai = substr($pertemuan['jam_mulai'], 0, 5);
+            $jamSelesai = substr($pertemuan['jam_selesai'], 0, 5);
+        } else {
+            // Next meeting number
+            $jadwalId = $jadwal ? (int)$jadwal['id'] : 0;
+            $stmtNextNo = $db->prepare("SELECT COALESCE(MAX(nomor_pertemuan), 0) + 1 FROM pertemuan WHERE jadwal_id = :j_id");
+            $stmtNextNo->execute(['j_id' => $jadwalId]);
+            $nomorPertemuan = (int) $stmtNextNo->fetchColumn();
+            if ($nomorPertemuan <= 0) {
+                $nomorPertemuan = 1;
+            }
+
+            $tanggal = date('Y-m-d');
+            $jamMulai = $jadwal ? substr($jadwal['jam_mulai'], 0, 5) : '15:00';
+            $jamSelesai = $jadwal ? substr($jadwal['jam_selesai'], 0, 5) : '16:30';
+
+            // Active students
+            $stmtStudents = $db->prepare("SELECT s.id AS siswa_id, s.nis, s.nama_lengkap AS siswa_nama, s.asal_sekolah,
+                                                 'none' AS status_kehadiran, '' AS nilai_sikap, '' AS nilai_akademik, '' AS catatan
+                                          FROM pendaftaran_siswa ps
+                                          JOIN siswa s ON s.id = ps.siswa_id
+                                          WHERE ps.kelas_id = :k_id AND ps.status = 'aktif'
+                                          ORDER BY s.nama_lengkap ASC");
+            $stmtStudents->execute(['k_id' => $kelasId]);
+            $presensiList = $stmtStudents->fetchAll();
+        }
+
+        $this->render('tentor/presensi/form', [
+            'pageTitle'      => 'Isi Kehadiran Siswa',
+            'activeNav'      => 'presensi',
+            'kelas'          => $kelas,
+            'jadwal'         => $jadwal,
+            'pertemuan'      => $pertemuan,
+            'nomorPertemuan' => $nomorPertemuan,
+            'tanggal'        => $tanggal,
+            'jamMulai'       => $jamMulai,
+            'jamSelesai'     => $jamSelesai,
+            'presensiList'   => $presensiList,
+        ], 'tentor/layout');
+    }
+
+    public function simpanPresensi(): void
+    {
+        $db = \getDBConnection();
+        $pertemuanId = (int) ($_POST['pertemuan_id'] ?? 0);
+        $jadwalId = (int) ($_POST['jadwal_id'] ?? 0);
+        $kelasId = (int) ($_POST['kelas_id'] ?? 0);
+        $nomorPertemuan = (int) ($_POST['pertemuan'] ?? 1);
+        $tanggal = trim($_POST['tanggal'] ?? date('Y-m-d'));
+        $jamMulai = trim($_POST['waktu_mulai'] ?? '15:00');
+        $jamSelesai = trim($_POST['waktu_selesai'] ?? '16:30');
+        $presensiData = $_POST['presensi'] ?? [];
+
+        if (strlen($jamMulai) === 5) $jamMulai .= ':00';
+        if (strlen($jamSelesai) === 5) $jamSelesai .= ':00';
+
+        if ($pertemuanId > 0) {
+            $stmtUpdate = $db->prepare("UPDATE pertemuan SET nomor_pertemuan = :no, tanggal = :tgl, jam_mulai = :mulai, jam_selesai = :selesai, diubah_pada = NOW() WHERE id = :id AND tentor_id = :t_id");
+            $stmtUpdate->execute([
+                'no'      => $nomorPertemuan,
+                'tgl'     => $tanggal,
+                'mulai'   => $jamMulai,
+                'selesai' => $jamSelesai,
+                'id'      => $pertemuanId,
+                't_id'    => $this->tentorId,
+            ]);
+        } else {
+            $stmtInsert = $db->prepare("INSERT INTO pertemuan (jadwal_id, tentor_id, nomor_pertemuan, tanggal, jam_mulai, jam_selesai, dibuat_pada, diubah_pada)
+                                        VALUES (:j_id, :t_id, :no, :tgl, :mulai, :selesai, NOW(), NOW())");
+            $stmtInsert->execute([
+                'j_id'    => $jadwalId,
+                't_id'    => $this->tentorId,
+                'no'      => $nomorPertemuan,
+                'tgl'     => $tanggal,
+                'mulai'   => $jamMulai,
+                'selesai' => $jamSelesai,
+            ]);
+            $pertemuanId = (int) $db->lastInsertId();
+        }
+
+        // Sync student attendance and grades
+        if (!empty($presensiData) && is_array($presensiData)) {
+            $this->pertemuanModel->syncPresensi($pertemuanId, $presensiData);
+        }
+
+        $_SESSION['flash_success'] = 'Kehadiran dan penilaian siswa berhasil disimpan.';
+        $this->redirect('/tentor/presensi');
+    }
+
     public function presensi(string $id): void
     {
-        $idInt = (int) $id;
-        $pertemuan = $this->pertemuanModel->find($idInt);
-
-        if (!$pertemuan || (int) $pertemuan['tentor_id'] !== $this->tentorId) {
-            $_SESSION['flash_error'] = 'Sesi pertemuan tidak ditemukan atau bukan milik Anda.';
-            $this->redirect('/tentor/pertemuan');
-        }
-
-        $jadwal = $this->jadwalModel->find((int) $pertemuan['jadwal_id']);
-        if ($jadwal) {
-            $this->populateInitialPresensi($idInt, (int) $jadwal['kelas_id']);
-        }
-
-        $presensiList = $this->pertemuanModel->getPresensiList($idInt);
-
-        $this->render('tentor/pertemuan/presensi', [
-            'pageTitle' => 'Input Presensi Siswa Pertemuan #' . $pertemuan['nomor_pertemuan'],
-            'activeNav' => 'pertemuan',
-            'pertemuan' => $pertemuan,
-            'presensiList' => $presensiList,
-        ], 'tentor/layout');
+        $this->redirect('/tentor/presensi/isi?pertemuan_id=' . (int)$id);
     }
 
     public function updatePresensi(string $id): void
@@ -199,7 +367,7 @@ class AkademikController extends Controller
 
         if (!$pertemuan || (int) $pertemuan['tentor_id'] !== $this->tentorId) {
             $_SESSION['flash_error'] = 'Sesi pertemuan tidak ditemukan atau bukan milik Anda.';
-            $this->redirect('/tentor/pertemuan');
+            $this->redirect('/tentor/presensi');
         }
 
         $presensiItems = $_POST['presensi'] ?? [];
@@ -209,7 +377,7 @@ class AkademikController extends Controller
         }
 
         $_SESSION['flash_success'] = 'Presensi & nilai siswa berhasil disimpan.';
-        $this->redirect('/tentor/pertemuan');
+        $this->redirect('/tentor/presensi');
     }
 
     private function populateInitialPresensi(int $pertemuanId, int $kelasId): void

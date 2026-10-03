@@ -28,7 +28,8 @@
 5. [Portal Tentor](#5-portal-tentor)
    - [Beranda Tentor](#51-beranda-tentor)
    - [Jadwal Saya](#52-jadwal-saya)
-   - [Sesi & Presensi (Tentor)](#53-sesi--presensi-tentor)
+   - [Dashboard Presensi Tentor](#53-dashboard-presensi-tentor)
+   - [Sesi & Presensi (Tentor)](#54-sesi--presensi-tentor)
 6. [Komponen UI Global](#6-komponen-ui-global)
 7. [JavaScript Behaviors](#7-javascript-behaviors)
 8. [Changelog](#8-changelog)
@@ -620,7 +621,9 @@ Pilih Kelas + Bulan + Tahun → klik "Tampilkan Rekap"
 #### Jadwal Hari Ini
 - "Lihat Semua" → `/tentor/jadwal`
 - Tiap kartu jadwal menampilkan: nama kelas + jenjang, ruangan, jam
-- Tombol **"Catat / Isi Presensi Sesi"** → `/tentor/pertemuan` (ke halaman daftar pertemuan)
+- Tombol **"Catat / Isi Presensi Sesi"** → `/tentor/presensi` (ke halaman pemilihan kelas presensi)
+
+> Detail alur presensi baru dijelaskan pada bagian [Dashboard Presensi Tentor](#53-dashboard-presensi-tentor).
 
 ---
 
@@ -636,7 +639,51 @@ Pilih Kelas + Bulan + Tahun → klik "Tampilkan Rekap"
 
 ---
 
-### 5.3 Sesi & Presensi (Tentor)
+### 5.3 Dashboard Presensi Tentor
+
+**Route:** `GET /tentor/presensi`
+**View:** `tentor/presensi/index.php`
+
+Halaman ini merupakan pintu masuk alur presensi dari dashboard tentor.
+
+#### Filter Kelas
+| Filter | Pilihan | Perilaku |
+|--------|---------|----------|
+| Tipe Kelas | Semua, Reguler, Privat | Menyaring kartu berdasarkan `program.tipe` |
+| Jenjang | Semua dan jenjang tersedia | Menyaring kartu berdasarkan nama jenjang |
+
+Filter berjalan di client-side menggunakan Vanilla JavaScript tanpa request tambahan.
+
+#### Kelas Aktif dan Riwayat
+- Kelas aktif hanya berasal dari jadwal aktif tentor yang sedang login.
+- Kartu menampilkan program, kelas, jenjang, jumlah siswa aktif, dan tombol **Isi Presensi**.
+- Tombol kelas → `/tentor/presensi/isi?kelas_id={kelas_id}`.
+- Riwayat menampilkan lima pertemuan terakhir milik tentor.
+- Klik riwayat → `/tentor/presensi/isi?pertemuan_id={pertemuan_id}`.
+
+### 5.4 Isi Kehadiran Siswa dan Panel Penilaian
+
+**Route:** `GET /tentor/presensi/isi?kelas_id={id}` atau `?pertemuan_id={id}`
+**View:** `tentor/presensi/form.php`
+
+Setiap siswa memiliki tombol status berikut:
+
+| Tombol | Nilai database | Arti |
+|--------|----------------|------|
+| `H` | `hadir` | Hadir |
+| `S` | `sakit` | Sakit |
+| `I` | `izin` | Izin |
+| `A` | `alfa` | Alfa |
+| `N` | `none` | Belum diisi |
+
+- Klik `H` memilih status hadir sekaligus membuka panel penilaian siswa.
+- Panel berisi nilai kemampuan/akademik dan nilai sikap dengan pilihan A/B/C/D.
+- Tombol **Batal** menutup panel tanpa memperbarui nilai.
+- Tombol **Simpan Penilaian** menyalin nilai ke hidden field siswa terkait.
+- Tombol utama **Simpan Presensi & Nilai** → `POST /tentor/presensi/simpan`.
+- Setelah berhasil, data disinkronkan melalui `Pertemuan::syncPresensi()` lalu redirect ke `/tentor/presensi`.
+
+### 5.5 Sesi & Presensi (Tentor)
 
 **Base Route:** `/tentor/pertemuan`
 
@@ -672,6 +719,8 @@ POST /tentor/pertemuan/simpan
 - Sama persis dengan presensi admin, tapi dengan **guard keamanan**: cek `pertemuan.tentor_id === $this->tentorId`
 - Jika pertemuan bukan miliknya → flash error + redirect ke daftar
 - Form submit → POST `/tentor/pertemuan/{id}/presensi/update` → redirect `/tentor/pertemuan`
+
+> Route daftar pertemuan dan route lama edit presensi tetap tersedia sebagai kompatibilitas. Alur baru dari dashboard menggunakan `/tentor/presensi` dan `/tentor/presensi/isi`.
 
 ---
 
@@ -807,3 +856,4 @@ Tidak ada polling/AJAX — status dikalkulasi saat page load.
 | Versi | Tanggal | Perubahan |
 |-------|---------|-----------|
 | `1.0.0` | 2026-09-21 | Dokumentasi awal — semua alur UI portal publik, admin, dan tentor |
+| `1.1.0` | 2026-10-03 | Menambahkan dokumentasi alur dashboard presensi tentor, filter kelas, status H/S/I/A/N, dan panel penilaian siswa |

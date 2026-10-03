@@ -69,8 +69,8 @@ class DashboardController extends Controller
 
             // Jadwal tentor hari ini
             $stmtToday = $db->prepare(
-                "SELECT j.hari, j.jam_mulai, j.jam_selesai, j.ruangan,
-                        k.nama AS kelas_nama, jg.nama AS jenjang_nama, pr.nama AS program_nama
+                "SELECT j.id AS jadwal_id, j.kelas_id, j.hari, j.jam_mulai, j.jam_selesai, j.ruangan, j.mata_pelajaran,
+                        k.nama AS kelas_nama, jg.nama AS jenjang_nama, pr.nama AS program_nama, pr.tipe AS program_tipe
                  FROM `jadwal` j
                  JOIN `kelas` k ON k.id = j.kelas_id
                  JOIN `jenjang` jg ON jg.id = k.jenjang_id
@@ -82,18 +82,35 @@ class DashboardController extends Controller
             );
             $stmtToday->execute(['t_id' => $tentorId]);
             $jadwalHariIni = $stmtToday->fetchAll();
+
+            // Jadwal terdekat jika hari ini tidak ada
+            $stmtNext = $db->prepare(
+                "SELECT j.id AS jadwal_id, j.kelas_id, j.hari, j.jam_mulai, j.jam_selesai, j.ruangan, j.mata_pelajaran,
+                        k.nama AS kelas_nama, jg.nama AS jenjang_nama, pr.nama AS program_nama, pr.tipe AS program_tipe
+                 FROM `jadwal` j
+                 JOIN `kelas` k ON k.id = j.kelas_id
+                 JOIN `jenjang` jg ON jg.id = k.jenjang_id
+                 JOIN `program` pr ON pr.id = k.program_id
+                 WHERE j.tentor_id = :t_id
+                   AND j.status_aktif = 1
+                 ORDER BY (j.hari < WEEKDAY(CURRENT_DATE()) + 1), j.hari ASC, j.jam_mulai ASC
+                 LIMIT 2"
+            );
+            $stmtNext->execute(['t_id' => $tentorId]);
+            $jadwalTerdekat = $stmtNext->fetchAll();
         }
 
         // Pengumuman khusus tentor/semua
         $announcements = $this->pengumumanModel->getLatestActiveAnnouncements('tentor');
 
         $this->render('tentor/beranda', [
-            'pageTitle' => 'Beranda Tentor',
-            'activeNav' => 'beranda',
-            'tentorProfil' => $tentorProfil,
-            'stats' => $stats,
-            'jadwalHariIni' => $jadwalHariIni,
-            'announcements' => $announcements,
+            'pageTitle'      => 'Beranda Tentor',
+            'activeNav'      => 'beranda',
+            'tentorProfil'   => $tentorProfil,
+            'stats'          => $stats,
+            'jadwalHariIni'  => $jadwalHariIni,
+            'jadwalTerdekat' => $jadwalTerdekat ?? [],
+            'announcements'  => $announcements,
         ], 'tentor/layout');
     }
 }
