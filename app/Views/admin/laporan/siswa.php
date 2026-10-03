@@ -153,15 +153,15 @@ if ($harian) {
                     </div>
                 </div>
                 <div class="flex items-center gap-1">
-                    <a href="/admin/laporan/siswa?mode=harian&tanggal=<?= $prevDate ?><?= $kelasId > 0 ? '&kelas_id=' . $kelasId : '' ?>" class="w-8 h-8 rounded-lg bg-[#FAF9F7] border border-[#E5E3DD] flex items-center justify-center text-[#4B5563] hover:text-[#1B4332] active:scale-95 transition-all" title="Hari Sebelumnya">
+                    <a href="/admin/laporan/siswa?mode=harian&tanggal=<?= $prevDate ?><?= $kelasId > 0 ? '&kelas_id=' . $kelasId : '' ?>&status=<?= e($status ?? 'semua') ?>" class="w-8 h-8 rounded-lg bg-[#FAF9F7] border border-[#E5E3DD] flex items-center justify-center text-[#4B5563] hover:text-[#1B4332] active:scale-95 transition-all" title="Hari Sebelumnya">
                         <span class="material-symbols-outlined text-[18px]">chevron_left</span>
                     </a>
                     <!-- Quick Date Picker -->
                     <label class="w-8 h-8 rounded-lg bg-[#FAF9F7] border border-[#E5E3DD] flex items-center justify-center text-[#4B5563] hover:text-[#1B4332] active:scale-95 transition-all cursor-pointer relative" title="Pilih Tanggal">
                         <span class="material-symbols-outlined text-[18px]">calendar_today</span>
-                        <input type="date" value="<?= e($currentDate) ?>" onchange="window.location.href='/admin/laporan/siswa?mode=harian&tanggal='+this.value+'<?= $kelasId > 0 ? '&kelas_id=' . $kelasId : '' ?>'" class="absolute inset-0 opacity-0 cursor-pointer w-full h-full">
+                        <input type="date" value="<?= e($currentDate) ?>" onchange="window.location.href='/admin/laporan/siswa?mode=harian&tanggal='+this.value+'<?= $kelasId > 0 ? '&kelas_id=' . $kelasId : '' ?>&status=<?= e($status ?? 'semua') ?>'" class="absolute inset-0 opacity-0 cursor-pointer w-full h-full">
                     </label>
-                    <a href="/admin/laporan/siswa?mode=harian&tanggal=<?= $nextDate ?><?= $kelasId > 0 ? '&kelas_id=' . $kelasId : '' ?>" class="w-8 h-8 rounded-lg bg-[#FAF9F7] border border-[#E5E3DD] flex items-center justify-center text-[#4B5563] hover:text-[#1B4332] active:scale-95 transition-all" title="Hari Berikutnya">
+                    <a href="/admin/laporan/siswa?mode=harian&tanggal=<?= $nextDate ?><?= $kelasId > 0 ? '&kelas_id=' . $kelasId : '' ?>&status=<?= e($status ?? 'semua') ?>" class="w-8 h-8 rounded-lg bg-[#FAF9F7] border border-[#E5E3DD] flex items-center justify-center text-[#4B5563] hover:text-[#1B4332] active:scale-95 transition-all" title="Hari Berikutnya">
                         <span class="material-symbols-outlined text-[18px]">chevron_right</span>
                     </a>
                 </div>
@@ -171,6 +171,7 @@ if ($harian) {
             <form method="GET" action="/admin/laporan/siswa" class="flex items-center gap-2">
                 <input type="hidden" name="mode" value="harian">
                 <input type="hidden" name="tanggal" value="<?= e($currentDate) ?>">
+                <input type="hidden" name="status" value="<?= e($status ?? 'semua') ?>">
                 <div class="relative flex-1">
                     <select name="kelas_id" onchange="this.form.submit()" class="w-full appearance-none bg-white border border-[#E5E3DD] rounded-xl px-3.5 py-2.5 pr-8 text-xs font-semibold text-zinc-800 shadow-xs focus:ring-1 focus:ring-[#1B4332] focus:border-[#1B4332]">
                         <option value="0">Semua Kelas</option>
@@ -185,6 +186,19 @@ if ($harian) {
                     </div>
                 </div>
             </form>
+
+            <!-- Filter Status Kehadiran -->
+            <div class="flex flex-col gap-2">
+                <span class="text-[10px] font-bold uppercase tracking-wider text-[#6B7280]">Filter Status</span>
+                <div class="grid grid-cols-4 gap-1.5 p-1 bg-[#ECEAE6] rounded-xl">
+                    <?php foreach (['semua' => 'Semua', 'sakit' => 'Sakit', 'izin' => 'Izin', 'alfa' => 'Alfa'] as $statusValue => $statusLabel): ?>
+                        <a href="/admin/laporan/siswa?mode=harian&tanggal=<?= urlencode($currentDate) ?>&kelas_id=<?= (int) $kelasId ?>&status=<?= e($statusValue) ?>"
+                           class="py-2 rounded-lg text-[11px] font-bold text-center <?= ($status ?? 'semua') === $statusValue ? 'bg-[#1B4332] text-white shadow-sm' : 'text-[#4B5563] hover:bg-white/70' ?>">
+                            <?= e($statusLabel) ?>
+                        </a>
+                    <?php endforeach; ?>
+                </div>
+            </div>
 
             <!-- Quick Summary Stats Banner -->
             <div class="grid grid-cols-3 gap-2">

@@ -52,10 +52,13 @@ class LaporanController extends Controller
         if ($mode === 'harian') {
             $tanggal = $_GET['tanggal'] ?? date('Y-m-d');
             $kelasId = (int) ($_GET['kelas_id'] ?? 0);
+            $status = $_GET['status'] ?? 'semua';
+            $status = in_array($status, ['semua', 'sakit', 'izin', 'alfa'], true) ? $status : 'semua';
             $data += [
                 'tanggal' => $tanggal,
                 'kelasId' => $kelasId,
-                'report'  => $this->pertemuanModel->getDailyReportByClass($tanggal, $kelasId),
+                'status'  => $status,
+                'report'  => $this->pertemuanModel->getDailyReportByClass($tanggal, $kelasId, $status),
             ];
         } else {
             $kelasId = (int) ($_GET['kelas_id'] ?? 0);

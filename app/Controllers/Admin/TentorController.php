@@ -30,14 +30,11 @@ class TentorController extends Controller
 
     public function create(): void
     {
-        $availableUsers = $this->tentorModel->getAvailableUsersForTentor();
-
         $this->render('admin/tentor/form', [
             'pageTitle' => 'Tambah Profil Tentor',
             'activeNav' => 'tentor',
             'isEdit' => false,
             'tentor' => null,
-            'availableUsers' => $availableUsers,
             'errors' => []
         ]);
     }
@@ -45,12 +42,10 @@ class TentorController extends Controller
     public function store(): void
     {
         $namaLengkap = trim($_POST['nama_lengkap'] ?? '');
+        $username = trim($_POST['username'] ?? '');
         $asalUniversitas = trim($_POST['asal_universitas'] ?? '');
         $nomorTelepon = trim($_POST['nomor_telepon'] ?? '');
         $bio = trim($_POST['bio'] ?? '');
-        $rateGajiPerJam = (float) ($_POST['rate_gaji_per_jam'] ?? 0);
-        $tarifPerSesi = (float) ($_POST['tarif_per_sesi'] ?? 0);
-        $penggunaId = (int) ($_POST['pengguna_id'] ?? 0);
         $statusAktif = isset($_POST['status_aktif']) ? 1 : 0;
 
         $errors = [];
@@ -63,15 +58,12 @@ class TentorController extends Controller
             $errors['asal_universitas'] = 'Asal universitas wajib diisi.';
         }
 
-        if ($penggunaId <= 0) {
-            $errors['pengguna_id'] = 'Pilih akun pengguna tentor.';
-        } else {
-            $user = $this->penggunaModel->find($penggunaId);
-            if (!$user || $user['peran'] !== 'tentor') {
-                $errors['pengguna_id'] = 'Akun pengguna tidak valid atau bukan bertipe tentor.';
-            } elseif ($this->tentorModel->findByPenggunaId($penggunaId)) {
-                $errors['pengguna_id'] = 'Akun pengguna ini sudah terikat dengan profil tentor lain.';
-            }
+        if (empty($username)) {
+            $errors['username'] = 'Username tentor wajib diisi.';
+        } elseif (strlen($username) < 3 || strlen($username) > 50) {
+            $errors['username'] = 'Username harus antara 3 - 50 karakter.';
+        } elseif ($this->penggunaModel->isUsernameExists($username)) {
+            $errors['username'] = 'Username sudah digunakan oleh akun lain.';
         }
 
         // Upload foto profil jika ada
@@ -90,35 +82,51 @@ class TentorController extends Controller
                 'isEdit' => false,
                 'tentor' => [
                     'nama_lengkap' => $namaLengkap,
+                    'username' => $username,
                     'asal_universitas' => $asalUniversitas,
                     'nomor_telepon' => $nomorTelepon,
                     'bio' => $bio,
-                    'rate_gaji_per_jam' => $rateGajiPerJam,
-                    'tarif_per_sesi' => $tarifPerSesi,
-                    'pengguna_id' => $penggunaId,
                     'status_aktif' => $statusAktif,
                 ],
-                'availableUsers' => $this->tentorModel->getAvailableUsersForTentor(),
                 'errors' => $errors
             ]);
             return;
         }
 
-        $this->tentorModel->create([
-            'pengguna_id' => $penggunaId,
-            'nama_lengkap' => $namaLengkap,
-            'asal_universitas' => $asalUniversitas,
-            'nomor_telepon' => $nomorTelepon ?: null,
-            'bio' => $bio ?: null,
-            'foto' => $fotoPath,
-            'rate_gaji_per_jam' => $rateGajiPerJam,
-            'tarif_per_sesi' => $tarifPerSesi,
-            'status_aktif' => $statusAktif,
-            'dibuat_pada' => date('Y-m-d H:i:s'),
-            'diubah_pada' => date('Y-m-d H:i:s'),
-        ]);
+        $temporaryPassword = $this->generateTemporaryPassword();
+        $db = \getDBConnection();
+        try {
+            $db->beginTransaction();
+            $penggunaId = (int) $this->penggunaModel->create([
+                'username' => $username,
+                'password' => password_hash($temporaryPassword, PASSWORD_DEFAULT),
+                'peran' => 'tentor',
+                'status_aktif' => $statusAktif,
+                'dibuat_pada' => date('Y-m-d H:i:s'),
+                'diubah_pada' => date('Y-m-d H:i:s'),
+            ]);
+            $this->tentorModel->create([
+                'pengguna_id' => $penggunaId,
+                'nama_lengkap' => $namaLengkap,
+                'asal_universitas' => $asalUniversitas,
+                'nomor_telepon' => $nomorTelepon ?: null,
+                'bio' => $bio ?: null,
+                'foto' => $fotoPath,
+                'status_aktif' => $statusAktif,
+                'dibuat_pada' => date('Y-m-d H:i:s'),
+                'diubah_pada' => date('Y-m-d H:i:s'),
+            ]);
+            $db->commit();
+        } catch (\Throwable $e) {
+            if ($db->inTransaction()) {
+                $db->rollBack();
+            }
+            $_SESSION['flash_error'] = 'Profil dan akun tentor gagal dibuat.';
+            $this->redirect('/admin/tentor/tambah');
+        }
 
-        $_SESSION['flash_success'] = 'Profil tentor berhasil dibuat.';
+        $this->setTemporaryCredentials($username, $temporaryPassword);
+        $_SESSION['flash_success'] = 'Profil dan akun tentor berhasil dibuat.';
         $this->redirect('/admin/tentor');
     }
 
@@ -131,14 +139,11 @@ class TentorController extends Controller
             $this->redirect('/admin/tentor');
         }
 
-        $availableUsers = $this->tentorModel->getAvailableUsersForTentor((int) $tentor['pengguna_id']);
-
         $this->render('admin/tentor/form', [
             'pageTitle' => 'Edit Profil Tentor',
             'activeNav' => 'tentor',
             'isEdit' => true,
             'tentor' => $tentor,
-            'availableUsers' => $availableUsers,
             'errors' => []
         ]);
     }
@@ -154,12 +159,10 @@ class TentorController extends Controller
         }
 
         $namaLengkap = trim($_POST['nama_lengkap'] ?? '');
+        $username = trim($_POST['username'] ?? '');
         $asalUniversitas = trim($_POST['asal_universitas'] ?? '');
         $nomorTelepon = trim($_POST['nomor_telepon'] ?? '');
         $bio = trim($_POST['bio'] ?? '');
-        $rateGajiPerJam = (float) ($_POST['rate_gaji_per_jam'] ?? 0);
-        $tarifPerSesi = (float) ($_POST['tarif_per_sesi'] ?? 0);
-        $penggunaId = (int) ($_POST['pengguna_id'] ?? 0);
         $statusAktif = isset($_POST['status_aktif']) ? 1 : 0;
 
         $errors = [];
@@ -172,18 +175,12 @@ class TentorController extends Controller
             $errors['asal_universitas'] = 'Asal universitas wajib diisi.';
         }
 
-        if ($penggunaId <= 0) {
-            $errors['pengguna_id'] = 'Pilih akun pengguna tentor.';
-        } else {
-            $user = $this->penggunaModel->find($penggunaId);
-            if (!$user || $user['peran'] !== 'tentor') {
-                $errors['pengguna_id'] = 'Akun pengguna tidak valid.';
-            } else {
-                $existing = $this->tentorModel->findByPenggunaId($penggunaId);
-                if ($existing && (int) $existing['id'] !== $idInt) {
-                    $errors['pengguna_id'] = 'Akun pengguna ini sudah terikat dengan profil tentor lain.';
-                }
-            }
+        if (empty($username)) {
+            $errors['username'] = 'Username tentor wajib diisi.';
+        } elseif (strlen($username) < 3 || strlen($username) > 50) {
+            $errors['username'] = 'Username harus antara 3 - 50 karakter.';
+        } elseif ($this->penggunaModel->isUsernameExists($username, (int) $tentor['pengguna_id'])) {
+            $errors['username'] = 'Username sudah digunakan oleh akun lain.';
         }
 
         $fotoPath = $tentor['foto'];
@@ -201,29 +198,29 @@ class TentorController extends Controller
                 'isEdit' => true,
                 'tentor' => array_merge($tentor, [
                     'nama_lengkap' => $namaLengkap,
+                    'username' => $username,
                     'asal_universitas' => $asalUniversitas,
                     'nomor_telepon' => $nomorTelepon,
                     'bio' => $bio,
-                    'rate_gaji_per_jam' => $rateGajiPerJam,
-                    'tarif_per_sesi' => $tarifPerSesi,
-                    'pengguna_id' => $penggunaId,
                     'status_aktif' => $statusAktif,
                 ]),
-                'availableUsers' => $this->tentorModel->getAvailableUsersForTentor((int) $tentor['pengguna_id']),
                 'errors' => $errors
             ]);
             return;
         }
 
         $this->tentorModel->update($idInt, [
-            'pengguna_id' => $penggunaId,
             'nama_lengkap' => $namaLengkap,
             'asal_universitas' => $asalUniversitas,
             'nomor_telepon' => $nomorTelepon ?: null,
             'bio' => $bio ?: null,
             'foto' => $fotoPath,
-            'rate_gaji_per_jam' => $rateGajiPerJam,
-            'tarif_per_sesi' => $tarifPerSesi,
+            'status_aktif' => $statusAktif,
+            'diubah_pada' => date('Y-m-d H:i:s'),
+        ]);
+
+        $this->penggunaModel->update((int) $tentor['pengguna_id'], [
+            'username' => $username,
             'status_aktif' => $statusAktif,
             'diubah_pada' => date('Y-m-d H:i:s'),
         ]);
@@ -250,6 +247,38 @@ class TentorController extends Controller
         }
 
         $this->redirect('/admin/tentor');
+    }
+
+    public function resetPassword(string $id): void
+    {
+        $tentor = $this->tentorModel->findWithPengguna((int) $id);
+        if (!$tentor) {
+            $_SESSION['flash_error'] = 'Data tentor tidak ditemukan.';
+            $this->redirect('/admin/tentor');
+        }
+
+        $temporaryPassword = $this->generateTemporaryPassword();
+        $this->penggunaModel->update((int) $tentor['pengguna_id'], [
+            'password' => password_hash($temporaryPassword, PASSWORD_DEFAULT),
+            'diubah_pada' => date('Y-m-d H:i:s'),
+        ]);
+        $this->setTemporaryCredentials($tentor['username'], $temporaryPassword);
+        $_SESSION['flash_success'] = 'Password tentor berhasil di-reset.';
+        $this->redirect('/admin/tentor');
+    }
+
+    private function generateTemporaryPassword(): string
+    {
+        return substr(bin2hex(random_bytes(8)), 0, 12);
+    }
+
+    private function setTemporaryCredentials(string $username, string $password): void
+    {
+        $_SESSION['temporary_credentials'] = [
+            'username' => $username,
+            'password' => $password,
+            'expires_at' => time() + 600,
+        ];
     }
 
     private function handleFileUpload(array $file, array &$errors): ?string

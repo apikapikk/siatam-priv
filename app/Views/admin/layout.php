@@ -72,6 +72,51 @@
                 <?php unset($_SESSION['flash_error']); ?>
             <?php endif; ?>
 
+            <?php
+            $temporaryCredentials = $_SESSION['temporary_credentials'] ?? null;
+            if ($temporaryCredentials && ($temporaryCredentials['expires_at'] ?? 0) <= time()) {
+                unset($_SESSION['temporary_credentials']);
+                $temporaryCredentials = null;
+            }
+            ?>
+            <?php if ($temporaryCredentials): ?>
+                <section id="temporary-credentials" class="bg-amber-50 border border-amber-200 text-amber-950 px-4 py-4 rounded-2xl shadow-sm">
+                    <div class="flex items-start justify-between gap-3">
+                        <div>
+                            <h2 class="font-bold text-sm flex items-center gap-2"><span class="material-symbols-outlined text-amber-700">key</span> Kredensial sementara</h2>
+                            <p class="text-xs mt-1">Salin sekarang. Password ini hanya ditampilkan sampai waktu habis dan tidak disimpan dalam bentuk asli.</p>
+                        </div>
+                        <button type="button" onclick="document.getElementById('temporary-credentials')?.remove()" class="text-amber-700" aria-label="Tutup">&times;</button>
+                    </div>
+                    <div class="mt-3 grid grid-cols-1 sm:grid-cols-2 gap-2 text-sm">
+                        <div class="bg-white/70 rounded-xl px-3 py-2"><span class="block text-[10px] uppercase text-amber-700">Username</span><strong id="temporary-username"><?= e($temporaryCredentials['username']) ?></strong></div>
+                        <div class="bg-white/70 rounded-xl px-3 py-2"><span class="block text-[10px] uppercase text-amber-700">Password</span><strong id="temporary-password" class="font-mono"><?= e($temporaryCredentials['password']) ?></strong></div>
+                    </div>
+                    <div class="mt-3 flex items-center justify-between gap-3">
+                        <span id="temporary-countdown" class="text-xs font-semibold"></span>
+                        <button type="button" onclick="navigator.clipboard?.writeText('Username: '+document.getElementById('temporary-username').textContent+'\nPassword: '+document.getElementById('temporary-password').textContent)" class="px-3 py-2 rounded-lg bg-amber-700 text-white text-xs font-semibold">Salin Kredensial</button>
+                    </div>
+                </section>
+                <script>
+                    (() => {
+                        const expiresAt = <?= (int) $temporaryCredentials['expires_at'] ?> * 1000;
+                        const countdown = document.getElementById('temporary-countdown');
+                        const tick = () => {
+                            const remaining = Math.max(0, expiresAt - Date.now());
+                            const minutes = Math.floor(remaining / 60000);
+                            const seconds = Math.floor((remaining % 60000) / 1000);
+                            if (remaining <= 0) {
+                                document.getElementById('temporary-credentials')?.remove();
+                                return;
+                            }
+                            countdown.textContent = `Kedaluwarsa dalam ${minutes}:${String(seconds).padStart(2, '0')}`;
+                            setTimeout(tick, 1000);
+                        };
+                        tick();
+                    })();
+                </script>
+            <?php endif; ?>
+
             <?php require $contentView; ?>
         </main>
 

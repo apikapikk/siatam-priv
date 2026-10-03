@@ -156,8 +156,10 @@ class Pertemuan extends Model
         ];
     }
 
-    public function getDailyReportByClass(string $date, int $kelasId = 0): array
+    public function getDailyReportByClass(string $date, int $kelasId = 0, string $status = 'semua'): array
     {
+        $allowedStatuses = ['hadir', 'sakit', 'izin', 'alfa'];
+        $statusFilter = in_array($status, $allowedStatuses, true) ? $status : 'semua';
         $sql = "SELECT p.id AS pertemuan_id, p.tanggal, p.jam_mulai, p.jam_selesai,
                        k.id AS kelas_id, k.nama AS kelas_nama,
                        t.nama_lengkap AS tentor_nama,
@@ -170,12 +172,15 @@ class Pertemuan extends Model
                 JOIN tentor t ON t.id = p.tentor_id
                 JOIN presensi prs ON prs.pertemuan_id = p.id
                 JOIN siswa s ON s.id = prs.siswa_id
-                WHERE p.tanggal = :tanggal" . ($kelasId > 0 ? " AND j.kelas_id = :kelas_id" : '') . "
+                WHERE p.tanggal = :tanggal" . ($kelasId > 0 ? " AND j.kelas_id = :kelas_id" : '') . ($statusFilter !== 'semua' ? " AND prs.status_kehadiran = :status_filter" : '') . "
                 ORDER BY k.nama ASC, p.jam_mulai ASC, s.nama_lengkap ASC";
         $stmt = $this->db->prepare($sql);
         $params = ['tanggal' => $date];
         if ($kelasId > 0) {
             $params['kelas_id'] = $kelasId;
+        }
+        if ($statusFilter !== 'semua') {
+            $params['status_filter'] = $statusFilter;
         }
         $stmt->execute($params);
         return $stmt->fetchAll();

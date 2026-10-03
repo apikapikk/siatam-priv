@@ -123,6 +123,7 @@ $router->post('/admin/tentor/simpan', [TentorController::class, 'store']);
 $router->get('/admin/tentor/{id}/edit', [TentorController::class, 'edit']);
 $router->post('/admin/tentor/{id}/update', [TentorController::class, 'update']);
 $router->post('/admin/tentor/{id}/hapus', [TentorController::class, 'delete']);
+$router->post('/admin/tentor/{id}/reset-password', [TentorController::class, 'resetPassword']);
 
 // Data Siswa & Wali Murid
 $router->get('/admin/siswa', [SiswaController::class, 'index']);

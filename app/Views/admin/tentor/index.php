@@ -34,7 +34,12 @@
                         <p class="text-xs text-gray-500 mt-1"><?= e($tentor['asal_universitas'] ?: 'Universitas belum diisi') ?> · @<?= e($tentor['username']) ?></p>
                     </div>
                 </div>
-                <a href="/admin/tentor/<?= $tentor['id'] ?>/edit" class="shrink-0 px-3.5 py-2 rounded-xl border border-[#1b4332]/30 text-[#1b4332] text-xs font-semibold hover:bg-[#1b4332] hover:text-white">Kelola</a>
+                <div class="shrink-0 flex items-center gap-2">
+                    <a href="/admin/tentor/<?= $tentor['id'] ?>/edit" class="px-3.5 py-2 rounded-xl border border-[#1b4332]/30 text-[#1b4332] text-xs font-semibold hover:bg-[#1b4332] hover:text-white">Kelola</a>
+                    <form action="/admin/tentor/<?= $tentor['id'] ?>/reset-password" method="POST" onsubmit="return confirm('Reset password tentor ini? Password lama akan langsung tidak berlaku.');">
+                        <button type="submit" class="px-3.5 py-2 rounded-xl border border-amber-300 text-amber-700 text-xs font-semibold hover:bg-amber-50">Reset Password</button>
+                    </form>
+                </div>
             </div>
         <?php endforeach; endif; ?>
     </div>

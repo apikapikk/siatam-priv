@@ -17,21 +17,14 @@
         <form action="<?= $isEdit ? '/admin/tentor/' . $tentor['id'] . '/update' : '/admin/tentor/simpan' ?>" method="POST" enctype="multipart/form-data" class="flex flex-col gap-4">
             
             <div class="flex flex-col gap-1.5">
-                <label class="text-xs font-semibold text-gray-700">Akun Pengguna <span class="text-red-500">*</span></label>
+                <label class="text-xs font-semibold text-gray-700">Username Login Tentor <span class="text-red-500">*</span></label>
                 <div class="relative flex items-center">
                     <span class="material-symbols-outlined absolute left-3.5 text-gray-400 text-[18px]">badge</span>
-                    <select name="pengguna_id" required class="w-full pl-10 pr-10 py-2.5 bg-[#FAF9F7] text-sm text-gray-800 rounded-xl border border-gray-200 focus:outline-none focus:border-[#324f47] focus:ring-1 focus:ring-[#324f47] transition-all appearance-none cursor-pointer">
-                        <option value="">-- Pilih Akun User Tentor --</option>
-                        <?php foreach ($availableUsers as $user): ?>
-                            <option value="<?= $user['id'] ?>" <?= ((int) ($tentor['pengguna_id'] ?? 0) === (int) $user['id']) ? 'selected' : '' ?>>
-                                <?= e($user['username']) ?> (ID: <?= $user['id'] ?>)
-                            </option>
-                        <?php endforeach; ?>
-                    </select>
-                    <span class="material-symbols-outlined absolute right-3.5 text-gray-400 text-[18px] pointer-events-none">expand_more</span>
+                    <input type="text" name="username" value="<?= e($tentor['username'] ?? '') ?>" minlength="3" maxlength="50" required class="w-full pl-10 pr-4 py-2.5 bg-[#FAF9F7] text-sm text-gray-800 rounded-xl border border-gray-200 focus:outline-none focus:border-[#324f47] focus:ring-1 focus:ring-[#324f47] transition-all">
                 </div>
-                <?php if (isset($errors['pengguna_id'])): ?>
-                    <small class="text-xs text-red-600"><?= e($errors['pengguna_id']) ?></small>
+                <small class="text-[11px] text-gray-500">Akun otomatis dibuat dengan peran Tentor. Password awal dibuat otomatis dan hanya ditampilkan selama 10 menit setelah disimpan.</small>
+                <?php if (isset($errors['username'])): ?>
+                    <small class="text-xs text-red-600"><?= e($errors['username']) ?></small>
                 <?php endif; ?>
             </div>
 
@@ -85,24 +78,6 @@
             <div class="flex flex-col gap-1.5">
                 <label class="text-xs font-semibold text-gray-700">Bio / Pengalaman Mengajar</label>
                 <textarea name="bio" rows="3" placeholder="Informasi singkat atau pengalaman mengajar tentor..." class="w-full px-4 py-2.5 bg-[#FAF9F7] text-sm text-gray-800 rounded-xl border border-gray-200 focus:outline-none focus:border-[#324f47] focus:ring-1 focus:ring-[#324f47] transition-all"><?= e($tentor['bio'] ?? '') ?></textarea>
-            </div>
-
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
-                <div class="flex flex-col gap-1.5">
-                    <label class="text-xs font-semibold text-gray-700">Rate Gaji per Jam</label>
-                    <div class="relative flex items-center">
-                        <span class="material-symbols-outlined absolute left-3.5 text-gray-400 text-[18px]">payments</span>
-                        <input type="number" name="rate_gaji_per_jam" min="0" step="1000" value="<?= e((string) ($tentor['rate_gaji_per_jam'] ?? 0)) ?>" placeholder="Contoh: 75000" class="w-full pl-10 pr-4 py-2.5 bg-[#FAF9F7] text-sm text-gray-800 rounded-xl border border-gray-200 focus:outline-none focus:border-[#324f47] focus:ring-1 focus:ring-[#324f47] transition-all">
-                    </div>
-                </div>
-
-                <div class="flex flex-col gap-1.5">
-                    <label class="text-xs font-semibold text-gray-700">Tarif per Sesi</label>
-                    <div class="relative flex items-center">
-                        <span class="material-symbols-outlined absolute left-3.5 text-gray-400 text-[18px]">receipt_long</span>
-                        <input type="number" name="tarif_per_sesi" min="0" step="1000" value="<?= e((string) ($tentor['tarif_per_sesi'] ?? 0)) ?>" placeholder="Isi jika pakai tarif tetap" class="w-full pl-10 pr-4 py-2.5 bg-[#FAF9F7] text-sm text-gray-800 rounded-xl border border-gray-200 focus:outline-none focus:border-[#324f47] focus:ring-1 focus:ring-[#324f47] transition-all">
-                    </div>
-                </div>
             </div>
 
             <div class="pt-1">

@@ -1,5 +1,27 @@
 # Log Perkembangan Frontend & Integration — Siatama Privat
 
+## 2026-10-03 — Pembuatan Akun Tentor Otomatis dan Reset Password
+
+- Status: **DONE**.
+- Form `/admin/tentor/tambah` tidak lagi memilih akun pengguna dari dropdown; admin sekarang mengisi username login tentor secara langsung.
+- Backend: saat profil tentor dibuat, sistem otomatis membuat akun `pengguna` dengan peran `tentor` dalam transaksi yang sama.
+- Backend: password dibuat acak, disimpan hanya dalam bentuk hash, dan tidak pernah disimpan sebagai plaintext.
+- Frontend: kredensial awal ditampilkan setelah pembuatan selama maksimal 10 menit, dilengkapi countdown dan tombol salin.
+- Backend/frontend: ditambahkan reset password untuk akun tentor yang sudah ada melalui `POST /admin/tentor/{id}/reset-password`.
+- Reset password membatalkan password lama dan menampilkan password baru sementara dengan mekanisme 10 menit yang sama.
+- Form edit tentor sekarang mengelola username langsung dan menyinkronkan status aktif ke akun pengguna.
+- Validasi: seluruh PHP terkait lolos `php -l`; tidak ada lagi dropdown `Akun Pengguna` pada form tentor.
+
+## 2026-10-03 — Menghapus Input Gaji Tentor dan Filter Status Laporan Siswa
+
+- Status: **DONE**.
+- Admin tentor: field `Rate Gaji per Jam` dan `Tarif per Sesi` dihapus dari form tambah/edit.
+- Backend tentor: proses create/update tidak lagi membaca atau menyimpan nilai gaji dari request; kolom database lama dibiarkan untuk kompatibilitas data.
+- Laporan siswa harian: ditambahkan filter `Semua`, `Sakit`, `Izin`, dan `Alfa`.
+- Backend laporan: `Pertemuan::getDailyReportByClass()` menerima filter status dan menerapkannya langsung pada query presensi.
+- Frontend laporan: filter status mempertahankan tanggal dan kelas aktif ketika digunakan atau saat berpindah tanggal.
+- Validasi: seluruh file PHP terkait lolos `php -l` dan tidak ada input gaji tersisa pada form admin tentor.
+
 ## 2026-10-03 — Normalisasi Filter Tipe dan Jenjang Presensi
 
 - Status: **DONE**.
