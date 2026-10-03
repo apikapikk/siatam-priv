@@ -52,4 +52,26 @@ class PendaftaranSiswa extends Model
         $stmt = $this->db->prepare($sql);
         $stmt->execute(['siswa_id' => $siswaId]);
     }
+
+    public function syncActivePlacement(int $siswaId, int $kelasId): void
+    {
+        $this->db->beginTransaction();
+        try {
+            $this->deactivateActiveRegistrations($siswaId);
+            $this->create([
+                'siswa_id' => $siswaId,
+                'kelas_id' => $kelasId,
+                'paket_id' => null,
+                'tanggal_mulai' => date('Y-m-d'),
+                'tanggal_selesai' => null,
+                'status' => 'aktif',
+                'dibuat_pada' => date('Y-m-d H:i:s'),
+                'diubah_pada' => date('Y-m-d H:i:s'),
+            ]);
+            $this->db->commit();
+        } catch (\Throwable $e) {
+            $this->db->rollBack();
+            throw $e;
+        }
+    }
 }

@@ -155,4 +155,39 @@ class Pertemuan extends Model
             'summary_by_student' => array_values($summaryByStudent),
         ];
     }
+
+    public function getDailyReportByClass(string $date, int $kelasId = 0): array
+    {
+        $sql = "SELECT p.id AS pertemuan_id, p.tanggal, p.jam_mulai, p.jam_selesai,
+                       k.id AS kelas_id, k.nama AS kelas_nama,
+                       t.nama_lengkap AS tentor_nama,
+                       j.mata_pelajaran,
+                       s.id AS siswa_id, s.nis, s.nama_lengkap AS siswa_nama, s.asal_sekolah,
+                       prs.status_kehadiran, prs.nilai_sikap, prs.nilai_akademik, prs.catatan
+                FROM pertemuan p
+                JOIN jadwal j ON j.id = p.jadwal_id
+                JOIN kelas k ON k.id = j.kelas_id
+                JOIN tentor t ON t.id = p.tentor_id
+                JOIN presensi prs ON prs.pertemuan_id = p.id
+                JOIN siswa s ON s.id = prs.siswa_id
+                WHERE p.tanggal = :tanggal" . ($kelasId > 0 ? " AND j.kelas_id = :kelas_id" : '') . "
+                ORDER BY k.nama ASC, p.jam_mulai ASC, s.nama_lengkap ASC";
+        $stmt = $this->db->prepare($sql);
+        $params = ['tanggal' => $date];
+        if ($kelasId > 0) {
+            $params['kelas_id'] = $kelasId;
+        }
+        $stmt->execute($params);
+        return $stmt->fetchAll();
+    }
+
+
+    public function getMonthlyMeetingCountsByClass(int $month, int $year): array
+    {
+        $stmt = $this->db->prepare("SELECT j.kelas_id, COUNT(DISTINCT p.id) AS total_pertemuan FROM pertemuan p JOIN jadwal j ON j.id = p.jadwal_id WHERE MONTH(p.tanggal)=:month AND YEAR(p.tanggal)=:year GROUP BY j.kelas_id");
+        $stmt->execute(['month' => $month, 'year' => $year]);
+        $counts = [];
+        foreach ($stmt->fetchAll() as $row) $counts[(int) $row['kelas_id']] = (int) $row['total_pertemuan'];
+        return $counts;
+    }
 }

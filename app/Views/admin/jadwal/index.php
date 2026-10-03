@@ -1,104 +1,64 @@
+<?php
+$hariNama = [1 => 'Senin', 2 => 'Selasa', 3 => 'Rabu', 4 => 'Kamis', 5 => 'Jumat', 6 => 'Sabtu', 7 => 'Minggu'];
+$kelasGroups = [];
+foreach ($jadwalList as $item) {
+    $kelasGroups[$item['kelas_id']]['meta'] = $item;
+    $kelasGroups[$item['kelas_id']]['sesi'][] = $item;
+}
+$hariItems = array_values(array_filter($jadwalList, fn ($item) => (int) $item['hari'] === (int) $hariAktif));
+$formatJam = static fn ($value) => substr((string) $value, 0, 5);
+?>
 <div class="flex flex-col gap-5 w-full">
-    <!-- Header Page & Back Button -->
-    <div class="flex items-center justify-between w-full">
-        <div class="flex items-center gap-3">
-            <a href="/admin/beranda" class="w-10 h-10 rounded-full bg-white text-gray-700 border border-gray-200 flex items-center justify-center hover:bg-gray-100 transition-colors shadow-sm active:scale-95">
-                <span class="material-symbols-outlined text-[22px]">arrow_back</span>
-            </a>
-            <div>
-                <h1 class="text-xl font-bold text-[#2D3E39] tracking-tight">Manajemen Jadwal Mengajar</h1>
-                <p class="text-xs text-gray-500">Kelola jadwal bimbingan tentor & kelas</p>
-            </div>
+    <div class="flex items-center justify-between gap-3">
+        <div class="flex items-center gap-3 min-w-0">
+            <a href="/admin/beranda" aria-label="Kembali" class="w-10 h-10 shrink-0 rounded-full bg-white text-gray-700 border border-gray-200 flex items-center justify-center shadow-sm"><span class="material-symbols-outlined text-[22px]">arrow_back</span></a>
+            <div class="min-w-0"><h1 class="text-xl font-bold text-[#2D3E39] tracking-tight truncate">Manajemen Kelas</h1><p class="text-xs text-gray-500">Kelola sesi belajar, tentor, dan kelas</p></div>
         </div>
-        <div class="flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#e8f0ec] text-[#2d5a4c]">
-            <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
-            <span class="text-xs font-semibold"><?= count($jadwalList) ?> Jadwal Sesi</span>
-        </div>
+        <span class="shrink-0 px-3 py-1 rounded-full bg-[#e8f0ec] text-[#2d5a4c] text-xs font-semibold"><?= count($jadwalList) ?> Sesi</span>
     </div>
 
-    <!-- Primary Action: Button Tambah -->
-    <a href="/admin/jadwal/tambah" class="w-full py-3 px-4 bg-[#324f47] hover:bg-[#2D3E39] active:scale-[0.99] text-white font-medium rounded-xl flex items-center justify-center gap-2 shadow-md transition-all">
-        <span class="material-symbols-outlined text-[22px]">calendar_add_on</span>
-        <span class="text-sm font-semibold tracking-wide">+ Buat Jadwal Mengajar Baru</span>
-    </a>
-
-    <!-- Filter/Search Bar -->
-    <div class="relative flex items-center w-full bg-white rounded-xl shadow-sm border border-gray-200/80 overflow-hidden focus-within:border-[#2d5a4c] transition-colors">
-        <div class="pl-4 pr-2 flex items-center pointer-events-none text-gray-400">
-            <span class="material-symbols-outlined text-[20px]">search</span>
+    <div class="flex items-center justify-between gap-3">
+        <div class="grid grid-cols-2 gap-1 p-1 bg-[#f0f2ef] rounded-xl flex-1">
+            <a href="/admin/jadwal?mode=kelas" class="flex items-center justify-center gap-1.5 py-2.5 rounded-lg text-xs font-semibold <?= $mode === 'kelas' ? 'bg-white text-[#2d5a4c] shadow-sm' : 'text-gray-500' ?>"><span class="material-symbols-outlined text-[17px]">view_agenda</span> Per Kelas</a>
+            <a href="/admin/jadwal?mode=hari&hari=<?= $hariAktif ?>" class="flex items-center justify-center gap-1.5 py-2.5 rounded-lg text-xs font-semibold <?= $mode === 'hari' ? 'bg-[#324f47] text-white shadow-sm' : 'text-gray-500' ?>"><span class="material-symbols-outlined text-[17px]">calendar_view_day</span> Per Hari</a>
         </div>
-        <input class="w-full py-3 pr-4 bg-transparent text-sm text-gray-800 placeholder:text-gray-400 focus:outline-none" id="search-jadwal" placeholder="Cari nama tentor, kelas, atau hari..." type="text"/>
+        <a href="/admin/jadwal/tambah" aria-label="Tambah sesi" class="w-11 h-11 shrink-0 rounded-xl bg-[#324f47] text-white flex items-center justify-center shadow-sm"><span class="material-symbols-outlined">add</span></a>
     </div>
 
-    <!-- List Data Jadwal -->
-    <div class="flex flex-col gap-3.5 w-full" id="jadwal-card-list">
-        <?php if (empty($jadwalList)): ?>
-            <div class="bg-white rounded-2xl p-8 text-center text-gray-500 border border-gray-200/80 text-sm">
-                Belum ada jadwal mengajar terdaftar.
-            </div>
-        <?php else: ?>
-            <?php foreach ($jadwalList as $item): ?>
-                <div class="jadwal-card bg-white rounded-2xl p-4.5 shadow-sm border border-gray-200/80 flex flex-col gap-3 transition-all hover:shadow-md">
-                    <div class="flex items-start justify-between flex-wrap gap-2">
-                        <div class="flex items-center gap-2">
-                            <span class="w-2.5 h-2.5 rounded-full <?= $item['status_aktif'] ? 'bg-[#324f47]' : 'bg-gray-300' ?>"></span>
-                            <span class="font-bold text-base text-[#2D3E39]">
-                                <?= hari_indonesia((int) $item['hari']) ?>, <?= substr($item['jam_mulai'], 0, 5) ?> - <?= substr($item['jam_selesai'], 0, 5) ?> WIB
-                            </span>
-                        </div>
-                        <div class="flex items-center gap-1.5">
-                            <span class="px-2.5 py-0.5 rounded-full bg-[#e8f0ec] text-[#2d5a4c] text-xs font-semibold"><?= e($item['jenjang_nama']) ?></span>
-                            <span class="px-2.5 py-0.5 rounded-full bg-amber-50 text-amber-800 text-xs font-semibold"><?= e($item['program_nama']) ?></span>
-                        </div>
-                    </div>
-
-                    <div class="flex flex-col md:flex-row md:items-center justify-between gap-3 bg-[#FAF9F6] p-3 rounded-xl border border-gray-100">
-                        <div class="flex items-center gap-3">
-                            <div class="w-10 h-10 rounded-xl bg-white text-[#2d5a4c] flex items-center justify-center font-bold text-sm shadow-xs border border-gray-200/60">
-                                <?= e(substr($item['kelas_nama'], 0, 3)) ?>
-                            </div>
-                            <div class="flex flex-col">
-                                <h3 class="font-bold text-sm text-gray-900">Kelas <?= e($item['kelas_nama']) ?></h3>
-                                <div class="flex items-center gap-2 text-xs text-gray-600 mt-0.5">
-                                    <span class="flex items-center gap-1">
-                                        <span class="material-symbols-outlined text-[14px] text-[#2d5a4c]">badge</span>
-                                        Tentor: <strong class="text-gray-800"><?= e($item['tentor_nama']) ?></strong>
-                                    </span>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="flex items-center gap-1 text-xs text-gray-500 self-start md:self-center">
-                            <span class="material-symbols-outlined text-[16px] text-[#2d5a4c]">location_on</span>
-                            <span><?= e($item['ruangan'] ?: 'Ruangan Standar') ?></span>
-                        </div>
-                    </div>
-
-                    <div class="flex items-center justify-end gap-2 pt-1 border-t border-gray-100">
-                        <a href="/admin/jadwal/<?= $item['id'] ?>/edit" class="px-3 py-1.5 rounded-xl bg-gray-100 text-gray-700 hover:bg-[#e8f0ec] hover:text-[#2d5a4c] text-xs font-semibold transition-colors flex items-center gap-1">
-                            <span class="material-symbols-outlined text-[16px]">edit</span>
-                            Ubah Jadwal
-                        </a>
-                        <form action="/admin/jadwal/<?= $item['id'] ?>/hapus" method="POST" onsubmit="return confirm('Yakin ingin menghapus jadwal ini?');" class="m-0">
-                            <button type="submit" class="px-3 py-1.5 rounded-xl bg-red-50 text-red-600 hover:bg-red-100 text-xs font-semibold transition-colors flex items-center gap-1">
-                                <span class="material-symbols-outlined text-[16px]">delete</span>
-                                Hapus
-                            </button>
-                        </form>
-                    </div>
-                </div>
+    <?php if ($mode === 'hari'): ?>
+        <div class="flex gap-2 overflow-x-auto pb-1">
+            <?php foreach ($hariNama as $number => $name): $jumlahHari = count(array_filter($jadwalList, fn ($i) => (int) $i['hari'] === $number)); ?>
+                <a href="/admin/jadwal?mode=hari&hari=<?= $number ?>" class="shrink-0 px-4 py-2 rounded-full text-xs font-semibold <?= $hariAktif === $number ? 'bg-[#2D3E39] text-white' : 'bg-white border border-gray-200 text-gray-600' ?>"><?= $name ?><?= $hariAktif === $number ? ' (' . $jumlahHari . ')' : '' ?></a>
             <?php endforeach; ?>
-        <?php endif; ?>
-    </div>
-</div>
+        </div>
+        <div class="flex items-center gap-2 text-xs text-gray-500"><span class="material-symbols-outlined text-[17px] text-[#324f47]">event_available</span><strong class="text-[#2D3E39]"><?= count($hariItems) ?> sesi terjadwal</strong> pada hari <?= $hariNama[$hariAktif] ?></div>
+    <?php endif; ?>
 
-<script>
-    document.getElementById('search-jadwal')?.addEventListener('input', function(e) {
-        const query = e.target.value.toLowerCase().trim();
-        const cards = document.querySelectorAll('#jadwal-card-list .jadwal-card');
-        cards.forEach(card => {
-            const text = card.textContent.toLowerCase();
-            card.style.display = text.includes(query) ? 'flex' : 'none';
-        });
-    });
-</script>
+    <?php if (empty($jadwalList)): ?>
+        <div class="bg-white rounded-2xl p-8 text-center text-sm text-gray-500 border border-gray-200">Belum ada sesi belajar terdaftar.</div>
+    <?php elseif ($mode === 'kelas'): ?>
+        <div class="flex flex-col gap-4">
+            <?php foreach ($kelasGroups as $group): $meta = $group['meta']; ?>
+                <article class="bg-white rounded-2xl border border-gray-200/80 shadow-sm overflow-hidden">
+                    <div class="px-4 py-3.5 bg-[#f5f7f4] border-b border-gray-200 flex items-center justify-between gap-3">
+                        <div class="flex items-center gap-2.5 min-w-0"><div class="w-9 h-9 rounded-xl bg-[#324f47]/10 text-[#324f47] flex items-center justify-center font-bold text-xs shrink-0"><?= e(substr($meta['kelas_nama'], 0, 3)) ?></div><div class="min-w-0"><h2 class="font-bold text-[15px] text-[#2D3E39] uppercase truncate">Kelas <?= e($meta['kelas_nama']) ?></h2><p class="text-[11px] text-gray-500"><?= e($meta['jenjang_nama']) ?> · <?= count($group['sesi']) ?> sesi / minggu</p></div></div>
+                        <span class="px-2.5 py-1 rounded-full text-[11px] font-semibold <?= $meta['status_aktif'] ? 'bg-[#e8f5e9] text-[#1b4332]' : 'bg-gray-100 text-gray-500' ?>"><?= $meta['status_aktif'] ? 'Aktif' : 'Nonaktif' ?></span>
+                    </div>
+                    <div class="p-4 space-y-2.5">
+                        <?php foreach ($group['sesi'] as $item): ?>
+                            <div class="flex items-center justify-between gap-3 p-3 rounded-xl bg-[#faf9f6] border border-[#f0eee8]"><div class="flex items-center gap-2.5 min-w-0"><span class="material-symbols-outlined text-[#324f47] text-[19px]">schedule</span><div class="min-w-0"><p class="text-[13px] font-semibold text-gray-800"><?= $hariNama[(int) $item['hari']] ?> · <?= $formatJam($item['jam_mulai']) ?>–<?= $formatJam($item['jam_selesai']) ?> WIB</p><p class="text-[11px] text-gray-500 truncate"><?= e($item['mata_pelajaran'] ?: 'Mata pelajaran belum diatur') ?><?= $item['ruangan'] ? ' · ' . e($item['ruangan']) : '' ?></p></div></div><div class="shrink-0 px-2.5 py-1.5 rounded-lg bg-white border border-[#e5e2db] text-[11px] font-bold text-gray-700 flex items-center gap-1"><span class="material-symbols-outlined text-[15px] text-gray-500">person</span><?= e($item['tentor_nama'] ?: 'Belum Ditugaskan') ?></div></div>
+                        <?php endforeach; ?>
+                    </div>
+                    <div class="px-4 pb-4"><a href="/admin/kelas/<?= $meta['kelas_id'] ?>/jadwal" class="w-full py-2.5 rounded-xl bg-[#f0eee8] text-gray-800 font-semibold text-xs flex items-center justify-center gap-2 border border-[#dedacf]"><span class="material-symbols-outlined text-[16px]">edit</span> Ubah Jadwal Kelas</a></div>
+                </article>
+            <?php endforeach; ?>
+        </div>
+    <?php else: ?>
+        <div class="flex flex-col gap-3">
+            <?php foreach ($hariItems as $item): ?>
+                <article class="bg-white rounded-2xl border border-gray-200/80 p-4 shadow-sm"><div class="flex items-start justify-between gap-3"><div><p class="text-lg font-bold text-[#2D3E39]"><?= $formatJam($item['jam_mulai']) ?> – <?= $formatJam($item['jam_selesai']) ?> WIB</p><h2 class="mt-1 font-bold text-base uppercase">Kelas <?= e($item['kelas_nama']) ?></h2><p class="text-xs text-gray-500"><?= e($item['program_nama']) ?> · <?= e($item['jenjang_nama']) ?></p></div><div class="px-3 py-2 rounded-xl bg-[#f2efe9] text-right shrink-0"><span class="block text-[10px] text-gray-500">Tentor</span><strong class="text-xs text-[#2D3E39]"><?= e($item['tentor_nama'] ?: 'Belum Ditugaskan') ?></strong></div></div><div class="mt-3 pt-3 border-t border-gray-100 flex items-center justify-between gap-2 text-xs text-gray-500"><span><span class="material-symbols-outlined text-[15px] text-[#324f47] align-middle">menu_book</span> <?= e($item['mata_pelajaran'] ?: 'Mata pelajaran belum diatur') ?></span><a href="/admin/manajemen-kelas/<?= $item['kelas_id'] ?>/jadwal" class="px-3 py-1.5 rounded-lg bg-gray-100 text-xs font-semibold text-gray-700">Ubah Jadwal Kelas</a></div></article>
+            <?php endforeach; ?>
+            <?php if (empty($hariItems)): ?><div class="bg-white rounded-2xl p-8 text-center text-sm text-gray-500 border border-gray-200">Belum ada sesi pada hari <?= $hariNama[$hariAktif] ?>.</div><?php endif; ?>
+        </div>
+    <?php endif; ?>
+</div>

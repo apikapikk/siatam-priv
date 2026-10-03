@@ -1,7 +1,7 @@
-<div class="flex flex-col gap-5 w-full">
+<div class="flex flex-col gap-5 w-full max-w-[430px] mx-auto">
 
     <!-- Page Header -->
-    <div class="flex items-center gap-3">
+        <div class="flex items-center gap-3">
         <a href="/admin/laporan" class="p-2 rounded-xl bg-white border border-gray-200 text-gray-500 hover:text-[#324f47] hover:border-[#324f47]/30 transition-all shadow-sm">
             <span class="material-symbols-outlined text-[20px]">arrow_back</span>
         </a>
@@ -9,6 +9,8 @@
             <h1 class="text-xl font-bold text-[#2D3E39] tracking-tight">Rekap Presensi & Nilai Siswa</h1>
             <p class="text-xs text-gray-500">Ringkasan kehadiran & evaluasi akademik per kelas</p>
         </div>
+
+    <div class="grid grid-cols-2 p-1 bg-[#ECEAE6] rounded-xl gap-1"><a class="py-2 rounded-lg text-xs font-semibold text-center text-gray-600" href="/admin/laporan/siswa?mode=harian">Harian</a><span class="py-2 rounded-lg text-xs font-bold text-center bg-[#1B4332] text-white">Bulanan</span></div>
     </div>
 
     <!-- Filter Form -->

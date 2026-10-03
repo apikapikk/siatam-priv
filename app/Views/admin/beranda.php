@@ -35,12 +35,12 @@
             </div>
             <span class="text-[11px] font-medium text-gray-700 leading-tight mt-1.5 group-hover:text-[#2d5a4c]">Data Siswa</span>
         </a>
-        <!-- Action 2: Jadwal -->
+        <!-- Action 2: Manajemen Kelas -->
         <a href="/admin/jadwal" class="flex flex-col items-center group focus:outline-none">
             <div class="rounded-full w-11 h-11 mx-auto flex items-center justify-center bg-[#e8f0ec] text-[#2d5a4c] group-hover:bg-[#d8e8e0] group-hover:scale-105 transition-all shadow-sm">
                 <span class="material-symbols-outlined text-xl">calendar_add_on</span>
             </div>
-            <span class="text-[11px] font-medium text-gray-700 leading-tight mt-1.5 group-hover:text-[#2d5a4c]">Jadwal Baru</span>
+            <span class="text-[11px] font-medium text-gray-700 leading-tight mt-1.5 group-hover:text-[#2d5a4c]">Manajemen Kelas</span>
         </a>
         <!-- Action 3: Pengumuman -->
         <a href="/admin/pengumuman" class="flex flex-col items-center group focus:outline-none">
@@ -69,7 +69,7 @@
 <!-- Bagian Pantauan Mengajar Hari Ini -->
 <section class="flex flex-col gap-3">
     <div class="flex items-center justify-between">
-        <h3 class="font-bold text-lg text-gray-800">Jadwal Mengajar Hari Ini</h3>
+        <h3 class="font-bold text-lg text-gray-800">Sesi Belajar Hari Ini</h3>
         <a href="/admin/jadwal" class="text-xs font-semibold text-[#2d5a4c] hover:underline flex items-center gap-0.5">
             Lihat Semua
             <span class="material-symbols-outlined text-sm">arrow_forward</span>

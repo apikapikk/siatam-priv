@@ -179,7 +179,8 @@ CREATE TABLE `pendaftaran_siswa` (
 CREATE TABLE `jadwal` (
   `id` BIGINT NOT NULL AUTO_INCREMENT,
   `kelas_id` BIGINT NOT NULL,
-  `tentor_id` BIGINT NOT NULL,
+  `tentor_id` BIGINT NULL,
+  `mata_pelajaran` VARCHAR(100) NULL,
   `hari` TINYINT NOT NULL COMMENT '1=Senin, 2=Selasa, 3=Rabu, 4=Kamis, 5=Jumat, 6=Sabtu, 7=Minggu',
   `jam_mulai` TIME NOT NULL,
   `jam_selesai` TIME NOT NULL,
@@ -191,7 +192,7 @@ CREATE TABLE `jadwal` (
   KEY `idx_jadwal_kelas` (`kelas_id`),
   KEY `idx_jadwal_tentor` (`tentor_id`),
   CONSTRAINT `fk_jadwal_kelas` FOREIGN KEY (`kelas_id`) REFERENCES `kelas` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT `fk_jadwal_tentor` FOREIGN KEY (`tentor_id`) REFERENCES `tentor` (`id`) ON DELETE RESTRICT ON UPDATE CASCADE
+  CONSTRAINT `fk_jadwal_tentor` FOREIGN KEY (`tentor_id`) REFERENCES `tentor` (`id`) ON DELETE SET NULL ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- --------------------------------------------------------------------

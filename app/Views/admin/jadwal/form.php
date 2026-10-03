@@ -55,6 +55,15 @@
             </div>
 
             <div class="flex flex-col gap-1.5">
+                <label class="text-xs font-semibold text-gray-700">Mata Pelajaran <span class="text-red-500">*</span></label>
+                <div class="relative flex items-center">
+                    <span class="material-symbols-outlined absolute left-3.5 text-gray-400 text-[18px]">menu_book</span>
+                    <input type="text" name="mata_pelajaran" value="<?= e($jadwal['mata_pelajaran'] ?? '') ?>" placeholder="Contoh: Matematika" required class="w-full pl-10 pr-4 py-2.5 bg-[#FAF9F7] text-sm text-gray-800 rounded-xl border border-gray-200 focus:outline-none focus:border-[#324f47]">
+                </div>
+                <?php if (isset($errors['mata_pelajaran'])): ?><small class="text-xs text-red-600"><?= e($errors['mata_pelajaran']) ?></small><?php endif; ?>
+            </div>
+
+            <div class="flex flex-col gap-1.5">
                 <label class="text-xs font-semibold text-gray-700">Hari Mengajar <span class="text-red-500">*</span></label>
                 <div class="relative flex items-center">
                     <span class="material-symbols-outlined absolute left-3.5 text-gray-400 text-[18px]">calendar_today</span>

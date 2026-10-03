@@ -1,5 +1,26 @@
 # Log Perkembangan Frontend & Integration — Siatama Privat
 
+## 2026-09-29 — Penyelarasan Tambah Jadwal dengan Form Kelas
+
+- Frontend: /admin/jadwal/tambah sekarang memakai pola "Informasi Dasar Kelas" lalu "Atur Sesi & Tentor", dengan sesi yang dapat ditambah atau dihapus secara dinamis.
+- Backend: alur simpan tambah jadwal menerima identitas kelas dan array sesi[], memvalidasi setiap hari/jam/tentor, lalu membuat kelas beserta seluruh sesinya dalam satu transaksi.
+- Validasi: minimal satu sesi lengkap wajib pada alur tambah jadwal; alur tambah kelas dari menu Master Data tetap dapat menyimpan kelas tanpa sesi.
+- File terkait: app/Controllers/Admin/JadwalController.php dan app/Views/admin/kelas/form.php.
+
+## 2026-09-29 — Penyesuaian Direktori Data Siswa
+
+- Index Data Siswa diubah menjadi direktori folder kelas dengan jumlah siswa aktif dan pencarian kelas.
+- Ditambahkan detail kelas yang menampilkan seluruh siswa aktif; klik siswa membuka Edit Data Siswa dan tombol tambah membuka Register Siswa dengan kelas sudah dipilih.
+- Backend menambahkan query jumlah siswa per kelas, daftar siswa per kelas, validasi penempatan kelas, dan sinkronisasi pendaftaran aktif ketika siswa dibuat atau dipindahkan.
+- File terkait: app/Controllers/Admin/SiswaController.php, app/Models/Siswa.php, app/Models/Kelas.php, app/Models/PendaftaranSiswa.php, app/Views/admin/siswa/index.php, app/Views/admin/siswa/detail_kelas.php, app/Views/admin/siswa/form.php, dan public/index.php.
+
+## 2026-09-29 — Penyesuaian Direktori Data Tentor
+
+- Index Data Tentor diselaraskan dengan draft: pencarian, filter status Semua/Aktif/Nonaktif, daftar profil ringkas, dan tombol aksi Kelola.
+- Tombol Kelola menuju form kelola profil tentor; tombol tambah menuju form registrasi tentor yang sudah tersedia.
+- Tidak ada perubahan skema atau logika backend baru karena CRUD tentor dan upload foto sudah tersedia.
+- File terkait: app/Views/admin/tentor/index.php.
+
 Dokumen ini mencatat histori perubahan frontend, penyelarasan tampilan views PHP dengan `@ui-draft`, serta pencatatan todo/gap analisis backend.
 
 > **Note (Metode Agile):** Seluruh arsitektur & modul backend ini dikembangkan dengan pendekatan **Agile (Iteratif & Inkremental)**. Kode dibuat sangat modular dan reusable sehingga sewaktu-waktu dapat dengan mudah disesuaikan jika ada perubahan kebutuhan dari tim UI/UX maupun perkembangan bisnis bimbel di masa mendatang.
@@ -73,3 +94,46 @@ Seluruh elemen form `input`, `select`, `textarea`, dan `button` pada seluruh hal
 ---
 
 > ✅ **Semua item dari `todo.md` telah selesai dikerjakan.**
+## 2026-10-03 — Penyederhanaan Navigasi Admin dan Laporan
+
+- Frontend: menu admin Pertemuan dihapus; menu Manajemen Kelas diganti menjadi Kelas dan diarahkan ke `/admin/kelas`.
+- Frontend: pusat laporan kini hanya menyediakan Laporan Siswa dan Laporan Tentor, dengan tab filter Harian dan Bulanan.
+- Backend: ditambahkan endpoint serta query laporan harian siswa/tentor; rekap tentor tidak lagi menampilkan honor/gaji.
+- File terkait: `app/Views/admin/layout.php`, `app/Views/admin/laporan/*`, `app/Controllers/Admin/LaporanController.php`, `app/Models/Pertemuan.php`, `app/Models/Tentor.php`, dan `public/index.php`.
+## 2026-10-03 — Penyatuan Filter Laporan Harian dan Bulanan
+
+- Backend: ditambahkan endpoint terpadu `/admin/laporan/siswa` dan `/admin/laporan/tentor` dengan parameter `mode=harian|bulanan`.
+- Frontend: tab Harian/Bulanan pada laporan siswa dan tentor sekarang berpindah dalam kategori yang sama, sesuai pola draft UI.
+- Frontend: tampilan laporan siswa harian dan tentor harian disesuaikan dengan pola header, tab periode, dan mobile frame pada draft.
+## 2026-10-03 — View Laporan Disatukan Per Kategori
+
+- Frontend: laporan siswa sekarang memakai satu view `app/Views/admin/laporan/siswa.php` dengan tab Harian/Bulanan.
+- Frontend: laporan tentor sekarang memakai satu view `app/Views/admin/laporan/tentor.php` dengan tab Harian/Bulanan.
+- Backend: controller terpadu memilih data dan filter berdasarkan parameter `mode`, sehingga perpindahan tab tetap berada di halaman kategori yang sama.
+## 2026-10-03 — Renaming Route Manajemen Kelas
+
+- Route admin kelas diubah dari `/admin/kelas` menjadi `/admin/manajemen-kelas` beserta route tambah, edit, hapus, dan pengaturan jadwal.
+- Seluruh link internal, redirect controller, dan navigasi admin diperbarui mengikuti route baru.
+## 2026-10-03 — Menu Manajemen Kelas Mengarah ke Tampilan Jadwal Kelas
+
+- Menu navigasi admin **Manajemen Kelas** sekarang membuka `/admin/jadwal?mode=kelas`, sama seperti tombol Manajemen Kelas pada Beranda Admin.
+- Route CRUD master kelas tetap menggunakan `/admin/kelas`; perubahan nama menu tidak mengubah route master data tersebut.
+## 2026-10-03 — Penambahan Dummy Data Laporan
+
+- Seed menambahkan 4 tentor, 12 siswa, 4 kelas, 8 jadwal, dan 27 pertemuan dummy.
+- Data pertemuan mencakup September dan Oktober 2026 untuk pengujian filter laporan bulanan serta tanggal harian.
+- Presensi siswa dibuat otomatis untuk seluruh siswa aktif di kelas masing-masing dengan variasi hadir, sakit, izin, dan alfa.
+- File terkait: `database/seed.sql`.
+## 2026-10-03 — Pemerataan Dummy Siswa di Semua Kelas
+
+- Menambahkan 24 siswa tambahan sehingga seluruh 8 kelas memiliki siswa aktif.
+- Menambahkan pendaftaran siswa ke setiap kelas.
+- Menambahkan jadwal dan pertemuan untuk kelas 7A, 8A, dan 12 IPA Private yang sebelumnya belum memiliki sesi.
+- Menambahkan presensi otomatis untuk semua siswa pada seluruh pertemuan dummy.
+## 2026-10-03 — Penyelarasan Laporan dengan Draft Terbaru
+
+- Laporan siswa bulanan kini menampilkan daftar folder kelas terlebih dahulu; klik kelas membuka rekap siswa per kelas.
+- Laporan siswa harian kini menampilkan kartu ringkasan dan daftar presensi dengan nilai sikap/akademik.
+- Laporan tentor harian kini menampilkan log pengajar per tanggal beserta sesi, kelas, dan jam.
+- Laporan tentor bulanan kini menampilkan akumulasi sesi dan total jam per tentor tanpa honor/gaji.
+- Backend menambahkan hitungan jumlah pertemuan bulanan per kelas untuk kebutuhan kartu folder.

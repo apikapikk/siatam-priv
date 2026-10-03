@@ -1,4 +1,4 @@
-<div class="flex flex-col gap-5 w-full">
+<div class="flex flex-col gap-5 w-full max-w-[430px] mx-auto">
 
     <!-- Page Header -->
     <div class="flex items-center gap-3">
@@ -6,10 +6,12 @@
             <span class="material-symbols-outlined text-[20px]">arrow_back</span>
         </a>
         <div class="flex flex-col gap-0.5">
-            <h1 class="text-xl font-bold text-[#2D3E39] tracking-tight">Rekap Log Mengajar & Honorarium</h1>
-            <p class="text-xs text-gray-500">Estimasi honorarium tentor berdasarkan sesi & jam mengajar</p>
+            <h1 class="text-xl font-bold text-[#2D3E39] tracking-tight">Laporan Tentor Bulanan</h1>
+            <p class="text-xs text-gray-500">Rekap sesi dan jam mengajar tentor</p>
         </div>
     </div>
+
+    <div class="grid grid-cols-2 p-1 bg-[#ECEAE6] rounded-xl gap-1"><a class="py-2 rounded-lg text-xs font-semibold text-center text-gray-600" href="/admin/laporan/tentor?mode=harian">Harian</a><span class="py-2 rounded-lg text-xs font-bold text-center bg-[#1B4332] text-white">Bulanan</span></div>
 
     <!-- Filter Form -->
     <div class="bg-white rounded-2xl p-4 shadow-sm border border-gray-200/80">
@@ -59,7 +61,6 @@
 
         <!-- Total Keseluruhan -->
         <?php
-            $grandTotal = array_sum(array_column($payrollList, 'total_honorarium'));
             $grandSesi  = array_sum(array_column($payrollList, 'total_sesi'));
             $grandJam   = array_sum(array_column($payrollList, 'total_jam'));
         ?>
@@ -72,10 +73,7 @@
                 <div class="text-lg font-bold text-blue-700"><?= number_format((float) $grandJam, 1) ?></div>
                 <div class="text-[11px] text-gray-500 font-medium">Total Jam</div>
             </div>
-            <div class="bg-amber-50 rounded-2xl p-3 text-center border border-amber-100">
-                <div class="text-base font-bold text-amber-700 leading-tight"><?= format_rupiah((float) $grandTotal) ?></div>
-                <div class="text-[11px] text-gray-500 font-medium">Est. Honor</div>
-            </div>
+            <div class="bg-gray-50 rounded-2xl p-3 text-center border border-gray-100"><div class="text-lg font-bold text-gray-700"><?= count($payrollList) ?></div><div class="text-[11px] text-gray-500 font-medium">Tentor Aktif</div></div>
         </div>
 
         <!-- Per-Tentor Cards -->
@@ -92,8 +90,8 @@
                             <p class="text-xs text-gray-500 truncate"><?= e($t['asal_universitas']) ?></p>
                         </div>
                         <div class="text-right flex-shrink-0">
-                            <p class="text-sm font-bold text-emerald-700"><?= format_rupiah((float) $t['total_honorarium']) ?></p>
-                            <p class="text-[11px] text-gray-400">Est. Honorarium</p>
+                            <p class="text-sm font-bold text-emerald-700"><?= (int) $t['total_sesi'] ?> sesi</p>
+                            <p class="text-[11px] text-gray-400">Sesi mengajar</p>
                         </div>
                     </div>
 
@@ -115,18 +113,6 @@
                         </div>
                     </div>
 
-                    <!-- Tarif Info -->
-                    <div class="flex items-center gap-3 text-[11px] text-gray-400 border-t border-gray-100 pt-2.5">
-                        <?php if ((float) $t['tarif_per_sesi'] > 0): ?>
-                            <span>Tarif/sesi: <strong class="text-gray-600"><?= format_rupiah((float) $t['tarif_per_sesi']) ?></strong></span>
-                        <?php endif; ?>
-                        <?php if ((float) $t['rate_gaji_per_jam'] > 0): ?>
-                            <span>Rate/jam: <strong class="text-gray-600"><?= format_rupiah((float) $t['rate_gaji_per_jam']) ?></strong></span>
-                        <?php endif; ?>
-                        <?php if ((float) $t['tarif_per_sesi'] == 0 && (float) $t['rate_gaji_per_jam'] == 0): ?>
-                            <span class="text-amber-600">⚠ Tarif belum diatur</span>
-                        <?php endif; ?>
-                    </div>
                 </div>
             <?php endforeach; ?>
         </div>

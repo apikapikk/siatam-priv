@@ -6,18 +6,21 @@ use App\Core\Controller;
 use App\Models\Kelas;
 use App\Models\Jenjang;
 use App\Models\Program;
+use App\Models\Tentor;
 
 class KelasController extends Controller
 {
     private Kelas $kelasModel;
     private Jenjang $jenjangModel;
     private Program $programModel;
+    private Tentor $tentorModel;
 
     public function __construct()
     {
         $this->kelasModel = new Kelas();
         $this->jenjangModel = new Jenjang();
         $this->programModel = new Program();
+        $this->tentorModel = new Tentor();
     }
 
     public function index(): void
@@ -43,6 +46,8 @@ class KelasController extends Controller
             'kelas' => null,
             'jenjangList' => $jenjangList,
             'programList' => $programList,
+            'tentorList' => $this->tentorModel->allWithPengguna(),
+            'sesiList' => [],
             'errors' => []
         ]);
     }
@@ -53,6 +58,7 @@ class KelasController extends Controller
         $jenjangId = (int) ($_POST['jenjang_id'] ?? 0);
         $programId = (int) ($_POST['program_id'] ?? 0);
         $statusAktif = isset($_POST['status_aktif']) ? 1 : 0;
+        $sesiInput = $_POST['sesi'] ?? [];
 
         $errors = [];
 
@@ -70,6 +76,9 @@ class KelasController extends Controller
             $errors['program_id'] = 'Pilih program yang valid.';
         }
 
+        [$sesiList, $sesiErrors] = $this->normaliseSchedules(is_array($sesiInput) ? $sesiInput : []);
+        $errors = array_merge($errors, $sesiErrors);
+
         if (!empty($errors)) {
             $this->render('admin/kelas/form', [
                 'pageTitle' => 'Tambah Kelas',
@@ -83,19 +92,22 @@ class KelasController extends Controller
                 ],
                 'jenjangList' => $this->jenjangModel->all(),
                 'programList' => $this->programModel->all(),
+                'tentorList' => $this->tentorModel->allWithPengguna(),
+                'sesiList' => is_array($sesiInput) ? array_values($sesiInput) : [],
                 'errors' => $errors
             ]);
             return;
         }
 
-        $this->kelasModel->create([
+        $now = date('Y-m-d H:i:s');
+        $this->kelasModel->createWithSchedules([
             'nama' => $nama,
             'jenjang_id' => $jenjangId,
             'program_id' => $programId,
             'status_aktif' => $statusAktif,
-            'dibuat_pada' => date('Y-m-d H:i:s'),
-            'diubah_pada' => date('Y-m-d H:i:s'),
-        ]);
+            'dibuat_pada' => $now,
+            'diubah_pada' => $now,
+        ], $sesiList);
 
         $_SESSION['flash_success'] = 'Data kelas berhasil ditambahkan.';
         $this->redirect('/admin/kelas');
@@ -117,6 +129,8 @@ class KelasController extends Controller
             'kelas' => $kelas,
             'jenjangList' => $this->jenjangModel->all(),
             'programList' => $this->programModel->all(),
+            'tentorList' => $this->tentorModel->allWithPengguna(),
+            'sesiList' => [],
             'errors' => []
         ]);
     }
@@ -165,6 +179,8 @@ class KelasController extends Controller
                 ]),
                 'jenjangList' => $this->jenjangModel->all(),
                 'programList' => $this->programModel->all(),
+                'tentorList' => $this->tentorModel->allWithPengguna(),
+                'sesiList' => [],
                 'errors' => $errors
             ]);
             return;
@@ -180,6 +196,44 @@ class KelasController extends Controller
 
         $_SESSION['flash_success'] = 'Data kelas berhasil diperbarui.';
         $this->redirect('/admin/kelas');
+    }
+
+    private function normaliseSchedules(array $input): array
+    {
+        $schedules = [];
+        $errors = [];
+        foreach ($input as $index => $row) {
+            if (!is_array($row)) {
+                continue;
+            }
+            $hari = (int) ($row['hari'] ?? 0);
+            $mulai = trim($row['jam_mulai'] ?? '');
+            $selesai = trim($row['jam_selesai'] ?? '');
+            $tentorId = (int) ($row['tentor_id'] ?? 0);
+            $mapel = trim($row['mata_pelajaran'] ?? '');
+            $ruangan = trim($row['ruangan'] ?? '');
+            if ($hari === 0 && $mulai === '' && $selesai === '' && $tentorId === 0 && $mapel === '' && $ruangan === '') {
+                continue;
+            }
+            $prefix = 'Sesi ' . ((int) $index + 1) . ': ';
+            if ($hari < 1 || $hari > 7) $errors['sesi_' . $index] = $prefix . 'pilih hari yang valid.';
+            if ($mulai === '' || $selesai === '') $errors['sesi_' . $index] = $prefix . 'jam mulai dan selesai wajib diisi.';
+            elseif ($selesai <= $mulai) $errors['sesi_' . $index] = $prefix . 'jam selesai harus lebih akhir.';
+            if ($tentorId > 0 && !$this->tentorModel->find($tentorId)) $errors['sesi_' . $index] = $prefix . 'tentor tidak valid.';
+            if (isset($errors['sesi_' . $index])) continue;
+            $schedules[] = [
+                'tentor_id' => $tentorId ?: null,
+                'mata_pelajaran' => $mapel ?: null,
+                'hari' => $hari,
+                'jam_mulai' => $mulai,
+                'jam_selesai' => $selesai,
+                'ruangan' => $ruangan ?: null,
+                'status_aktif' => 1,
+                'dibuat_pada' => date('Y-m-d H:i:s'),
+                'diubah_pada' => date('Y-m-d H:i:s'),
+            ];
+        }
+        return [$schedules, $errors];
     }
 
     public function delete(string $id): void

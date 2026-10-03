@@ -23,58 +23,112 @@ class LaporanController extends Controller
     // GET /admin/laporan
     public function index(): void
     {
+        $db = \getDBConnection();
+        $totalSiswa = (int) $db->query("SELECT COUNT(*) FROM siswa WHERE status_aktif = 1")->fetchColumn();
+        $totalTentor = (int) $db->query("SELECT COUNT(*) FROM tentor WHERE status_aktif = 1")->fetchColumn();
+
         $this->render('admin/laporan/index', [
-            'pageTitle' => 'Pusat Laporan & Rekap',
-            'activeNav' => 'laporan',
-            'kelasList' => $this->kelasModel->all(),
-            'bulan'     => (int) date('n'),
-            'tahun'     => (int) date('Y'),
-        ]);
-    }
-
-    // GET /admin/laporan/siswa-bulanan
-    public function siswaBulanan(): void
-    {
-        $kelasId = (int) ($_GET['kelas_id'] ?? 0);
-        $bulan   = (int) ($_GET['bulan']    ?? date('n'));
-        $tahun   = (int) ($_GET['tahun']    ?? date('Y'));
-
-        $report      = [];
-        $kelasDetail = null;
-
-        if ($kelasId > 0) {
-            $kelasDetail = $this->kelasModel->find($kelasId);
-            $report      = $this->pertemuanModel->getMonthlyReportByClass($kelasId, $bulan, $tahun);
-        }
-
-        $this->render('admin/laporan/siswa_bulanan', [
-            'pageTitle'   => 'Rekap Presensi & Nilai Siswa Bulanan',
+            'pageTitle'   => 'Pusat Laporan & Rekap',
             'activeNav'   => 'laporan',
             'kelasList'   => $this->kelasModel->all(),
-            'kelasId'     => $kelasId,
-            'kelasDetail' => $kelasDetail,
-            'bulan'       => $bulan,
-            'tahun'       => $tahun,
-            'report'      => $report,
+            'totalSiswa'  => $totalSiswa,
+            'totalTentor' => $totalTentor,
+            'bulan'       => (int) date('n'),
+            'tahun'       => (int) date('Y'),
         ]);
     }
 
-    // GET /admin/laporan/tentor-bulanan
+    // GET /admin/laporan/siswa
+    public function siswa(): void
+    {
+        $mode = ($_GET['mode'] ?? 'bulanan') === 'harian' ? 'harian' : 'bulanan';
+        $data = [
+            'pageTitle' => 'Laporan Siswa',
+            'activeNav' => 'laporan',
+            'mode'      => $mode,
+            'kelasList' => $this->kelasModel->allWithRelations(),
+        ];
+
+        if ($mode === 'harian') {
+            $tanggal = $_GET['tanggal'] ?? date('Y-m-d');
+            $kelasId = (int) ($_GET['kelas_id'] ?? 0);
+            $data += [
+                'tanggal' => $tanggal,
+                'kelasId' => $kelasId,
+                'report'  => $this->pertemuanModel->getDailyReportByClass($tanggal, $kelasId),
+            ];
+        } else {
+            $kelasId = (int) ($_GET['kelas_id'] ?? 0);
+            $bulan   = (int) ($_GET['bulan'] ?? date('n'));
+            $tahun   = (int) ($_GET['tahun'] ?? date('Y'));
+            $data += [
+                'kelasId'     => $kelasId,
+                'bulan'       => $bulan,
+                'tahun'       => $tahun,
+                'kelasDetail' => $kelasId > 0 ? $this->kelasModel->findWithRelations($kelasId) : null,
+                'report'      => $kelasId > 0 ? $this->pertemuanModel->getMonthlyReportByClass($kelasId, $bulan, $tahun) : [],
+            ];
+            $data['meetingCounts'] = $this->pertemuanModel->getMonthlyMeetingCountsByClass($bulan, $tahun);
+        }
+
+        $this->render('admin/laporan/siswa', $data);
+    }
+
+    // GET /admin/laporan/tentor
+    public function tentor(): void
+    {
+        $mode = ($_GET['mode'] ?? 'bulanan') === 'harian' ? 'harian' : 'bulanan';
+        $data = [
+            'pageTitle' => 'Laporan Tentor',
+            'activeNav' => 'laporan',
+            'mode'      => $mode,
+        ];
+
+        if ($mode === 'harian') {
+            $tanggal = $_GET['tanggal'] ?? date('Y-m-d');
+            $data += [
+                'tanggal' => $tanggal,
+                'report'  => $this->tentorModel->getDailyTeachingSummary($tanggal),
+            ];
+        } else {
+            $bulan = (int) ($_GET['bulan'] ?? date('n'));
+            $tahun = (int) ($_GET['tahun'] ?? date('Y'));
+            $data += [
+                'bulan'      => $bulan,
+                'tahun'      => $tahun,
+                'report'     => $this->tentorModel->getMonthlyTeachingSummary($bulan, $tahun),
+                'breakdowns' => $this->tentorModel->getMonthlyBreakdownByTentor($bulan, $tahun),
+            ];
+        }
+
+        $this->render('admin/laporan/tentor', $data);
+    }
+
+    // Legacy forwarding endpoints
+    public function siswaBulanan(): void
+    {
+        $params = array_merge(['mode' => 'bulanan'], $_GET);
+        $this->redirect('/admin/laporan/siswa?' . http_build_query($params));
+    }
+
+    public function siswaHarian(): void
+    {
+        $params = array_merge(['mode' => 'harian'], $_GET);
+        $this->redirect('/admin/laporan/siswa?' . http_build_query($params));
+    }
+
     public function tentorBulanan(): void
     {
-        $bulan = (int) ($_GET['bulan'] ?? date('n'));
-        $tahun = (int) ($_GET['tahun'] ?? date('Y'));
-
-        $payrollList = $this->tentorModel->getMonthlyPayrollSummary($bulan, $tahun);
-
-        $this->render('admin/laporan/tentor_bulanan', [
-            'pageTitle'   => 'Rekap Log Mengajar & Honorarium Tentor',
-            'activeNav'   => 'laporan',
-            'bulan'       => $bulan,
-            'tahun'       => $tahun,
-            'payrollList' => $payrollList,
-        ]);
+        $params = array_merge(['mode' => 'bulanan'], $_GET);
+        $this->redirect('/admin/laporan/tentor?' . http_build_query($params));
     }
+
+    public function tentorHarian(): void
+    {
+        $params = array_merge(['mode' => 'harian'], $_GET);
+        $this->redirect('/admin/laporan/tentor?' . http_build_query($params));
+    }
+
 
     // GET /admin/laporan/siswa-bulanan/export-csv
     public function exportSiswaCsv(): void
@@ -134,9 +188,9 @@ class LaporanController extends Controller
         $bulan = (int) ($_GET['bulan'] ?? date('n'));
         $tahun = (int) ($_GET['tahun'] ?? date('Y'));
 
-        $payrollList = $this->tentorModel->getMonthlyPayrollSummary($bulan, $tahun);
+        $payrollList = $this->tentorModel->getMonthlyTeachingSummary($bulan, $tahun);
         $namaBulan   = date('F', mktime(0, 0, 0, $bulan, 1));
-        $filename    = "rekap-honorarium-tentor-{$namaBulan}-{$tahun}.csv";
+        $filename    = "rekap-tentor-{$namaBulan}-{$tahun}.csv";
 
         header('Content-Type: text/csv; charset=UTF-8');
         header('Content-Disposition: attachment; filename="' . $filename . '"');
@@ -145,7 +199,7 @@ class LaporanController extends Controller
         $out = fopen('php://output', 'w');
         fwrite($out, "\xEF\xBB\xBF");
 
-        fputcsv($out, ['Nama Tentor', 'Universitas', 'Total Sesi', 'Total Jam', 'Tarif/Sesi', 'Rate/Jam', 'Estimasi Honorarium']);
+        fputcsv($out, ['Nama Tentor', 'Universitas', 'Total Sesi', 'Total Jam']);
 
         foreach ($payrollList as $row) {
             fputcsv($out, [
@@ -153,9 +207,6 @@ class LaporanController extends Controller
                 $row['asal_universitas'],
                 (int)   $row['total_sesi'],
                 round((float) $row['total_jam'], 1),
-                'Rp ' . number_format((float) $row['tarif_per_sesi'], 0, ',', '.'),
-                'Rp ' . number_format((float) $row['rate_gaji_per_jam'], 0, ',', '.'),
-                'Rp ' . number_format((float) $row['total_honorarium'], 0, ',', '.'),
             ]);
         }
 

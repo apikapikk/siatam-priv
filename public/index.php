@@ -116,6 +116,7 @@ $router->post('/admin/tentor/{id}/hapus', [TentorController::class, 'delete']);
 $router->get('/admin/siswa', [SiswaController::class, 'index']);
 $router->get('/admin/siswa/tambah', [SiswaController::class, 'create']);
 $router->post('/admin/siswa/simpan', [SiswaController::class, 'store']);
+$router->get('/admin/siswa/kelas/{id}', [SiswaController::class, 'kelas']);
 $router->get('/admin/siswa/{id}/edit', [SiswaController::class, 'edit']);
 $router->post('/admin/siswa/{id}/update', [SiswaController::class, 'update']);
 $router->post('/admin/siswa/{id}/hapus', [SiswaController::class, 'delete']);
@@ -135,6 +136,8 @@ $router->post('/admin/jadwal/simpan', [JadwalController::class, 'store']);
 $router->get('/admin/jadwal/{id}/edit', [JadwalController::class, 'edit']);
 $router->post('/admin/jadwal/{id}/update', [JadwalController::class, 'update']);
 $router->post('/admin/jadwal/{id}/hapus', [JadwalController::class, 'delete']);
+$router->get('/admin/kelas/{id}/jadwal', [JadwalController::class, 'editKelas']);
+$router->post('/admin/kelas/{id}/jadwal/update', [JadwalController::class, 'updateKelas']);
 
 // Sesi Pertemuan Mengajar & Presensi
 $router->get('/admin/pertemuan', [PertemuanController::class, 'index']);
@@ -162,20 +165,17 @@ $router->post('/admin/berita/{id}/hapus', [BeritaController::class, 'delete']);
 
 // Pusat Laporan & Rekap
 $router->get('/admin/laporan', [LaporanController::class, 'index']);
+$router->get('/admin/laporan/siswa', [LaporanController::class, 'siswa']);
+$router->get('/admin/laporan/tentor', [LaporanController::class, 'tentor']);
 $router->get('/admin/laporan/siswa-bulanan', [LaporanController::class, 'siswaBulanan']);
+$router->get('/admin/laporan/siswa-harian', [LaporanController::class, 'siswaHarian']);
 $router->get('/admin/laporan/siswa-bulanan/export-csv', [LaporanController::class, 'exportSiswaCsv']);
 $router->get('/admin/laporan/tentor-bulanan', [LaporanController::class, 'tentorBulanan']);
+$router->get('/admin/laporan/tentor-harian', [LaporanController::class, 'tentorHarian']);
 $router->get('/admin/laporan/tentor-bulanan/export-csv', [LaporanController::class, 'exportTentorCsv']);
 
 // Dispatch HTTP request
 $router->dispatch($_SERVER['REQUEST_METHOD'], $_SERVER['REQUEST_URI']);
-
-
-
-
-
-
-
 
 
 

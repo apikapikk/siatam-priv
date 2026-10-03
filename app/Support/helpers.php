@@ -58,3 +58,37 @@ function konversi_nilai_huruf(?string $nilai): string
 
     return $labels[$nilai ?? ''] ?? '-';
 }
+
+function tanggal_indonesia(string $date, bool $withDay = true): string
+{
+    if (empty($date)) {
+        return '-';
+    }
+    $timestamp = strtotime($date);
+    if (!$timestamp) {
+        return $date;
+    }
+
+    $hari = ['Minggu', 'Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu'][(int) date('w', $timestamp)];
+    $bulan = [
+        1 => 'Januari', 2 => 'Februari', 3 => 'Maret', 4 => 'April',
+        5 => 'Mei', 6 => 'Juni', 7 => 'Juli', 8 => 'Agustus',
+        9 => 'September', 10 => 'Oktober', 11 => 'November', 12 => 'Desember'
+    ][(int) date('n', $timestamp)] ?? '';
+
+    $tgl = date('d', $timestamp);
+    $thn = date('Y', $timestamp);
+
+    return $withDay ? "{$hari}, {$tgl} {$bulan} {$thn}" : "{$tgl} {$bulan} {$thn}";
+}
+
+function nama_bulan_indonesia(int $month): string
+{
+    $bulan = [
+        1 => 'Januari', 2 => 'Februari', 3 => 'Maret', 4 => 'April',
+        5 => 'Mei', 6 => 'Juni', 7 => 'Juli', 8 => 'Agustus',
+        9 => 'September', 10 => 'Oktober', 11 => 'November', 12 => 'Desember'
+    ];
+    return $bulan[$month] ?? '-';
+}
+

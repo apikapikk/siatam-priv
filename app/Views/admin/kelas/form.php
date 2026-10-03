@@ -1,66 +1,56 @@
-<div class="content-section">
-    <div style="margin-bottom: 16px;">
-        <a href="/admin/kelas" style="display: inline-flex; align-items: center; gap: 6px; color: #6b7280; font-size: 13px; font-weight: 500;">
-            &larr; Kembali ke Daftar Kelas
-        </a>
-        <h1 style="font-size: 20px; font-weight: 700; margin: 8px 0 0;"><?= $isEdit ? 'Edit Kelas' : 'Tambah Kelas Baru' ?></h1>
+<?php
+$hariNama = [1 => 'Senin', 2 => 'Selasa', 3 => 'Rabu', 4 => 'Kamis', 5 => 'Jumat', 6 => 'Sabtu', 7 => 'Minggu'];
+$isScheduleCreate = ($formContext ?? '') === 'jadwal';
+$requireSchedule = $requireSchedule ?? false;
+$displaySessions = $sesiList ?: [['hari' => '', 'jam_mulai' => '', 'jam_selesai' => '', 'tentor_id' => '', 'mata_pelajaran' => '', 'ruangan' => '']];
+?>
+<div class="flex flex-col gap-5 w-full max-w-3xl mx-auto pb-8">
+    <div class="flex items-center gap-3">
+        <a href="<?= $isScheduleCreate ? '/admin/jadwal' : '/admin/kelas' ?>" class="w-10 h-10 rounded-full bg-white text-gray-700 border border-gray-200 flex items-center justify-center shadow-sm"><span class="material-symbols-outlined">arrow_back</span></a>
+        <div><h1 class="text-xl font-bold text-[#2D3E39]"><?= $isEdit ? 'Edit Kelas' : ($isScheduleCreate ? 'Tambah Jadwal Kelas' : 'Tambah Kelas Baru') ?></h1><p class="text-xs text-gray-500"><?= $isScheduleCreate ? 'Buat data kelas sekaligus atur satu atau beberapa sesi belajar' : 'Buat identitas kelas dan tambahkan sesi belajar bila diperlukan' ?></p></div>
     </div>
 
-    <div class="ui-card">
-        <form action="<?= $isEdit ? '/admin/kelas/' . $kelas['id'] . '/update' : '/admin/kelas/simpan' ?>" method="POST">
-            <div class="form-group">
-                <label class="form-label">Nama Kelas</label>
-                <input type="text" name="nama" value="<?= e($kelas['nama'] ?? '') ?>" placeholder="Contoh: 7A, 8B, 12 IPA Private" required class="form-control <?= isset($errors['nama']) ? 'is-invalid' : '' ?>">
-                <?php if (isset($errors['nama'])): ?>
-                    <small class="form-error"><?= e($errors['nama']) ?></small>
-                <?php endif; ?>
-            </div>
+    <div class="bg-[#f2f8f5] border border-[#dcece3] rounded-2xl p-4 flex gap-3 text-sm text-[#1b4332]"><span class="material-symbols-outlined">add_circle</span><div><strong><?= $isEdit ? 'Informasi Kelas' : 'Pembuatan Jadwal & Kelas' ?></strong><p class="text-xs text-gray-600 mt-0.5"><?= $isScheduleCreate ? 'Isi informasi kelas, lalu tambahkan sesi belajar sesuai kebutuhan.' : 'Sesi bersifat opsional dan dapat diatur kembali dari menu Manajemen Kelas.' ?></p></div></div>
 
-            <div class="form-group">
-                <label class="form-label">Jenjang Pendidikan</label>
-                <select name="jenjang_id" required class="form-control <?= isset($errors['jenjang_id']) ? 'is-invalid' : '' ?>">
-                    <option value="">-- Pilih Jenjang --</option>
-                    <?php foreach ($jenjangList as $j): ?>
-                        <option value="<?= $j['id'] ?>" <?= ((int) ($kelas['jenjang_id'] ?? 0) === (int) $j['id']) ? 'selected' : '' ?>>
-                            <?= e($j['nama']) ?>
-                        </option>
-                    <?php endforeach; ?>
-                </select>
-                <?php if (isset($errors['jenjang_id'])): ?>
-                    <small class="form-error"><?= e($errors['jenjang_id']) ?></small>
-                <?php endif; ?>
+    <form action="<?= $isEdit ? '/admin/kelas/' . $kelas['id'] . '/update' : ($isScheduleCreate ? '/admin/jadwal/simpan' : '/admin/kelas/simpan') ?>" method="POST" class="flex flex-col gap-5">
+        <section class="bg-white rounded-2xl p-5 border border-gray-200 shadow-sm space-y-4">
+            <div class="flex items-center gap-2 pb-3 border-b border-gray-100"><span class="material-symbols-outlined text-[#1b4332]">badge</span><h2 class="font-bold text-sm">Informasi Dasar Kelas</h2></div>
+            <div><label class="block text-xs font-semibold text-gray-700 mb-1.5">Nama Kelas <span class="text-red-500">*</span></label><input name="nama" value="<?= e($kelas['nama'] ?? '') ?>" placeholder="Contoh: KELAS 1A atau PRIVAT 9F" required class="w-full px-3.5 py-3 rounded-xl border border-gray-200 bg-[#FAF9F6] text-sm focus:outline-none focus:border-[#1b4332]"><?= isset($errors['nama']) ? '<small class="text-xs text-red-600">' . e($errors['nama']) . '</small>' : '' ?></div>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                <div><label class="block text-xs font-semibold text-gray-700 mb-1.5">Jenjang Pendidikan <span class="text-red-500">*</span></label><select name="jenjang_id" required class="w-full px-3.5 py-3 rounded-xl border border-gray-200 bg-[#FAF9F6] text-sm"><option value="">Pilih Jenjang</option><?php foreach ($jenjangList as $j): ?><option value="<?= $j['id'] ?>" <?= ((int) ($kelas['jenjang_id'] ?? 0) === (int) $j['id']) ? 'selected' : '' ?>><?= e($j['nama']) ?></option><?php endforeach; ?></select><?= isset($errors['jenjang_id']) ? '<small class="text-xs text-red-600">' . e($errors['jenjang_id']) . '</small>' : '' ?></div>
+                <div><label class="block text-xs font-semibold text-gray-700 mb-1.5">Program Bimbel <span class="text-red-500">*</span></label><select name="program_id" required class="w-full px-3.5 py-3 rounded-xl border border-gray-200 bg-[#FAF9F6] text-sm"><option value="">Reguler / Privat / Intensif</option><?php foreach ($programList as $p): ?><option value="<?= $p['id'] ?>" <?= ((int) ($kelas['program_id'] ?? 0) === (int) $p['id']) ? 'selected' : '' ?>><?= e($p['nama']) ?> (<?= e($p['tipe']) ?>)</option><?php endforeach; ?></select><?= isset($errors['program_id']) ? '<small class="text-xs text-red-600">' . e($errors['program_id']) . '</small>' : '' ?></div>
             </div>
+            <label class="inline-flex items-center gap-2 text-xs font-semibold text-gray-700"><input type="checkbox" name="status_aktif" value="1" <?= (!isset($kelas['status_aktif']) || $kelas['status_aktif']) ? 'checked' : '' ?> class="w-4 h-4 rounded text-[#1b4332]"> Kelas Aktif</label>
+        </section>
 
-            <div class="form-group">
-                <label class="form-label">Program</label>
-                <select name="program_id" required class="form-control <?= isset($errors['program_id']) ? 'is-invalid' : '' ?>">
-                    <option value="">-- Pilih Program --</option>
-                    <?php foreach ($programList as $p): ?>
-                        <option value="<?= $p['id'] ?>" <?= ((int) ($kelas['program_id'] ?? 0) === (int) $p['id']) ? 'selected' : '' ?>>
-                            <?= e($p['nama']) ?> (<?= e($p['tipe']) ?>)
-                        </option>
-                    <?php endforeach; ?>
-                </select>
-                <?php if (isset($errors['program_id'])): ?>
-                    <small class="form-error"><?= e($errors['program_id']) ?></small>
-                <?php endif; ?>
+        <?php if (!$isEdit): ?>
+        <section class="space-y-3">
+            <div class="flex items-center justify-between"><div><h2 class="font-bold text-sm text-[#1b4332]">Atur Sesi & Tentor</h2><p class="text-xs text-gray-500"><?= $isScheduleCreate ? 'Sesi 1 wajib diisi. Tambahkan atau kurangi sesi sesuai jadwal belajar.' : 'Opsional. Tambahkan jika jadwal kelas sudah tersedia.' ?></p></div><span class="text-[11px] px-2.5 py-1 rounded-full bg-[#f2f8f5] text-[#1b4332]">Fleksibel</span></div>
+            <?php if (isset($errors['sesi'])): ?><p class="text-xs text-red-600"><?= e($errors['sesi']) ?></p><?php endif; ?>
+            <div id="sesi-container" class="space-y-3">
+                <?php foreach ($displaySessions as $index => $sesi): ?><div class="sesi-card bg-white rounded-2xl p-4 border-2 border-gray-200 shadow-sm" data-session-card>
+                    <div class="flex items-center justify-between pb-3 mb-3 border-b border-gray-100"><div class="flex items-center gap-2"><span class="session-number w-6 h-6 rounded-full bg-[#1b4332] text-white text-xs font-bold flex items-center justify-center"><?= $index + 1 ?></span><strong class="text-xs">Sesi <?= $index + 1 ?></strong><?php if ($index === 0): ?><span class="text-[10px] font-medium text-gray-500 bg-gray-100 px-2 py-0.5 rounded-md">Pertemuan Utama</span><?php endif; ?></div><button type="button" data-remove-session class="text-xs text-red-500 flex items-center gap-1"><span class="material-symbols-outlined text-[16px]">delete</span> Hapus</button></div>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-3"><div><label class="block text-[11px] font-semibold text-gray-600 mb-1">Pilih Hari</label><select name="sesi[<?= $index ?>][hari]" <?= $requireSchedule ? 'required' : '' ?> class="w-full px-3 py-2.5 rounded-xl border border-gray-200 bg-[#FAF9F6] text-sm"><option value="">Pilih Hari</option><?php foreach ($hariNama as $day => $name): ?><option value="<?= $day ?>" <?= ((int) ($sesi['hari'] ?? 0) === $day) ? 'selected' : '' ?>><?= $name ?></option><?php endforeach; ?></select></div><div><label class="block text-[11px] font-semibold text-gray-600 mb-1">Mata Pelajaran <span class="font-normal">(opsional)</span></label><input name="sesi[<?= $index ?>][mata_pelajaran]" value="<?= e($sesi['mata_pelajaran'] ?? '') ?>" placeholder="Contoh: Matematika" class="w-full px-3 py-2.5 rounded-xl border border-gray-200 bg-[#FAF9F6] text-sm"></div></div>
+                    <div class="grid grid-cols-2 gap-3 mt-3"><div><label class="block text-[11px] font-semibold text-gray-600 mb-1">Jam Belajar (Mulai)</label><input type="time" name="sesi[<?= $index ?>][jam_mulai]" value="<?= e($sesi['jam_mulai'] ?? '') ?>" <?= $requireSchedule ? 'required' : '' ?> class="w-full px-3 py-2.5 rounded-xl border border-gray-200 bg-[#FAF9F6] text-sm"></div><div><label class="block text-[11px] font-semibold text-gray-600 mb-1">Jam Belajar (Selesai)</label><input type="time" name="sesi[<?= $index ?>][jam_selesai]" value="<?= e($sesi['jam_selesai'] ?? '') ?>" <?= $requireSchedule ? 'required' : '' ?> class="w-full px-3 py-2.5 rounded-xl border border-gray-200 bg-[#FAF9F6] text-sm"></div></div>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-3 mt-3"><div><label class="block text-[11px] font-semibold text-gray-600 mb-1">Tentor <span class="font-normal">(opsional)</span></label><select name="sesi[<?= $index ?>][tentor_id]" class="w-full px-3 py-2.5 rounded-xl border border-gray-200 bg-[#FAF9F6] text-sm"><option value="">Belum Ditugaskan</option><?php foreach ($tentorList as $t): ?><option value="<?= $t['id'] ?>" <?= ((int) ($sesi['tentor_id'] ?? 0) === (int) $t['id']) ? 'selected' : '' ?>><?= e($t['nama_lengkap']) ?></option><?php endforeach; ?></select></div><div><label class="block text-[11px] font-semibold text-gray-600 mb-1">Ruangan <span class="font-normal">(opsional)</span></label><input name="sesi[<?= $index ?>][ruangan]" value="<?= e($sesi['ruangan'] ?? '') ?>" placeholder="Ruang / meja" class="w-full px-3 py-2.5 rounded-xl border border-gray-200 bg-[#FAF9F6] text-sm"></div></div>
+                    <?php if (isset($errors['sesi_' . $index])): ?><p class="text-xs text-red-600 mt-2"><?= e($errors['sesi_' . $index]) ?></p><?php endif; ?>
+                </div><?php endforeach; ?>
             </div>
+            <button type="button" id="add-session" class="w-full py-3 rounded-xl border-2 border-dashed border-[#1b4332] text-[#1b4332] font-bold text-xs bg-white"><span class="material-symbols-outlined text-[17px] align-middle">add_circle</span> Tambah Sesi Hari Lain</button>
+        </section>
+        <?php endif; ?>
 
-            <div style="margin-bottom: 20px;">
-                <label style="display: inline-flex; align-items: center; gap: 8px; font-size: 14px; font-weight: 500; cursor: pointer;">
-                    <input type="checkbox" name="status_aktif" value="1" <?= (!isset($kelas['status_aktif']) || $kelas['status_aktif']) ? 'checked' : '' ?> style="width: 18px; height: 18px; accent-color: #1b4332;">
-                    <span>Kelas Aktif</span>
-                </label>
-            </div>
-
-            <div style="display: flex; gap: 10px;">
-                <button type="submit" class="btn btn-primary" style="flex: 1;">
-                    <?= $isEdit ? 'Simpan Perubahan' : 'Tambah Kelas' ?>
-                </button>
-                <a href="/admin/kelas" class="btn btn-secondary">
-                    Batal
-                </a>
-            </div>
-        </form>
-    </div>
+        <div class="flex gap-3"><a href="<?= $isScheduleCreate ? '/admin/jadwal' : '/admin/kelas' ?>" class="flex-1 py-3 rounded-xl border border-gray-300 bg-white text-gray-700 text-sm font-semibold text-center">Batal</a><button class="flex-1 py-3 rounded-xl bg-[#1b4332] text-white text-sm font-bold"><?= $isEdit ? 'Simpan Perubahan' : ($isScheduleCreate ? 'Simpan Jadwal Kelas' : 'Simpan Kelas Baru') ?></button></div>
+    </form>
 </div>
+<?php if (!$isEdit): ?>
+<script>
+const container = document.getElementById('sesi-container');
+const tentorOptions = <?= json_encode(array_map(fn ($t) => ['id' => $t['id'], 'name' => $t['nama_lengkap']], $tentorList), JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_HEX_AMP) ?>;
+const days = <?= json_encode($hariNama, JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_HEX_AMP) ?>;
+const sessionFieldsRequired = <?= $requireSchedule ? 'true' : 'false' ?>;
+function renumber() { container.querySelectorAll('[data-session-card]').forEach((card, i) => { card.querySelector('.session-number').textContent = i + 1; card.querySelector('strong').textContent = 'Sesi ' + (i + 1); card.querySelectorAll('[name]').forEach(input => input.name = input.name.replace(/sesi\[\d+\]/, 'sesi[' + i + ']')); }); }
+document.getElementById('add-session').addEventListener('click', () => { const i = container.querySelectorAll('[data-session-card]').length; const options = Object.entries(days).map(([id, name]) => `<option value="${id}">${name}</option>`).join(''); const tutors = tentorOptions.map(t => `<option value="${t.id}">${t.name}</option>`).join(''); const card = document.createElement('div'); card.className = 'sesi-card bg-white rounded-2xl p-4 border-2 border-gray-200 shadow-sm'; card.setAttribute('data-session-card', ''); card.innerHTML = `<div class="flex items-center justify-between pb-3 mb-3 border-b border-gray-100"><div class="flex items-center gap-2"><span class="session-number w-6 h-6 rounded-full bg-[#1b4332] text-white text-xs font-bold flex items-center justify-center">${i + 1}</span><strong class="text-xs">Sesi ${i + 1}</strong></div><button type="button" data-remove-session class="text-xs text-red-500">Hapus</button></div><div class="grid grid-cols-1 md:grid-cols-2 gap-3"><div><label class="block text-[11px] font-semibold mb-1">Hari</label><select name="sesi[${i}][hari]" class="w-full px-3 py-2.5 rounded-xl border border-gray-200 bg-[#FAF9F6] text-sm"><option value="">Pilih Hari</option>${options}</select></div><div><label class="block text-[11px] font-semibold mb-1">Mata Pelajaran</label><input name="sesi[${i}][mata_pelajaran]" class="w-full px-3 py-2.5 rounded-xl border border-gray-200 bg-[#FAF9F6] text-sm"></div></div><div class="grid grid-cols-2 gap-3 mt-3"><input type="time" name="sesi[${i}][jam_mulai]" class="w-full px-3 py-2.5 rounded-xl border border-gray-200 bg-[#FAF9F6] text-sm"><input type="time" name="sesi[${i}][jam_selesai]" class="w-full px-3 py-2.5 rounded-xl border border-gray-200 bg-[#FAF9F6] text-sm"></div><div class="grid grid-cols-1 md:grid-cols-2 gap-3 mt-3"><select name="sesi[${i}][tentor_id]" class="w-full px-3 py-2.5 rounded-xl border border-gray-200 bg-[#FAF9F6] text-sm"><option value="">Belum Ditugaskan</option>${tutors}</select><input name="sesi[${i}][ruangan]" placeholder="Ruangan (opsional)" class="w-full px-3 py-2.5 rounded-xl border border-gray-200 bg-[#FAF9F6] text-sm"></div>`; container.appendChild(card); });
+container.addEventListener('click', e => { if (e.target.closest('[data-remove-session]')) { const cards = container.querySelectorAll('[data-session-card]'); if (cards.length > 1) e.target.closest('[data-session-card]').remove(); else e.target.closest('[data-session-card]').querySelectorAll('input, select').forEach(el => el.value = ''); renumber(); } });
+</script>
+<?php endif; ?>

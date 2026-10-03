@@ -86,6 +86,64 @@ class Tentor extends Model
         return $stmt->fetchAll();
     }
 
+    public function getMonthlyTeachingSummary(int $month, int $year): array
+    {
+        $stmt = $this->db->prepare("SELECT t.id, t.nama_lengkap, t.asal_universitas, t.foto,
+                                           COUNT(p.id) AS total_sesi,
+                                           COALESCE(SUM(TIMESTAMPDIFF(MINUTE, p.jam_mulai, p.jam_selesai)) / 60, 0) AS total_jam
+                                    FROM tentor t
+                                    LEFT JOIN pertemuan p ON p.tentor_id = t.id AND MONTH(p.tanggal) = :month AND YEAR(p.tanggal) = :year
+                                    WHERE t.status_aktif = 1
+                                    GROUP BY t.id, t.nama_lengkap, t.asal_universitas, t.foto
+                                    ORDER BY total_sesi DESC, t.nama_lengkap ASC");
+        $stmt->execute(['month' => $month, 'year' => $year]);
+        return $stmt->fetchAll();
+    }
+
+    public function getMonthlyBreakdownByTentor(int $month, int $year): array
+    {
+        $sql = "SELECT p.tentor_id, jg.nama AS jenjang_nama, k.nama AS kelas_nama, COUNT(p.id) AS total_sesi
+                FROM pertemuan p
+                JOIN jadwal j ON j.id = p.jadwal_id
+                JOIN kelas k ON k.id = j.kelas_id
+                JOIN jenjang jg ON jg.id = k.jenjang_id
+                WHERE MONTH(p.tanggal) = :month AND YEAR(p.tanggal) = :year
+                GROUP BY p.tentor_id, jg.nama, k.nama
+                ORDER BY p.tentor_id ASC, jg.nama ASC, k.nama ASC";
+        $stmt = $this->db->prepare($sql);
+        $stmt->execute(['month' => $month, 'year' => $year]);
+        $rows = $stmt->fetchAll();
+
+        $result = [];
+        foreach ($rows as $row) {
+            $tentorId = (int) $row['tentor_id'];
+            $result[$tentorId][] = $row;
+        }
+        return $result;
+    }
+
+    public function getDailyTeachingSummary(string $date): array
+    {
+        $sql = "SELECT t.id AS tentor_id, t.nama_lengkap, t.asal_universitas, t.foto,
+                       j.mata_pelajaran,
+                       p.id AS pertemuan_id, p.jam_mulai, p.jam_selesai,
+                       k.id AS kelas_id, k.nama AS kelas_nama,
+                       COUNT(prs.id) AS total_siswa,
+                       SUM(CASE WHEN prs.status_kehadiran = 'hadir' THEN 1 ELSE 0 END) AS total_hadir
+                FROM pertemuan p
+                JOIN tentor t ON t.id = p.tentor_id
+                JOIN jadwal j ON j.id = p.jadwal_id
+                JOIN kelas k ON k.id = j.kelas_id
+                LEFT JOIN presensi prs ON prs.pertemuan_id = p.id
+                WHERE p.tanggal = :tanggal
+                GROUP BY p.id, t.id, t.nama_lengkap, t.asal_universitas, t.foto, j.mata_pelajaran, p.jam_mulai, p.jam_selesai, k.id, k.nama
+                ORDER BY p.jam_mulai ASC, t.nama_lengkap ASC";
+        $stmt = $this->db->prepare($sql);
+        $stmt->execute(['tanggal' => $date]);
+        return $stmt->fetchAll();
+    }
+
+
     public function getTeachingPerformance(int $tentorId, int $month, int $year): array
     {
         $sql = "SELECT COUNT(DISTINCT p.id) AS total_sesi,

@@ -55,13 +55,27 @@
                     <?php endif; ?>
                 </div>
 
-                <div class="pt-1">
-                    <label class="inline-flex items-center gap-2 text-xs font-semibold text-gray-700 cursor-pointer">
+            <div class="pt-1">
+                <label class="inline-flex items-center gap-2 text-xs font-semibold text-gray-700 cursor-pointer">
                         <input type="checkbox" name="status_aktif" value="1" <?= (!isset($siswa['status_aktif']) || $siswa['status_aktif']) ? 'checked' : '' ?> class="w-4 h-4 rounded text-[#324f47] focus:ring-[#324f47]">
                         <span>Status Siswa Aktif</span>
-                    </label>
-                </div>
+                </label>
             </div>
+
+            <div class="flex flex-col gap-1.5 pt-2 border-t border-gray-100">
+                <label class="text-xs font-semibold text-gray-700">Pilih Kelas / Program Pembelajaran <span class="text-red-500">*</span></label>
+                <div class="relative flex items-center">
+                    <span class="material-symbols-outlined absolute left-3.5 text-gray-400 text-[18px]">account_tree</span>
+                    <select name="kelas_id" required class="w-full pl-10 pr-10 py-2.5 bg-[#FAF9F7] text-sm text-gray-800 rounded-xl border border-gray-200 focus:outline-none focus:border-[#324f47]">
+                        <option value="">Pilih kelas</option>
+                        <?php foreach ($kelasList as $kelas): ?>
+                            <option value="<?= $kelas['id'] ?>" <?= ((int) ($kelasId ?? 0) === (int) $kelas['id']) ? 'selected' : '' ?>><?= e($kelas['nama']) ?> · <?= e($kelas['program_nama']) ?></option>
+                        <?php endforeach; ?>
+                    </select>
+                </div>
+                <?php if (isset($errors['kelas_id'])): ?><small class="text-xs text-red-600"><?= e($errors['kelas_id']) ?></small><?php endif; ?>
+            </div>
+        </div>
 
             <!-- Group 2: Data Wali / Orang Tua -->
             <div class="flex flex-col gap-4 pt-2">

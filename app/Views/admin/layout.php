@@ -81,9 +81,9 @@
                 <span class="material-symbols-outlined text-xl group-hover:scale-110 transition-transform">home</span>
                 <span class="text-[11px] mt-0.5 leading-none">Beranda</span>
             </a>
-            <a class="flex flex-col items-center justify-center py-1 px-3 rounded-xl transition-all group <?= ($activeNav ?? '') === 'jadwal' ? 'text-[#2d5a4c] font-semibold bg-[#e8f0ec]/70' : 'text-gray-500 hover:text-[#2d5a4c] font-medium' ?>" href="/admin/jadwal">
-                <span class="material-symbols-outlined text-xl group-hover:scale-110 transition-transform">calendar_month</span>
-                <span class="text-[11px] mt-0.5 leading-none">Jadwal</span>
+            <a class="flex flex-col items-center justify-center py-1 px-3 rounded-xl transition-all group <?= ($activeNav ?? '') === 'jadwal' ? 'text-[#2d5a4c] font-semibold bg-[#e8f0ec]/70' : 'text-gray-500 hover:text-[#2d5a4c] font-medium' ?>" href="/admin/jadwal?mode=kelas">
+                <span class="material-symbols-outlined text-xl group-hover:scale-110 transition-transform">auto_stories</span>
+                <span class="text-[11px] mt-0.5 leading-none">Manajemen Kelas</span>
             </a>
             <a class="flex flex-col items-center justify-center py-1 px-3 rounded-xl transition-all group <?= ($activeNav ?? '') === 'siswa' ? 'text-[#2d5a4c] font-semibold bg-[#e8f0ec]/70' : 'text-gray-500 hover:text-[#2d5a4c] font-medium' ?>" href="/admin/siswa">
                 <span class="material-symbols-outlined text-xl group-hover:scale-110 transition-transform">school</span>
@@ -92,10 +92,6 @@
             <a class="flex flex-col items-center justify-center py-1 px-3 rounded-xl transition-all group <?= ($activeNav ?? '') === 'tentor' ? 'text-[#2d5a4c] font-semibold bg-[#e8f0ec]/70' : 'text-gray-500 hover:text-[#2d5a4c] font-medium' ?>" href="/admin/tentor">
                 <span class="material-symbols-outlined text-xl group-hover:scale-110 transition-transform">badge</span>
                 <span class="text-[11px] mt-0.5 leading-none">Tentor</span>
-            </a>
-            <a class="flex flex-col items-center justify-center py-1 px-3 rounded-xl transition-all group <?= ($activeNav ?? '') === 'pertemuan' ? 'text-[#2d5a4c] font-semibold bg-[#e8f0ec]/70' : 'text-gray-500 hover:text-[#2d5a4c] font-medium' ?>" href="/admin/pertemuan">
-                <span class="material-symbols-outlined text-xl group-hover:scale-110 transition-transform">assessment</span>
-                <span class="text-[11px] mt-0.5 leading-none">Pertemuan</span>
             </a>
             <a class="flex flex-col items-center justify-center py-1 px-3 rounded-xl transition-all group <?= ($activeNav ?? '') === 'laporan' ? 'text-[#2d5a4c] font-semibold bg-[#e8f0ec]/70' : 'text-gray-500 hover:text-[#2d5a4c] font-medium' ?>" href="/admin/laporan">
                 <span class="material-symbols-outlined text-xl group-hover:scale-110 transition-transform">summarize</span>

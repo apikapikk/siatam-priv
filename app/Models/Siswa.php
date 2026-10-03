@@ -42,6 +42,17 @@ class Siswa extends Model
         return $stmt->fetchAll();
     }
 
+    public function getActivePlacement(int $siswaId): ?array
+    {
+        $sql = "SELECT * FROM pendaftaran_siswa
+                WHERE siswa_id = :siswa_id AND status = 'aktif'
+                ORDER BY id DESC LIMIT 1";
+        $stmt = $this->db->prepare($sql);
+        $stmt->execute(['siswa_id' => $siswaId]);
+        $result = $stmt->fetch();
+        return $result ?: null;
+    }
+
     public function syncParents(int $siswaId, array $parentsData): void
     {
         $this->db->beginTransaction();
