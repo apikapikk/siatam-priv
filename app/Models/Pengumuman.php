@@ -33,4 +33,18 @@ class Pengumuman extends Model
         $stmt->execute(['peran' => $allowedPeran]);
         return $stmt->fetchAll();
     }
+
+    public function getPublicAnnouncements(int $limit = 5): array
+    {
+        $limit = max(1, min($limit, 20));
+        $sql = "SELECT p.*, u.username AS pembuat_nama
+                FROM `pengumuman` p
+                LEFT JOIN `pengguna` u ON u.id = p.dibuat_oleh
+                WHERE p.status_aktif = 1
+                  AND p.target_peran IN ('semua', 'publik')
+                ORDER BY p.diterbitkan_pada DESC
+                LIMIT {$limit}";
+        $stmt = $this->db->query($sql);
+        return $stmt->fetchAll();
+    }
 }

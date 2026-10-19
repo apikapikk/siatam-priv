@@ -243,7 +243,7 @@ CREATE TABLE `pengumuman` (
   `judul` VARCHAR(150) NOT NULL,
   `isi` TEXT NOT NULL,
   `dibuat_oleh` BIGINT NOT NULL,
-  `target_peran` ENUM('semua', 'tentor', 'admin') NOT NULL DEFAULT 'semua',
+  `target_peran` ENUM('semua', 'tentor', 'admin', 'publik') NOT NULL DEFAULT 'semua',
   `tipe_broadcast` ENUM('banner', 'popup', 'push') NOT NULL DEFAULT 'banner',
   `kategori` VARCHAR(50) NOT NULL DEFAULT 'Umum',
   `diterbitkan_pada` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,

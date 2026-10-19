@@ -9,6 +9,7 @@ use App\Models\Tentor;
 use App\Models\Berita;
 use App\Models\Siswa;
 use App\Models\Pertemuan;
+use App\Models\Pengumuman;
 
 class PublicController extends Controller
 {
@@ -18,6 +19,7 @@ class PublicController extends Controller
     private Berita $beritaModel;
     private Siswa $siswaModel;
     private Pertemuan $pertemuanModel;
+    private Pengumuman $pengumumanModel;
 
     public function __construct()
     {
@@ -27,6 +29,7 @@ class PublicController extends Controller
         $this->beritaModel = new Berita();
         $this->siswaModel = new Siswa();
         $this->pertemuanModel = new Pertemuan();
+        $this->pengumumanModel = new Pengumuman();
     }
 
     public function index(): void
@@ -39,6 +42,8 @@ class PublicController extends Controller
         $stmtBerita = $db->query("SELECT * FROM `berita` WHERE `status_terbit` = 1 ORDER BY `diterbitkan_pada` DESC LIMIT 3");
         $latestBerita = $stmtBerita->fetchAll();
 
+        $pengumumanList = $this->pengumumanModel->getPublicAnnouncements(5);
+
         $this->render('public/home', [
             'pageTitle' => 'Sistem Informasi Bimbingan Belajar',
             'activeNav' => 'home',
@@ -46,6 +51,7 @@ class PublicController extends Controller
             'paketList' => $paketList,
             'tentorList' => $tentorList,
             'latestBerita' => $latestBerita,
+            'pengumumanList' => $pengumumanList,
         ], 'public/layout');
     }
 

@@ -58,7 +58,7 @@ class PengumumanController extends Controller
             $errors['isi'] = 'Isi pengumuman wajib diisi.';
         }
 
-        if (!in_array($targetPeran, ['semua', 'tentor', 'admin'])) {
+        if (!in_array($targetPeran, ['semua', 'tentor', 'admin', 'publik'])) {
             $errors['target_peran'] = 'Target peran tidak valid.';
         }
 
@@ -150,7 +150,7 @@ class PengumumanController extends Controller
             $errors['isi'] = 'Isi pengumuman wajib diisi.';
         }
 
-        if (!in_array($targetPeran, ['semua', 'tentor', 'admin'])) {
+        if (!in_array($targetPeran, ['semua', 'tentor', 'admin', 'publik'])) {
             $errors['target_peran'] = 'Target peran tidak valid.';
         }
 

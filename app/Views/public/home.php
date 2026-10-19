@@ -1,4 +1,41 @@
 <div class="max-w-2xl mx-auto w-full flex flex-col gap-8 pt-2">
+    <?php if (!empty($pengumumanList)): ?>
+        <section class="flex flex-col gap-3">
+            <div class="flex items-center justify-between px-2">
+                <h2 class="text-lg font-bold text-[#2D3E39] flex items-center gap-2">
+                    <span class="material-symbols-outlined text-[#324f47]">campaign</span> Pengumuman Terkini
+                </h2>
+                <span class="text-xs text-gray-500 font-medium">Informasi Resmi Bimbel</span>
+            </div>
+            <div class="flex flex-col gap-3">
+                <?php foreach ($pengumumanList as $item): ?>
+                    <div class="bg-white rounded-2xl p-4 md:p-5 shadow-sm border border-emerald-100/80 hover:border-emerald-300 transition-all flex flex-col gap-2">
+                        <div class="flex items-center justify-between gap-2 flex-wrap">
+                            <div class="flex items-center gap-2">
+                                <span class="px-2.5 py-0.5 rounded-full text-[11px] font-semibold bg-[#e8f0ec] text-[#2d5a4c]">
+                                    <?= e($item['kategori'] ?? 'Pengumuman') ?>
+                                </span>
+                                <?php if (($item['tipe_broadcast'] ?? '') === 'popup'): ?>
+                                    <span class="px-2 py-0.5 rounded-full text-[10px] font-semibold bg-amber-50 text-amber-700">Penting</span>
+                                <?php endif; ?>
+                            </div>
+                            <span class="text-[11px] text-gray-400 flex items-center gap-1">
+                                <span class="material-symbols-outlined text-[13px]">calendar_today</span>
+                                <?= e(date('d M Y, H:i', strtotime($item['diterbitkan_pada'] ?? 'now'))) ?> WIB
+                            </span>
+                        </div>
+                        <h3 class="text-base font-bold text-[#2D3E39] leading-snug">
+                            <?= e($item['judul']) ?>
+                        </h3>
+                        <p class="text-sm text-gray-600 leading-relaxed whitespace-pre-line">
+                            <?= e($item['isi']) ?>
+                        </p>
+                    </div>
+                <?php endforeach; ?>
+            </div>
+        </section>
+    <?php endif; ?>
+
     <section class="bg-white rounded-2xl p-6 md:p-8 shadow-sm border border-gray-200/80 flex flex-col items-center text-center">
         <div class="w-32 h-32 rounded-full bg-[#e8f0ec] flex items-center justify-center mb-4 overflow-hidden">
             <img src="/assets/logo.png" alt="Logo Siatama Privat" class="w-28 h-28 object-contain">
